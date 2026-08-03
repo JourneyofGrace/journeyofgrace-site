@@ -1,8 +1,8 @@
 # Journey of Grace — Static Site POC
 
-Proof-of-concept static site for Journey of Grace church, replacing Squarespace with a GitHub Pages-hosted static site integrated with Planning Center Online.
+Faithful clone of the Journey of Grace Squarespace site, rebuilt as a static site hosted on GitHub Pages with Planning Center Online integration.
 
-## Pages
+## Site Structure
 
 | Page | Description |
 |------|-------------|
@@ -14,13 +14,25 @@ Proof-of-concept static site for Journey of Grace church, replacing Squarespace 
 | `events.html` | Events — Planning Center Calendar widget |
 | `nextstep.html` | Next Step — contact form (Formspree) |
 | `spanish.html` | Español — Spanish-language contact form |
+| `kids-min.html` | Kids Ministry |
+| `youth-group.html` | Youth Group |
+| `mens-ministry.html` | Men's Ministry |
+| `womens-ministry.html` | Women's Ministry |
+| `life-groups.html` | Life Groups |
+| `journey-classes.html` | Journey Classes |
+| `service-teams.html` | Service Teams |
+| `prximo-paso.html` | Próximo Paso |
+| `privacy.html` | Privacy Policy |
+| `plan-your-visit.html` | Plan Your Visit |
+| `blog.html` | Blog |
+| `sermon-archive.html` | Sermon Archive |
 
 ## Planning Center Integration
 
 This site integrates with Planning Center Online via embeddable widgets:
 
 - **Calendar** (`events.html`) — Shows upcoming church events
-- **Groups** (`connect.html`) — Shows small groups and ministries
+- **Groups** (`connect.html`, `youth-group.html`, `life-groups.html`) — Shows small groups and ministries
 - **Giving** — Link to Planning Center Giving (configure in `js/main.js`)
 
 To enable widgets, replace placeholder IDs in `js/main.js`:
@@ -55,12 +67,14 @@ Then visit `http://localhost:8000`.
 - Planning Center integration (forms, events, groups, giving)
 - Church content (sermons, about, visit info)
 - Social media links
+- All site pages and navigation
 
 ### What changes
 - Forms use Formspree instead of Squarespace Forms
 - Events use Planning Center Calendar instead of Squarespace Events
-- Content is managed via Git (Markdown/HTML) instead of Squarespace editor
+- Content is managed via Git (HTML/CSS) instead of Squarespace editor
 - Hosting is free on GitHub Pages instead of Squarespace monthly fee
+- Images are served from Squarespace CDN (no change)
 
 ### What's lost
 - Squarespace Commerce (cart/store) — would need Snipcart or similar

@@ -28,6 +28,64 @@
 <link rel="stylesheet" type="text/css" href="https://assets.squarespace.com/universal/styles-compressed/commerce-d50e5960dc9fd059-min.en-US.css">
 <link rel="stylesheet" type="text/css" href="https://static1.squarespace.com/static/sitecss/5a8c711ed55b41ec4db0fa5d/108/56d9c12107eaa07660adbcad/5c32e37603ce64e8bf2959d6/354/site.css?nocustom=true">
 <link rel="stylesheet" type="text/css" href="https://static1.squarespace.com/static/custom-css/5a8c711ed55b41ec4db0fa5d/5c32e37603ce64e8bf2959d6/0/custom.css">
+<style>
+  .not-found-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .not-found-title {
+    font-size: 120px;
+    font-weight: 300;
+    line-height: 1;
+    margin: 0 0 20px 0;
+    color: #333;
+  }
+  .not-found-message {
+    font-size: 18px;
+    margin: 0 0 40px 0;
+    color: #666;
+    max-width: 500px;
+  }
+  .not-found-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .not-found-links li {
+    margin: 0;
+  }
+  .not-found-links a {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  .not-found-links a:hover {
+    background-color: #555;
+  }
+  .not-found-links a.secondary {
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  .not-found-links a.secondary:hover {
+    border-color: #333;
+  }
+</style>
 </head>
 <body id="collection-5a8c711ed55b41ec4db0fa5d" class="tweak-display-social-icons tweak-social-icons-on-right tweak-cart-link-display-hide tweak-cart-icon-style-cart tweak-cart-icon-weight-medium tweak-cart-icon-size-medium tweak-user-account-link-position-with-nav tweak-user-account-icon-weight-medium tweak-user-account-icon-size-medium tweak-show-footer tweak-nav-style-icon tweak-nav-position-right tweak-menu-icon-weight-light tweak-menu-icon-size-medium tweak-nav-link-style-none tweak-mobile-nav-alignment-center tweak-mobile-nav-always-show-tagline tweak-show-page-title-overlay-not-in-index tweak-page-title-overlay-blend-mode-multiply tweak-page-title-position-top-center tweak-show-page-title tweak-show-page-desc tweak-show-page-banner-image-not-in-index collection-5a8c711ed55b41ec4db0fa5d collection-layout-default collection-type-page view-item mobile-style-available has-main-image">
 
@@ -59,33 +117,20 @@
   <div class="main-content-inner-wrapper">
     <div class="mercury-transition-wrapper">
       <div class="page-wrapper">
-        <div class="row sqs-row">
-          <div class="col sqs-col-12 span-12">
-            <div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-404-title">
-              <div class="sqs-block-content">
-                <h1 style="text-align:center;">404 — Page Not Found</h1>
-                <p style="text-align:center;">The page you're looking for doesn't exist or has been moved.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row sqs-row">
-          <div class="col sqs-col-12 span-12">
-            <div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-404-links">
-              <div class="sqs-block-content">
-                <h2 style="text-align:center;">Try these links instead:</h2>
-                <ul style="text-align:center;">
-                  <li><a href="/">Home</a></li>
-                  <li><a href="/about-us">About Us</a></li>
-                  <li><a href="/visit-1">Visit</a></li>
-                  <li><a href="/connect">Connect</a></li>
-                  <li><a href="/sermons">Sermons</a></li>
-                  <li><a href="/events">Events</a></li>
-                  <li><a href="/nextstep">Next Step</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
+        <div class="not-found-wrapper">
+          <h1 class="not-found-title">404</h1>
+          <p class="not-found-message">The page you're looking for doesn't exist or has been moved.</p>
+          <ul class="not-found-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about-us">About Us</a></li>
+            <li><a href="/visit-1">Visit</a></li>
+            <li><a href="/connect">Connect</a></li>
+            <li><a href="/sermons">Sermons</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/nextstep">Next Step</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact" class="secondary">Contact Us</a></li>
+          </ul>
         </div>
       </div>
     </div>

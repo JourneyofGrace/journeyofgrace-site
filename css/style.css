@@ -1,0 +1,384 @@
+/* Journey of Grace — Custom Styles
+   Enhances Squarespace base with improved design and UI/UX standards */
+
+/* === Typography Improvements === */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+/* === Layout Improvements === */
+.content-outer-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-inner-wrapper {
+  flex: 1;
+}
+
+/* === Header Improvements === */
+.header {
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8e8;
+  transition: box-shadow 0.2s ease;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header-logo img {
+  height: 40px;
+  width: auto;
+  transition: opacity 0.2s ease;
+}
+
+.header-logo:hover img {
+  opacity: 0.85;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.nav-list a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #333333;
+  transition: width 0.2s ease;
+}
+
+.nav-list a:hover {
+  color: #555555;
+}
+
+.nav-list a:hover::after {
+  width: 100%;
+}
+
+.nav-list a.active {
+  color: #333333;
+}
+
+.nav-list a.active::after {
+  width: 100%;
+}
+
+/* === Main Content Improvements === */
+.main-content {
+  padding: 0;
+}
+
+.main-content-inner-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* === Page Title Improvements === */
+.page-title {
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+}
+
+.page-description {
+  font-size: 18px;
+  color: #666666;
+  margin-bottom: 32px;
+}
+
+/* === Button Improvements === */
+a.btn,
+button,
+input[type="submit"],
+input[type="button"] {
+  display: inline-block;
+  padding: 12px 28px;
+  background-color: #333333;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+a.btn:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: #555555;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+a.btn:active,
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* === Form Improvements === */
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #333333;
+  box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+}
+
+.form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.btn-submit {
+  padding: 12px 28px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+  background-color: #555555;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* === Footer Improvements === */
+.footer {
+  background: #f9f9f9;
+  border-top: 1px solid #e8e8e8;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.footer-social a {
+  color: #333333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-social a:hover {
+  color: #666666;
+}
+
+.footer-content {
+  font-size: 13px;
+  color: #999999;
+}
+
+/* === Section Improvements === */
+.sqs-block {
+  margin-bottom: 0;
+}
+
+.sqs-block-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* === Image Improvements === */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* === Link Improvements === */
+a {
+  color: #333333;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a:hover {
+  text-decoration-color: #333333;
+}
+
+/* === Responsive Improvements === */
+@media (max-width: 768px) {
+  .header-inner {
+    padding: 0 16px;
+  }
+
+  .nav-list {
+    gap: 16px;
+  }
+
+  .nav-list a {
+    font-size: 13px;
+  }
+
+  .main-content-inner-wrapper {
+    padding: 0 16px;
+  }
+
+  .page-title {
+    font-size: 36px;
+  }
+
+  .page-description {
+    font-size: 16px;
+  }
+
+  .footer-social {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-list {
+    gap: 12px;
+  }
+
+  .nav-list a {
+    font-size: 12px;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+}
+
+/* === Animation Improvements === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* === Accessibility Improvements === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === Focus Styles for Accessibility === */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #333333;
+  outline-offset: 2px;
+}
+
+/* === Print Styles === */
+@media print {
+  .header,
+  .footer,
+  .nav-wrapper {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000000;
+  }
+
+  a {
+    color: #000000;
+    text-decoration: underline;
+  }
+}

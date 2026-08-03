@@ -64,10 +64,7 @@ function initMobileNav() {
   var navToggle = document.querySelector('.nav-toggle');
   if (navToggle) {
     navToggle.addEventListener('click', function() {
-      var navList = document.querySelector('.nav-list');
-      if (navList) {
-        navList.classList.toggle('nav-open');
-      }
+      document.body.classList.toggle('nav-open');
     });
   }
 }

@@ -382,3 +382,12 @@ textarea:focus-visible {
     text-decoration: underline;
   }
 }
+
+/* === Mobile Navigation === */
+.nav-toggle {
+  display: flex;
+}
+
+.nav-open .main-navigation {
+  display: flex;
+}

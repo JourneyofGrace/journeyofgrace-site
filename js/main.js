@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initFormspreeForms();
   initMobileNav();
   initSermonArchive();
+  initEventExports();
 });
 
 function initPCOWidgets() {
@@ -62,7 +63,8 @@ function initFormspreeForms() {
 
 function initMobileNav() {
   var navToggle = document.querySelector('.nav-toggle');
-  if (navToggle) {
+  var handledBySquarespace = document.querySelector('.overlay-nav-wrapper');
+  if (navToggle && !handledBySquarespace) {
     navToggle.addEventListener('click', function() {
       document.body.classList.toggle('nav-open');
     });
@@ -70,8 +72,65 @@ function initMobileNav() {
 }
 
 function initSermonArchive() {
-  var sermonItems = document.querySelectorAll('.sermon-item');
-  sermonItems.forEach(function(item) {
+  var list = document.querySelector('.sermon-list');
+  if (!list) return;
+
+  var items = list.querySelectorAll('.sermon-item');
+  if (!items.length) return;
+
+  var searchInput = document.getElementById('sermon-search');
+  var seriesSelect = document.getElementById('sermon-series');
+  var speakerSelect = document.getElementById('sermon-speaker');
+
+  function values(item, attr) {
+    var raw = item.getAttribute(attr);
+    if (!raw) return [];
+    return raw.split(',').map(function(v) { return v.trim(); }).filter(Boolean);
+  }
+
+  function populate(select, attr) {
+    if (!select) return;
+    var seen = {};
+    items.forEach(function(item) {
+      values(item, attr).forEach(function(v) {
+        if (!seen[v]) {
+          seen[v] = true;
+          var option = document.createElement('option');
+          option.value = v;
+          option.textContent = v;
+          select.appendChild(option);
+        }
+      });
+    });
+  }
+
+  function matches(item, text) {
+    if (!text) return true;
+    var haystack = (item.textContent + ' ' + item.getAttribute('data-tags') + ' ' + item.getAttribute('data-topic')).toLowerCase();
+    return text.split(/\s+/).every(function(word) {
+      return haystack.indexOf(word) > -1;
+    });
+  }
+
+  function applyFilters() {
+    var text = searchInput ? searchInput.value.toLowerCase() : '';
+    var series = seriesSelect ? seriesSelect.value : '';
+    var speaker = speakerSelect ? speakerSelect.value : '';
+    items.forEach(function(item) {
+      var seriesOk = !series || values(item, 'data-series').indexOf(series) > -1;
+      var speakerOk = !speaker || values(item, 'data-speaker').indexOf(speaker) > -1;
+      item.hidden = !(seriesOk && speakerOk && matches(item, text));
+    });
+  }
+
+  populate(seriesSelect, 'data-series');
+  populate(speakerSelect, 'data-speaker');
+
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
+  if (seriesSelect) seriesSelect.addEventListener('change', applyFilters);
+  if (speakerSelect) speakerSelect.addEventListener('change', applyFilters);
+
+  items.forEach(function(item) {
     item.addEventListener('click', function() {
       var audio = item.querySelector('audio');
       if (audio) {
@@ -84,5 +143,64 @@ function initSermonArchive() {
         }
       }
     });
+  });
+}
+
+function initEventExports() {
+  document.querySelectorAll('.eventlist-event').forEach(function(article) {
+    var ical = article.querySelector('.eventlist-meta-export-ical');
+    if (!ical || !ical.href || ical.href.indexOf('/journeyofgrace-site/events') === -1) return;
+
+    var titleEl = article.querySelector('.eventlist-title-link');
+    var dateEl = article.querySelector('.eventlist-meta-date time');
+    var startTimeEl = article.querySelector('.event-time-24hr-start');
+    var endTimeEl = article.querySelector('.event-time-24hr-end');
+    var addressEl = article.querySelector('.eventlist-meta-address');
+    var excerptEl = article.querySelector('.eventlist-excerpt');
+
+    var title = titleEl ? titleEl.textContent.trim() : 'Journey of Grace Event';
+    var date = dateEl ? dateEl.getAttribute('datetime') : '';
+    var start = date && startTimeEl ? date + 'T' + startTimeEl.textContent.trim() + ':00' : '';
+    var end = date && endTimeEl ? date + 'T' + endTimeEl.textContent.trim() + ':00' : '';
+    if (!start) return;
+
+    var location = '';
+    if (addressEl) {
+      var lines = addressEl.querySelectorAll('.eventlist-meta-address-line');
+      lines.forEach(function(line) {
+        var text = line.textContent.trim();
+        if (text) location += (location ? ', ' : '') + text;
+      });
+    }
+    var description = excerptEl ? excerptEl.textContent.trim() : '';
+
+    function esc(value) {
+      return String(value).replace(/[,;\\]/g, function(c) {
+        return '\\' + c;
+      }).replace(/\n/g, '\\n');
+    }
+
+    var stamp = new Date();
+    function toIcs(dt) {
+      return dt.replace(/[-:]/g, '').replace('T', 'T');
+    }
+
+    var lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Journey of Grace//Events//EN',
+      'BEGIN:VEVENT',
+      'UID:' + Date.now() + '@journeyofgrace.church',
+      'DTSTAMP:' + toIcs(stamp.toISOString().slice(0, 19)),
+      'DTSTART:' + toIcs(start),
+      'DTEND:' + toIcs(end),
+      'SUMMARY:' + esc(title)
+    ];
+    if (location) lines.push('LOCATION:' + esc(location));
+    if (description) lines.push('DESCRIPTION:' + esc(description));
+    lines.push('END:VEVENT', 'END:VCALENDAR');
+
+    ical.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+    ical.setAttribute('download', 'journey-of-grace-event.ics');
   });
 }

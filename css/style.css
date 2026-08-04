@@ -1362,3 +1362,147 @@ textarea:focus-visible,
   justify-content: center;
   background: rgba(0, 0, 0, 0.35);
 }
+
+/* ==========================================================================
+   GLOBAL DESIGN SYSTEM ENHANCEMENTS (HEADER, MOBILE NAV, FOOTER, ADA)
+   ========================================================================== */
+
+/* WCAG 2.1 AA Focus Ring Accessibility */
+:focus-visible {
+  outline: 3px solid #c97a2b !important;
+  outline-offset: 2px !important;
+}
+
+/* Premium Sticky Navigation Bar */
+.jog-global-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e6dfd5;
+  padding: 0.85rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+.jog-global-header .header-brand img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+.jog-global-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+}
+.jog-global-nav a {
+  text-decoration: none;
+  color: #22252a;
+  font-family: 'Asap', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+.jog-global-nav a:hover {
+  color: #c97a2b;
+}
+.jog-btn-cta {
+  background: #c97a2b !important;
+  color: #ffffff !important;
+  padding: 0.65rem 1.4rem !important;
+  border-radius: 50px !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 3px 10px rgba(201, 122, 43, 0.25);
+  text-decoration: none !important;
+}
+.jog-btn-cta:hover {
+  background: #a8621d !important;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(201, 122, 43, 0.35);
+}
+
+/* Mobile Hamburger Navigation Drawer */
+.jog-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #1f242d;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+.jog-mobile-drawer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 36, 45, 0.98);
+  z-index: 2000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8rem;
+  padding: 2rem;
+}
+.jog-mobile-drawer.open {
+  display: flex;
+}
+.jog-mobile-drawer a {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Asap', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.jog-mobile-drawer a:hover {
+  color: #c97a2b;
+}
+.jog-mobile-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 2.2rem;
+  cursor: pointer;
+}
+
+/* Mobile Responsive Overrides */
+@media (max-width: 850px) {
+  .jog-global-header {
+    padding: 0.75rem 1.25rem;
+  }
+  .jog-global-nav {
+    display: none;
+  }
+  .jog-mobile-toggle {
+    display: block;
+  }
+}
+
+/* Global Footer Social Links Enhancements */
+.jog-footer-social {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  margin-top: 0.8rem;
+}
+.jog-footer-social a {
+  color: #a0aab8;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.jog-footer-social a:hover {
+  color: #c97a2b;
+}
+

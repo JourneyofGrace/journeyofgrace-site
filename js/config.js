@@ -51,5 +51,7 @@ window.JOG_CONFIG.formRecipientEmail =
  */
 window.JOG_CONFIG.planningCenter.clientId = window.JOG_CONFIG.planningCenter.clientId || "";
 window.JOG_CONFIG.planningCenter.workerUrl = window.JOG_CONFIG.planningCenter.workerUrl || "";
-window.JOG_CONFIG.planningCenter.visitorFormUrl = window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
+window.JOG_CONFIG.planningCenter.visitorFormUrl =
+  window.JOG_CONFIG.planningCenter.visitorFormUrl || "https://journeyofgrace.churchcenter.com/people/forms/1284759";
+
 

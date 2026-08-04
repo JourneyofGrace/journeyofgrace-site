@@ -19,13 +19,24 @@ async function fetchLatestSermons() {
       const anchors = Array.from(document.querySelectorAll('a[href*="/watch?v="]'));
       const map = new Map();
       anchors.forEach(a => {
-        const title = a.getAttribute('aria-label') || a.textContent.trim();
-        if (title && !title.match(/^\d+:\d+/)) {
+        const text = (a.innerText || a.textContent || '').trim();
+        const aria = a.getAttribute('aria-label') || '';
+        // Skip timestamp badges like "1:23:52"
+        if (text && !text.match(/^\d+:\d+(:\d+)?$/)) {
           const id = a.href.split('v=')[1]?.split('&')[0];
           if (id && !map.has(id)) {
-            let cleanTitle = title.replace(/\s+\d+\s+(hour|hours|minute|minutes).*/i, '').trim();
-            if (!cleanTitle) cleanTitle = 'Worship Service';
-            map.set(id, { id, title: cleanTitle, url: 'https://www.youtube.com/watch?v=' + id });
+            // Use the title portion of aria-label or innerText
+            let title = text;
+            if (aria) {
+              // Strip trailing durations like "1 hour, 23 minutes"
+              const match = aria.match(/^(.*?)(?:\s+\d+\s+(?:hour|hours|minute|minutes).*)/i);
+              if (match && match[1]) {
+                title = match[1].trim();
+              } else if (!title || title.match(/^\d+:\d+/)) {
+                title = aria;
+              }
+            }
+            map.set(id, { id, title: title || 'Journey of Grace Service', url: 'https://www.youtube.com/watch?v=' + id });
           }
         }
       });

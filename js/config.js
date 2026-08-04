@@ -33,3 +33,11 @@ window.JOG_CONFIG.planningCenter.calendarEmbedUrl =
 window.JOG_CONFIG.planningCenter.calendarLink =
   window.JOG_CONFIG.planningCenter.calendarLink ||
   "https://journeyofgrace.churchcenter.com/calendar";
+
+/*
+ * Recipient email address for self-hosted contact forms (FormSubmit).
+ * Can be overridden globally via JS config or populated during CI build.
+ */
+window.JOG_CONFIG.formRecipientEmail =
+  window.JOG_CONFIG.formRecipientEmail || "office@journeyofgrace.church";
+

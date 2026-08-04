@@ -42,6 +42,11 @@ function initPlanningCenter() {
 }
 
 function initFormThanks() {
+  var email = (window.JOG_CONFIG && window.JOG_CONFIG.formRecipientEmail) || 'office@journeyofgrace.church';
+  document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
+    form.action = 'https://formsubmit.co/' + encodeURIComponent(email);
+  });
+
   if (window.location.hash === '#submitted') {
     document.querySelectorAll('.form-thanks').forEach(function(el) {
       el.hidden = false;
@@ -207,6 +212,6 @@ function initVisitMap() {
     maxZoom: 19
   }).addTo(map);
   L.marker([33.4219082, -111.8100475]).addTo(map)
-    .bindPopup('<strong>Mesa First Church of the Nazarene</strong><br>955 E University Dr., Mesa, AZ 85203')
+    .bindPopup('<strong>Journey of Grace</strong><br>955 E University Dr., Mesa, AZ 85203')
     .openPopup();
 }

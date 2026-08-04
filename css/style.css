@@ -1271,12 +1271,69 @@ textarea:focus-visible,
 }
 
 /* === Visit Page Hero Banner === */
-.page-banner-wrapper {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  overflow: hidden;
+/* Hide the Squarespace index-gallery-wrapper on pages with a custom page-banner-wrapper.
+   The index-gallery-wrapper is position:fixed and creates a full-viewport background that
+   pushes the main content down when the page has a custom hero section instead.
+   Scoped to the visit-1 page via its unique body collection ID. */
+#collection-5fe2ceca4aff1019af48766b .index-gallery-wrapper {
+  display: none !important;
 }
+
+/* When we have a custom hero banner, reset the main-content spacing.
+   The mainContent div is normally short (just the overlay area) so reset it. */
+#collection-5fe2ceca4aff1019af48766b #mainContent {
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Reset the content-outer-wrapper min-height:100vh set by has-index-nav in site.css */
+#collection-5fe2ceca4aff1019af48766b .content-outer-wrapper {
+  min-height: 0 !important;
+}
+
+/* Reset the main-content-inner-wrapper top offset and remove padding
+   so the hero banner starts immediately after the header */
+#collection-5fe2ceca4aff1019af48766b .main-content-inner-wrapper {
+  margin-top: 0 !important;
+  top: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove the sqs-layout padding that creates an indent around the hero banner */
+#collection-5fe2ceca4aff1019af48766b .sqs-layout {
+  padding: 0 !important;
+}
+
+/* The col/span-12 that wraps the hero also removes padding */
+#collection-5fe2ceca4aff1019af48766b .sqs-col-12,
+#collection-5fe2ceca4aff1019af48766b .span-12,
+#collection-5fe2ceca4aff1019af48766b .sqs-row {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Make the main content blocks (after the banner) use standard page padding */
+#collection-5fe2ceca4aff1019af48766b .sqs-block-html {
+  padding-left: 6vw;
+  padding-right: 6vw;
+}
+
+/* Override site.css display:none and height:100vh on page-banner-wrapper */
+.page-banner-wrapper {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 400px !important;
+  overflow: hidden;
+  z-index: 1 !important;
+}
+/* Override site.css rule that sets 100vh */
+.page-banner-wrapper:not(.no-main-image) {
+  height: 400px !important;
+}
+
 .page-banner-wrapper .page-banner-image-wrapper {
   position: absolute;
   top: 0;

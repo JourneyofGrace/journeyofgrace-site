@@ -1,0 +1,337 @@
+/* Journey of Grace - Clean Modern Design System */
+:root {
+  --color-brand-primary: #1e293b; /* Deep slate */
+  --color-brand-accent: #d97706;  /* Warm amber accent */
+  --color-brand-accent-hover: #b45309;
+  --color-bg-page: #f8fafc;
+  --color-bg-surface: #ffffff;
+  --color-bg-alt: #f1f5f9;
+  --color-text-main: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-light: #94a3b8;
+  --color-border: #e2e8f0;
+
+  --font-serif: 'Cantata One', Georgia, serif;
+  --font-sans: 'Asap', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --transition-normal: all 0.2s ease-in-out;
+}
+
+/* Reset & Layout Base */
+body.custom-jog-page {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.custom-jog-page * {
+  box-sizing: border-box;
+}
+
+/* Custom Clean Navigation Header */
+.jog-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jog-header .brand-logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.jog-header nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.jog-header nav a {
+  text-decoration: none;
+  color: var(--color-text-main);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: var(--transition-normal);
+}
+
+.jog-header nav a:hover {
+  color: var(--color-brand-accent);
+}
+
+.jog-btn-primary {
+  display: inline-block;
+  background-color: var(--color-brand-accent);
+  color: #ffffff !important;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: var(--transition-normal);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.jog-btn-primary:hover {
+  background-color: var(--color-brand-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Main Container Layout */
+.jog-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* Page Intro Header (To-The-Point Clean Layout) */
+.page-intro {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 3rem;
+}
+
+.page-intro h1 {
+  font-family: var(--font-serif);
+  font-size: 2.75rem;
+  color: var(--color-brand-primary);
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.page-intro p {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* Two Column Grid for Key Information & Form */
+.visit-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 868px) {
+  .visit-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Info Cards & Sections */
+.info-section-card {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.75rem;
+  transition: var(--transition-normal);
+}
+
+.info-section-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.info-section-card h2 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--color-brand-primary);
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Service Times List */
+.service-times-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.service-time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.service-time-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.service-name {
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.service-clock {
+  font-weight: 700;
+  color: var(--color-brand-accent);
+}
+
+.service-note {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+/* Location Card & Map Embed */
+.location-card address {
+  font-style: normal;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+#clean-visit-map {
+  height: 240px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+/* Modern Clean Form Styling */
+.form-card {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-main);
+}
+
+.form-group label .required {
+  color: #e11d48;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-page);
+  transition: var(--transition-normal);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-brand-accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-submit-btn {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+/* What to Expect Grid */
+.expect-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 550px) {
+  .expect-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.expect-card {
+  background: var(--color-bg-alt);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+}
+
+.expect-card h3 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: var(--color-brand-primary);
+}
+
+.expect-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Footer Clean */
+.jog-footer {
+  background: var(--color-brand-primary);
+  color: #cbd5e1;
+  padding: 3rem 2rem 2rem;
+  margin-top: 4rem;
+}
+
+.jog-footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.jog-footer-bottom {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}

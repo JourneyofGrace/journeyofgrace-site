@@ -3,3 +3,11 @@ screenshots/
 test-screenshots.mjs
 package.json
 package-lock.json
+
+# AI-generated / temporary files
+audit-visit.mjs
+analyze-detail.py
+analyze-visit.py
+.gemini/
+*.mjs.bak
+*.html.bak

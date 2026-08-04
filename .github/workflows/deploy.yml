@@ -27,6 +27,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Inject Form Recipient Email Environment Variable
+        run: |
+          if [ -n "${{ secrets.FORM_RECIPIENT_EMAIL }}" ]; then
+            echo "Injecting secret email into js/config.js"
+            sed -i 's|"office@journeyofgrace.church"|"${{ secrets.FORM_RECIPIENT_EMAIL }}"|g' js/config.js
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

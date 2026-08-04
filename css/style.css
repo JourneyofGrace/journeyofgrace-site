@@ -1050,3 +1050,42 @@ textarea:focus-visible,
     display: none !important;
   }
 }
+
+/* === Live Church Calendar (Planning Center embed) === */
+.church-calendar-section {
+  max-width: 960px;
+  margin: 0 auto 2.5rem;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid #eae4d8;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.church-calendar-heading {
+  font-family: var(--font-serif);
+  color: var(--color-slate);
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.church-calendar-intro {
+  color: var(--color-ink-muted);
+  margin: 0 0 1.25rem;
+}
+
+.church-calendar-embed {
+  width: 100%;
+  min-height: 620px;
+  border: 1px solid #eae4d8;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.church-calendar-note {
+  color: var(--color-ink-muted);
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-sand);
+  border: 1px dashed #d8d2c6;
+  border-radius: var(--radius);
+}

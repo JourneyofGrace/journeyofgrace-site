@@ -1,71 +1,49 @@
 document.addEventListener('DOMContentLoaded', function() {
-  initPCOWidgets();
-  initFormspreeForms();
+  initPlanningCenter();
   initMobileNav();
   initSermonArchive();
   initEventExports();
   initFormThanks();
 });
 
+function initPlanningCenter() {
+  var cfg = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
+  var el = document.getElementById('church-calendar');
+  if (!el) return;
+
+  var link = document.getElementById('church-calendar-full');
+  if (link && cfg && cfg.calendarLink) {
+    link.href = cfg.calendarLink;
+  }
+
+  var embed = cfg && cfg.calendarEmbedUrl ? cfg.calendarEmbedUrl.trim() : '';
+  if (!embed) {
+    var note = document.createElement('p');
+    note.className = 'church-calendar-note';
+    note.innerHTML = 'Our live calendar is being set up. You can view upcoming events on our ' +
+      '<a href="' + (cfg && cfg.calendarLink ? cfg.calendarLink : '#') + '">Church Center calendar</a>.';
+    el.appendChild(note);
+    return;
+  }
+
+  if (embed.charAt(0) === '<') {
+    el.insertAdjacentHTML('beforeend', embed);
+    return;
+  }
+
+  var frame = document.createElement('iframe');
+  frame.className = 'church-calendar-embed';
+  frame.src = embed;
+  frame.title = 'Upcoming events at Journey of Grace';
+  frame.setAttribute('loading', 'lazy');
+  frame.setAttribute('frameborder', '0');
+  el.appendChild(frame);
+}
+
 function initFormThanks() {
   if (window.location.hash === '#submitted') {
     document.querySelectorAll('.form-thanks').forEach(function(el) {
       el.hidden = false;
-    });
-  }
-}
-
-function initPCOWidgets() {
-  var calendarId = 'YOUR_CALENDAR_ID';
-  var groupsId = 'YOUR_GROUPS_ID';
-  var givingId = 'YOUR_GIVING_ID';
-
-  if (calendarId && calendarId !== 'YOUR_CALENDAR_ID') {
-    var calendarContainer = document.getElementById('pco-calendar');
-    if (calendarContainer) {
-      calendarContainer.innerHTML = '<iframe src="https://onlinechurch.plannedcenter.com/embed/calendar/' + calendarId + '" width="100%" height="600" frameborder="0" style="border: none;"></iframe>';
-    }
-  }
-
-  if (groupsId && groupsId !== 'YOUR_GROUPS_ID') {
-    var groupsContainer = document.getElementById('pco-groups');
-    if (groupsContainer) {
-      groupsContainer.innerHTML = '<iframe src="https://onlinechurch.plannedcenter.com/embed/groups/' + groupsId + '" width="100%" height="600" frameborder="0" style="border: none;"></iframe>';
-    }
-  }
-
-  if (givingId && givingId !== 'YOUR_GIVING_ID') {
-    var givingContainer = document.getElementById('pco-giving');
-    if (givingContainer) {
-      givingContainer.innerHTML = '<iframe src="https://onlinechurch.plannedcenter.com/embed/giving/' + givingId + '" width="100%" height="600" frameborder="0" style="border: none;"></iframe>';
-    }
-  }
-}
-
-function initFormspreeForms() {
-  var formspreeId = 'YOUR_FORM_ID';
-  if (formspreeId && formspreeId !== 'YOUR_FORM_ID') {
-    var forms = document.querySelectorAll('form[data-formspree]');
-    forms.forEach(function(form) {
-      form.setAttribute('action', 'https://formspree.io/f/' + formspreeId);
-      form.setAttribute('method', 'POST');
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData(form);
-        fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        }).then(function(response) {
-          if (response.ok) {
-            form.innerHTML = '<p>Thank you! We will be in touch soon.</p>';
-          } else {
-            form.innerHTML = '<p>Something went wrong. Please try again.</p>';
-          }
-        }).catch(function() {
-          form.innerHTML = '<p>Something went wrong. Please try again.</p>';
-        });
-      });
     });
   }
 }

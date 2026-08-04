@@ -45,6 +45,11 @@ window.JOG_CONFIG.formRecipientEmail =
  * Planning Center People / Form Embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/embed/123456)
  * Leave empty ("") to use the default HTML form with FormSubmit/email forwarding.
  */
-window.JOG_CONFIG.planningCenter.visitorFormUrl =
-  window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
+/*
+ * Planning Center Online API integration parameters.
+ * Configurable via GitHub Repository Secrets (PCO_CLIENT_ID, PCO_SECRET) or environment settings.
+ */
+window.JOG_CONFIG.planningCenter.clientId = window.JOG_CONFIG.planningCenter.clientId || "";
+window.JOG_CONFIG.planningCenter.workerUrl = window.JOG_CONFIG.planningCenter.workerUrl || "";
+window.JOG_CONFIG.planningCenter.visitorFormUrl = window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
 

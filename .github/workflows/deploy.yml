@@ -27,11 +27,19 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Inject Form Recipient Email Environment Variable
+      - name: Inject GitHub Secrets into JS Configuration
         run: |
           if [ -n "${{ secrets.FORM_RECIPIENT_EMAIL }}" ]; then
             echo "Injecting secret email into js/config.js"
             sed -i 's|"office@journeyofgrace.church"|"${{ secrets.FORM_RECIPIENT_EMAIL }}"|g' js/config.js
+          fi
+          if [ -n "${{ secrets.PCO_CLIENT_ID }}" ]; then
+            echo "Injecting PCO_CLIENT_ID into js/config.js"
+            sed -i 's|planningCenter.clientId = ""|planningCenter.clientId = "${{ secrets.PCO_CLIENT_ID }}"|g' js/config.js
+          fi
+          if [ -n "${{ secrets.PCO_WORKER_URL }}" ]; then
+            echo "Injecting PCO_WORKER_URL into js/config.js"
+            sed -i 's|planningCenter.workerUrl = ""|planningCenter.workerUrl = "${{ secrets.PCO_WORKER_URL }}"|g' js/config.js
           fi
 
       - name: Upload artifact

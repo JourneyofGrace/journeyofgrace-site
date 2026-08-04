@@ -146,9 +146,68 @@ a:hover {
 }
 
 /* === Header (Squarespace clone pages) === */
+/* Frosted bar so nav text is readable over any background (cream content, banner photos) */
+.site-header {
+  background: rgba(250, 248, 244, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(45, 58, 69, 0.12);
+  box-shadow: 0 4px 20px rgba(45, 58, 69, 0.08);
+}
+
+/* Nav links: dark slate on the frosted bar (beats site.css white-on-image rules) */
+.site-header .main-navigation a {
+  color: var(--color-slate) !important;
+}
+
+.site-header .main-navigation a:hover,
+.site-header .main-navigation .nav-item:not(.header-cta) a:hover {
+  color: var(--color-amber-deep) !important;
+}
+
+.site-header .main-navigation .active > a,
+.site-header .main-navigation .active > a span:not(.sqs-cart-quantity) {
+  color: var(--color-slate) !important;
+  text-decoration: underline;
+  text-decoration-color: var(--color-amber);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+/* Hamburger + social icons: dark on the frosted bar */
+.site-header .nav-toggle svg {
+  stroke: var(--color-slate) !important;
+}
+
+.site-header .nav-toggle:hover svg {
+  stroke: var(--color-amber-deep) !important;
+}
+
+.site-header .header-social-icons-with-nav .SocialLinks-link-icon,
+.site-header .header-social-icons-right .SocialLinks-link-icon {
+  fill: var(--color-slate) !important;
+}
+
+.site-header .header-social-icons-with-nav .SocialLinks-link:hover .SocialLinks-link-icon,
+.site-header .header-social-icons-right .SocialLinks-link:hover .SocialLinks-link-icon {
+  fill: var(--color-amber-deep) !important;
+}
+
 .site-header .nav-item a {
   font-family: var(--font-sans);
   letter-spacing: 0.08em;
+}
+
+/* Nav menu polish: tame Squarespace defaults (26px + 3.6vw gaps + orange active) */
+.main-navigation .nav-item {
+  font-size: 15px;
+  font-weight: 600;
+  padding-right: 2rem;
+  letter-spacing: 0.1em;
+}
+
+.main-navigation .nav-item a {
+  text-transform: uppercase;
 }
 
 .main-navigation .nav-item:not(.header-cta) a:hover {
@@ -156,6 +215,11 @@ a:hover {
   text-decoration-color: var(--color-amber);
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
+}
+
+.main-navigation .active > a,
+.main-navigation .active > a span:not(.sqs-cart-quantity) {
+  color: var(--color-slate);
 }
 
 .site-branding h1.image img {
@@ -802,4 +866,83 @@ textarea:focus-visible,
   .nav-list a {
     font-size: 0.72rem;
   }
+}
+
+/* ==== Self-hosted contact forms (FormSubmit) ==== */
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element {
+  background: var(--color-surface);
+  border: 1px solid #d8d2c6;
+  border-radius: var(--radius);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  padding: 12px 14px;
+  min-height: 48px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element:focus {
+  border-color: var(--color-amber);
+  box-shadow: 0 0 0 3px rgba(201, 151, 61, 0.25);
+  outline: none;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field textarea.field-element {
+  min-height: 140px;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+  margin-bottom: 2px;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title .required-mark {
+  color: var(--color-amber-deep);
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field {
+  margin: 0 0 20px;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .description {
+  color: var(--color-ink-muted);
+  font-size: 13px;
+  opacity: 1;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit] {
+  background-color: var(--color-amber);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1em;
+  min-height: 48px;
+  padding: 14px 34px;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit]:hover {
+  background-color: var(--color-amber-deep);
+  color: #fff;
+}
+
+.sqs-block[data-definition-name="website.components.form"] .form-wrapper .form-thanks {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-amber);
+  border-radius: var(--radius);
+  background: var(--color-amber-pale);
+  color: var(--color-slate);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
 }

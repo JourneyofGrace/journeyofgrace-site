@@ -4,7 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
   initMobileNav();
   initSermonArchive();
   initEventExports();
+  initFormThanks();
 });
+
+function initFormThanks() {
+  if (window.location.hash === '#submitted') {
+    document.querySelectorAll('.form-thanks').forEach(function(el) {
+      el.hidden = false;
+    });
+  }
+}
 
 function initPCOWidgets() {
   var calendarId = 'YOUR_CALENDAR_ID';

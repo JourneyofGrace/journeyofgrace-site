@@ -1269,3 +1269,39 @@ textarea:focus-visible,
   background: rgba(250,248,244,0.8) !important;
   font-size: 10px !important;
 }
+
+/* === Visit Page Hero Banner === */
+.page-banner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+.page-banner-wrapper .page-banner-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.page-banner-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  margin: 0 !important;
+  display: block !important;
+}
+.page-banner-wrapper .title-card-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+}

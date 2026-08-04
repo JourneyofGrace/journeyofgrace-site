@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 15 * * 0' # Every Sunday at 15:00 UTC (8:00 AM MST)
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -23,6 +26,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies & Playwright Browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Fetch Latest 5 YouTube Sermons
+        run: |
+          node scripts/fetch-sermons.mjs
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

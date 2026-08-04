@@ -5,37 +5,59 @@
    JOURNEY OF GRACE TYPOGRAPHY BEAUTIFICATION & HIGH CONTRAST FLARE
    ========================================================================== */
 
-/* Warm Cream Page Canvas & White Card Containers */
+/* Pure Clean Canvas & Card Container Styling */
 body {
-  background-color: #f4f1ea !important;
-  color: #22252a !important;
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
   font-family: 'Asap', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  line-height: 1.75 !important;
-  letter-spacing: 0.01em !important;
+  line-height: 1.8 !important;
+  font-size: 1.05rem !important;
   -webkit-font-smoothing: antialiased !important;
 }
 
-#canvas, .content-outer-wrapper, #mainContent, .main-content-inner-wrapper, .sqs-layout {
-  background-color: #f4f1ea !important;
+#canvas, .content-outer-wrapper, #mainContent, .main-content-inner-wrapper {
+  background-color: #f8fafc !important;
 }
 
-/* Card Containers Polish - Warm White Surface */
-.sqs-block-html, .card, .sqs-block-content {
+/* Elegant Content Cards & High Contrast Text */
+.sqs-layout .sqs-row {
+  margin-bottom: 1.5rem !important;
+}
+
+.sqs-block-html {
+  background: #ffffff !important;
+  padding: 2.2rem 2.8rem !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-bottom: 2rem !important;
+}
+
+p, li {
+  color: #334155 !important;
+  font-size: 1.05rem !important;
   line-height: 1.8 !important;
 }
 
-/* Cantata One Serif Headings with Elegant Text Shadow */
+/* Elegant Cantata One Serif Headings */
 h1, h2, h3, .title-card-title, .hero-title, .page-title {
   font-family: 'Cantata One', Georgia, serif !important;
-  letter-spacing: 0.03em !important;
-  color: #1f242d !important;
+  letter-spacing: 0.02em !important;
+  color: #0f172a !important;
   font-weight: 700 !important;
+  margin-bottom: 1rem !important;
 }
 
-/* Beautiful Hero Header Flare Overlay */
+h2 {
+  font-size: 1.8rem !important;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.6rem;
+}
+
+/* Beautiful Hero Header Overlay */
 .title-card-title, .hero-title, .page-title, .title-card h1 {
   color: #ffffff !important;
-  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.95) !important;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.95) !important;
 }
 
 .title-card-wrapper .overlay, .hero-banner::before {

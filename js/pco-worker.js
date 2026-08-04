@@ -6,9 +6,52 @@ const url = require('url');
 const PCO_APP_ID = process.env.PCO_APP_ID || process.env.PCO_CLIENT_ID;
 const PCO_SECRET = process.env.PCO_SECRET;
 const PORT = process.env.PORT || 3000;
+const PCO_WORKFLOW_ID = process.env.PCO_WORKFLOW_ID || '764898'; // "First-Time Visitor Follow-up" Workflow ID
 
 if (!PCO_APP_ID || !PCO_SECRET) {
   console.warn('[PCO Worker] Warning: PCO_APP_ID or PCO_SECRET is not set in environment variables.');
+}
+
+function makePcoRequest(path, method, payload = null) {
+  return new Promise((resolve, reject) => {
+    const authHeader = 'Basic ' + Buffer.from(`${PCO_APP_ID}:${PCO_SECRET}`).toString('base64');
+    const dataString = payload ? JSON.stringify(payload) : null;
+
+    const options = {
+      hostname: 'api.planningcenteronline.com',
+      path: path,
+      method: method,
+      headers: {
+        'Authorization': authHeader,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    if (dataString) {
+      options.headers['Content-Length'] = Buffer.byteLength(dataString);
+    }
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', chunk => { body += chunk.toString(); });
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(body);
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(parsed);
+          } else {
+            reject({ statusCode: res.statusCode, error: parsed });
+          }
+        } catch (e) {
+          reject({ statusCode: res.statusCode, error: body });
+        }
+      });
+    });
+
+    req.on('error', reject);
+    if (dataString) req.write(dataString);
+    req.end();
+  });
 }
 
 const server = http.createServer((req, res) => {
@@ -32,7 +75,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Handle Visitor Registration Submission to Planning Center People API
+  // Handle Visitor Registration Submission to Planning Center People API & Workflows
   if (req.method === 'POST' && (reqUrl.pathname === '/api/register-visitor' || reqUrl.pathname === '/submit')) {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
@@ -59,56 +102,78 @@ const server = http.createServer((req, res) => {
           throw new Error('Planning Center API credentials not configured.');
         }
 
-        // Construct Planning Center People JSON:API payload
-        const pcoPayload = JSON.stringify({
+        // 1. Create or Update Person in Planning Center People
+        const personResp = await makePcoRequest('/people/v2/people', 'POST', {
           data: {
             type: 'Person',
             attributes: {
               first_name: firstName,
               last_name: lastName,
-              medical_notes: familyInfo ? `Family Info: ${familyInfo}` : undefined
+              medical_notes: familyInfo ? `Family / Visitor Notes: ${familyInfo}` : undefined
             }
           }
         });
 
-        const authHeader = 'Basic ' + Buffer.from(`${PCO_APP_ID}:${PCO_SECRET}`).toString('base64');
+        const personId = personResp.data.id;
 
-        const pcoReq = https.request({
-          hostname: 'api.planningcenteronline.com',
-          path: '/people/v2/people',
-          method: 'POST',
-          headers: {
-            'Authorization': authHeader,
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(pcoPayload)
+        // 2. Add Email Address if provided
+        if (email && personId) {
+          try {
+            await makePcoRequest(`/people/v2/people/${personId}/emails`, 'POST', {
+              data: {
+                type: 'Email',
+                attributes: { address: email, location: 'Home' }
+              }
+            });
+          } catch (e) {
+            console.warn('[PCO Email Warning]', e);
           }
-        }, (pcoRes) => {
-          let pcoResponseBody = '';
-          pcoRes.on('data', c => { pcoResponseBody += c; });
-          pcoRes.on('end', () => {
-            if (pcoRes.statusCode >= 200 && pcoRes.statusCode < 300) {
-              res.writeHead(200, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ success: true, message: 'Successfully registered in Planning Center!' }));
-            } else {
-              console.error('[PCO Error]', pcoRes.statusCode, pcoResponseBody);
-              res.writeHead(500, { 'Content-Type': 'application/json' });
-              res.end(JSON.stringify({ success: false, error: 'Failed to create record in Planning Center.' }));
-            }
-          });
-        });
+        }
 
-        pcoReq.on('error', (err) => {
-          console.error('[PCO Network Error]', err);
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: err.message }));
-        });
+        // 3. Add Phone Number if provided
+        if (phone && personId) {
+          try {
+            await makePcoRequest(`/people/v2/people/${personId}/phone_numbers`, 'POST', {
+              data: {
+                type: 'PhoneNumber',
+                attributes: { number: phone, location: 'Mobile' }
+              }
+            });
+          } catch (e) {
+            console.warn('[PCO Phone Warning]', e);
+          }
+        }
 
-        pcoReq.write(pcoPayload);
-        pcoReq.end();
+        // 4. Create Card in "First-Time Visitor Follow-up" Workflow
+        let workflowCardId = null;
+        if (personId && PCO_WORKFLOW_ID) {
+          try {
+            const cardResp = await makePcoRequest(`/people/v2/workflows/${PCO_WORKFLOW_ID}/cards`, 'POST', {
+              data: {
+                type: 'WorkflowCard',
+                attributes: {
+                  person_id: personId
+                }
+              }
+            });
+            workflowCardId = cardResp.data ? cardResp.data.id : null;
+          } catch (e) {
+            console.warn('[PCO Workflow Card Warning]', e);
+          }
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          message: 'Successfully registered visitor in Planning Center!',
+          personId: personId,
+          workflowCardId: workflowCardId
+        }));
 
       } catch (err) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        console.error('[PCO Worker Error]', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message || err.error }));
       }
     });
     return;

@@ -243,65 +243,122 @@ a:hover {
   letter-spacing: 0.08em;
 }
 
-/* Nav menu polish: tame Squarespace defaults (26px + 3.6vw gaps + orange active) */
+/* Nav menu polish */
 .main-navigation .nav-item {
-  font-size: 15px !important;
-  font-weight: 600;
-  padding-right: 2rem;
-  letter-spacing: 0.1em;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding-right: 0 !important;
+  letter-spacing: 0.05em !important;
 }
 
 .main-navigation .nav-item a {
-  text-transform: uppercase;
+  text-transform: uppercase !important;
+  color: #f4f1ea !important;
 }
 
 .main-navigation .nav-item:not(.header-cta) a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--color-amber);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  color: #c97a2b !important;
+  text-decoration: none !important;
 }
 
 .main-navigation .active > a,
 .main-navigation .active > a span:not(.sqs-cart-quantity) {
-  color: var(--color-slate);
+  color: #c97a2b !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* === Header Flex Alignment & Logo Vertical Centering === */
+.site-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #1e242d !important;
+  border-bottom: 3px solid var(--color-amber) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  margin: 0 !important;
+  padding: 0.6rem 3vw !important;
+  min-height: 70px !important;
+}
+
+.site-branding {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.site-branding h1.image {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+
+.site-branding h1.image a {
+  display: flex !important;
+  align-items: center !important;
 }
 
 .site-branding h1.image img {
-  max-height: 44px;
-  width: auto;
+  max-height: 48px !important;
+  height: 48px !important;
+  width: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+  margin: 0 !important;
 }
 
-/* Hamburger: 48x48 touch target, visually unchanged */
-.nav-toggle {
-  width: 48px;
-  height: 48px;
-  margin: -12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius);
+.main-navigation {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.8rem !important;
 }
 
-.nav-toggle:hover svg {
-  stroke: var(--color-amber);
+.main-navigation .nav-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding-right: 0 !important;
 }
 
-/* Header CTA (desktop nav) */
-.header-cta a {
-  display: inline-flex;
-  align-items: center;
-  background: var(--color-amber);
-  color: var(--color-ink);
-  border-radius: var(--radius-pill);
-  padding: 12px 22px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 13px;
-  line-height: 1;
-  white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+.main-navigation .nav-item a {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.4rem 0 !important;
+}
+
+/* Header CTA (Plan Your Visit Button) */
+.main-navigation .nav-item.header-cta {
+  margin-left: 0.8rem !important;
+}
+
+.header-cta a, .jog-btn-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #c97a2b !important;
+  color: #ffffff !important;
+  border-radius: 50px !important;
+  padding: 0.55rem 1.4rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  font-size: 0.82rem !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 3px 10px rgba(201, 122, 43, 0.3) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.header-cta a:hover, .jog-btn-cta:hover {
+  background: #a8621d !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 5px 14px rgba(201, 122, 43, 0.4) !important;
+  text-decoration: none !important;
 }
 
 .header-cta a:hover,

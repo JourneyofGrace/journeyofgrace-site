@@ -146,13 +146,13 @@ a:hover {
 }
 
 /* === Header (Squarespace clone pages) === */
-/* Slim, translucent, full-width frosted bar so nav text is readable over any background */
+/* Dark slate bar matching the footer: translucent, slim, full-width, amber border */
 .site-header {
-  background: rgba(250, 248, 244, 0.72);
+  background: rgba(45, 58, 69, 0.92);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(45, 58, 69, 0.12);
-  box-shadow: 0 4px 20px rgba(45, 58, 69, 0.08);
+  border-bottom: 4px solid var(--color-amber);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
   margin: 0 !important;
   padding: 0.9rem 3vw !important;
 }
@@ -195,42 +195,47 @@ a:hover {
   color: var(--color-amber-pale) !important;
 }
 
-/* Nav links: dark slate on the frosted bar (beats site.css white-on-image rules) */
+/* Nav links: cream on the dark slate bar (beats site.css white-on-image rules) */
 .site-header .main-navigation a {
-  color: var(--color-slate) !important;
+  color: #f4f1ea !important;
 }
 
 .site-header .main-navigation a:hover,
 .site-header .main-navigation .nav-item:not(.header-cta) a:hover {
-  color: var(--color-amber-deep) !important;
+  color: var(--color-amber-pale) !important;
 }
 
 .site-header .main-navigation .active > a,
 .site-header .main-navigation .active > a span:not(.sqs-cart-quantity) {
-  color: var(--color-slate) !important;
+  color: #f4f1ea !important;
   text-decoration: underline;
   text-decoration-color: var(--color-amber);
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
 }
 
-/* Hamburger + social icons: dark on the frosted bar */
+/* Hamburger + social icons: cream on the dark slate bar */
 .site-header .nav-toggle svg {
-  stroke: var(--color-slate) !important;
+  stroke: #f4f1ea !important;
 }
 
 .site-header .nav-toggle:hover svg {
-  stroke: var(--color-amber-deep) !important;
+  stroke: var(--color-amber) !important;
 }
 
 .site-header .header-social-icons-with-nav .SocialLinks-link-icon,
 .site-header .header-social-icons-right .SocialLinks-link-icon {
-  fill: var(--color-slate) !important;
+  fill: #f4f1ea !important;
 }
 
 .site-header .header-social-icons-with-nav .SocialLinks-link:hover .SocialLinks-link-icon,
 .site-header .header-social-icons-right .SocialLinks-link:hover .SocialLinks-link-icon {
-  fill: var(--color-amber-deep) !important;
+  fill: var(--color-amber) !important;
+}
+
+/* Logo: subtle lift off the dark bar */
+.site-branding h1.image img {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
 }
 
 .site-header .nav-item a {

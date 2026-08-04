@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en-US">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Plan Your Visit — Journey of Grace</title>
-<meta content="Plan your first visit to Journey of Grace Church in Mesa, AZ. Sunday service times, location details, what to expect, and visitor registration." name="description"/>
-<link href="assets/img/vendor/584ce91f-6b29-49e6-9b45-be6ca0fe60f5-favicon.ico" rel="icon" type="image/x-icon"/>
-<!-- Shared Site Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Cantata+One&amp;display=swap" rel="stylesheet"/>
-<!-- Leaflet Map CSS -->
-<link href="assets/vendor-sqsp/leaflet/leaflet.css" rel="stylesheet"/>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan Your Visit — Journey of Grace</title>
+  <meta name="description" content="Plan your first visit to Journey of Grace Church in Mesa, AZ. Sunday service times, location details, what to expect, and visitor registration." />
+  <link rel="icon" type="image/x-icon" href="assets/img/vendor/584ce91f-6b29-49e6-9b45-be6ca0fe60f5-favicon.ico" />
+
+  <!-- Shared Site Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cantata+One&display=swap" rel="stylesheet">
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="assets/vendor-sqsp/leaflet/leaflet.css" />
+
+  <style>
     :root {
       --bg-cream: #f4f1ea;
       --bg-card: #ffffff;
@@ -460,196 +462,219 @@
       font-size: 0.85rem;
       color: #717c8d;
     }
-  
-/* WCAG Focus Styles */
-a:focus, button:focus, input:focus, select:focus, textarea:focus { outline: 3px solid var(--brand-amber) !important; outline-offset: 2px; }
-</style>
+  </style>
 </head>
+
 <body class="jog-visit-page">
-<!-- Top Announcement Bar -->
-<div class="top-announcement">
-    Join Us This Sunday at <span>10:30 AM</span> — 955 E University Dr, Mesa, AZ
+
+  <!-- Top Announcement Bar -->
+  <div class="top-announcement">
+    Join Us This Sunday at <span>10:30 AM</span> &mdash; 955 E University Dr, Mesa, AZ
   </div>
-<!-- Header Navigation -->
-<header class="jog-header">
-<div class="logo">
-<a href="/journeyofgrace-site/">
-<img alt="Journey of Grace Logo" src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp"/>
-</a>
-</div>
-<button aria-label="Open Mobile Navigation" class="mobile-nav-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')">
-      ☰
+
+  <!-- Header Navigation -->
+  <header class="jog-header">
+    <div class="logo">
+      <a href="/journeyofgrace-site/">
+        <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace Logo" />
+      </a>
+    </div>
+    <button class="mobile-nav-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')" aria-label="Open Mobile Navigation">
+      &#9776;
     </button>
-<nav class="jog-nav">
-<a href="/journeyofgrace-site/about-us">About Us</a>
-<a href="/journeyofgrace-site/events">Events</a>
-<a href="/journeyofgrace-site/sermons">Sermons</a>
-<a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
-<a href="/journeyofgrace-site/nextstep">Next Step</a>
-<a class="btn-header-cta" href="/journeyofgrace-site/visit">Plan Your Visit</a>
-</nav>
-</header>
-<!-- Mobile Navigation Drawer -->
-<div class="mobile-nav-drawer" id="mobileNavDrawer">
-<button aria-label="Close Mobile Navigation" class="mobile-nav-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')">×</button>
-<a href="/journeyofgrace-site/about-us">About Us</a>
-<a href="/journeyofgrace-site/events">Events</a>
-<a href="/journeyofgrace-site/sermons">Sermons</a>
-<a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
-<a href="/journeyofgrace-site/nextstep">Next Step</a>
-<a class="btn-header-cta" href="/journeyofgrace-site/visit" style="margin-top: 1rem;">Plan Your Visit</a>
-</div>
-<!-- Hero Banner -->
-<section class="hero-banner">
-<div class="hero-content">
-<span class="hero-tagline">Welcome Home</span>
-<h1 class="hero-title">Plan Your Visit</h1>
-<p class="hero-subtitle">We would love to welcome you this Sunday! Here is everything you need to know for your first visit with our church family.</p>
-</div>
-</section>
-<!-- Main Content Layout -->
-<main class="main-wrapper">
-<div class="content-grid">
-<!-- Left Column: Key Visitor Information -->
-<div class="info-column">
-<!-- Service Times Card -->
-<div class="card">
-<h2 class="card-title">Service Times</h2>
-<div class="service-row">
-<div class="service-info">
-<h4>Sunday Worship</h4>
-<p>Morning service with worship music &amp; teaching</p>
-</div>
-<div class="service-time">10:30 AM</div>
-</div>
-<div class="service-row">
-<div class="service-info">
-<h4>Sunday School</h4>
-<p>Journey Classes for all ages</p>
-</div>
-<div class="service-time">9:00 AM</div>
-</div>
-<div class="service-row">
-<div class="service-info">
-<h4>Youth Group</h4>
-<p>Midweek gathering for students (Wednesdays)</p>
-</div>
-<div class="service-time">7:00 PM</div>
-</div>
-</div>
-<!-- Location & Interactive Map Card -->
-<div class="card">
-<h2 class="card-title">Location &amp; Directions</h2>
-<div class="address-box">
-<strong>Journey of Grace Church</strong><br/>
-            955 E University Dr.<br/>
-            Mesa, AZ 85203<br/>
-<span style="font-size: 0.88rem;">Phone: 480-964-5062</span>
-</div>
-<a class="btn-directions" href="https://www.google.com/maps/dir/?api=1&amp;destination=955+E+University+Dr,+Mesa,+AZ+85203" rel="noopener" target="_blank">Get Directions</a>
-<div class="map-frame" id="visit-interactive-map"></div>
-</div>
-<!-- What to Expect Grid -->
-<div class="card">
-<h2 class="card-title">What to Expect</h2>
-<div class="expect-grid">
-<div class="expect-card">
-<h5>Warm Welcome</h5>
-<p>Greeters will meet you at the door and show you around.</p>
-</div>
-<div class="expect-card">
-<h5>Kids Ministry</h5>
-<p>Fun, secure programs available for birth through 5th grade.</p>
-</div>
-<div class="expect-card">
-<h5>Casual Dress</h5>
-<p>Come as you are! Jeans, t-shirts, or Sunday best are all great.</p>
-</div>
-<div class="expect-card">
-<h5>75 Min Service</h5>
-<p>Uplifting worship music, prayer, and practical Bible teaching.</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Right Column: Registration Form -->
-<div class="form-column">
-<div class="card">
-<h2 class="card-title">Tell Us You're Coming</h2>
-<p class="form-header-text">Let us know a bit about your family so we can greet you at the entrance and help you get checked in!</p>
-<form action="https://formsubmit.co/office@journeyofgrace.church" class="self-hosted-form" method="POST">
-<input name="_subject" type="hidden" value="Plan Your Visit Form — Journey of Grace"/>
-<input name="_template" type="hidden" value="table"/>
-<input name="_captcha" type="hidden" value="false"/>
-<input name="_next" type="hidden" value="https://journeyofgrace.github.io/journeyofgrace-site/plan-your-visit.html#submitted"/>
-<div class="form-group">
-<label for="name">Your Name *</label>
-<input class="form-control" id="name" name="Name" placeholder="Jane Doe" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="email">Email Address *</label>
-<input class="form-control" id="email" name="Email" placeholder="jane@example.com" required="" type="email"/>
-</div>
-<div class="form-group">
-<label for="phone">Phone Number *</label>
-<input class="form-control" id="phone" name="Phone" placeholder="(480) 555-0199" required="" type="tel"/>
-</div>
-<div class="form-group">
-<label for="tell-us-about-your-family">Tell Us About Your Family *</label>
-<textarea class="form-control" id="tell-us-about-your-family" name="Tell Us About Your Family" placeholder="e.g. 2 adults, 2 kids (ages 4 and 8)" required=""></textarea>
-</div>
-<button class="btn-submit-form" type="submit">Register Your Visit</button>
-</form>
-<div class="form-thanks" hidden="" style="margin-top: 1.2rem; color: #16a34a; font-weight: 700; text-align: center;">
+    <nav class="jog-nav">
+      <a href="/journeyofgrace-site/about-us">About Us</a>
+      <a href="/journeyofgrace-site/events">Events</a>
+      <a href="/journeyofgrace-site/sermons">Sermons</a>
+      <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+      <a href="/journeyofgrace-site/nextstep">Next Step</a>
+      <a href="/journeyofgrace-site/visit" class="btn-header-cta">Plan Your Visit</a>
+    </nav>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="mobile-nav-drawer">
+    <button class="mobile-nav-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
+    <a href="/journeyofgrace-site/about-us">About Us</a>
+    <a href="/journeyofgrace-site/events">Events</a>
+    <a href="/journeyofgrace-site/sermons">Sermons</a>
+    <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+    <a href="/journeyofgrace-site/nextstep">Next Step</a>
+    <a href="/journeyofgrace-site/visit" class="btn-header-cta" style="margin-top: 1rem;">Plan Your Visit</a>
+  </div>
+
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <span class="hero-tagline">Welcome Home</span>
+      <h1 class="hero-title">Plan Your Visit</h1>
+      <p class="hero-subtitle">We would love to welcome you this Sunday! Here is everything you need to know for your first visit with our church family.</p>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-wrapper">
+    <div class="content-grid">
+
+      <!-- Left Column: Key Visitor Information -->
+      <div class="info-column">
+        
+        <!-- Service Times Card -->
+        <div class="card">
+          <h2 class="card-title">Service Times</h2>
+          
+          <div class="service-row">
+            <div class="service-info">
+              <h4>Sunday Worship</h4>
+              <p>Morning service with worship music & teaching</p>
+            </div>
+            <div class="service-time">10:30 AM</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <h4>Sunday School</h4>
+              <p>Journey Classes for all ages</p>
+            </div>
+            <div class="service-time">9:00 AM</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <h4>Youth Group</h4>
+              <p>Midweek gathering for students (Wednesdays)</p>
+            </div>
+            <div class="service-time">7:00 PM</div>
+          </div>
+        </div>
+
+        <!-- Location & Interactive Map Card -->
+        <div class="card">
+          <h2 class="card-title">Location & Directions</h2>
+          <div class="address-box">
+            <strong>Journey of Grace Church</strong><br>
+            955 E University Dr.<br>
+            Mesa, AZ 85203<br>
+            <span style="font-size: 0.88rem;">Phone: 480-964-5062</span>
+          </div>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=955+E+University+Dr,+Mesa,+AZ+85203" target="_blank" rel="noopener" class="btn-directions">Get Directions</a>
+          <div id="visit-interactive-map" class="map-frame"></div>
+        </div>
+
+        <!-- What to Expect Grid -->
+        <div class="card">
+          <h2 class="card-title">What to Expect</h2>
+          <div class="expect-grid">
+            <div class="expect-card">
+              <h5>Warm Welcome</h5>
+              <p>Greeters will meet you at the door and show you around.</p>
+            </div>
+            <div class="expect-card">
+              <h5>Kids Ministry</h5>
+              <p>Fun, secure programs available for birth through 5th grade.</p>
+            </div>
+            <div class="expect-card">
+              <h5>Casual Dress</h5>
+              <p>Come as you are! Jeans, t-shirts, or Sunday best are all great.</p>
+            </div>
+            <div class="expect-card">
+              <h5>75 Min Service</h5>
+              <p>Uplifting worship music, prayer, and practical Bible teaching.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Registration Form -->
+      <div class="form-column">
+        <div class="card">
+          <h2 class="card-title">Tell Us You're Coming</h2>
+          <p class="form-header-text">Let us know a bit about your family so we can greet you at the entrance and help you get checked in!</p>
+
+          <form class="self-hosted-form" action="https://formsubmit.co/office@journeyofgrace.church" method="POST">
+            <input type="hidden" name="_subject" value="Plan Your Visit Form — Journey of Grace">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://journeyofgrace.github.io/journeyofgrace-site/plan-your-visit.html#submitted">
+
+            <div class="form-group">
+              <label for="name">Your Name *</label>
+              <input class="form-control" id="name" name="Name" type="text" placeholder="Jane Doe" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input class="form-control" id="email" name="Email" type="email" placeholder="jane@example.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input class="form-control" id="phone" name="Phone" type="tel" placeholder="(480) 555-0199" required />
+            </div>
+
+            <div class="form-group">
+              <label for="tell-us-about-your-family">Tell Us About Your Family *</label>
+              <textarea class="form-control" id="tell-us-about-your-family" name="Tell Us About Your Family" placeholder="e.g. 2 adults, 2 kids (ages 4 and 8)" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit-form">Register Your Visit</button>
+          </form>
+
+          <div class="form-thanks" hidden style="margin-top: 1.2rem; color: #16a34a; font-weight: 700; text-align: center;">
             Thank you! We look forward to meeting you!
           </div>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="jog-footer">
-<div class="footer-inner">
-<div class="footer-brand">
-<h3>Journey of Grace</h3>
-<p>
-          Sunday Worship: 10:30 AM<br/>
-          955 E University Dr. Mesa, AZ 85203<br/>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="jog-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Journey of Grace</h3>
+        <p>
+          Sunday Worship: 10:30 AM<br>
+          955 E University Dr. Mesa, AZ 85203<br>
           Phone: 480-964-5062
         </p>
-</div>
-<div class="footer-links">
-<h4>Navigation</h4>
-<nav>
-<a href="/journeyofgrace-site/about-us">About Us</a>
-<a href="/journeyofgrace-site/events">Upcoming Events</a>
-<a href="/journeyofgrace-site/sermons">Sermons</a>
-<a href="/journeyofgrace-site/spanish">Español</a>
-</nav>
-</div>
-<div class="footer-social">
-<h4>Connect With Us</h4>
-<div style="display: flex; gap: 1rem; align-items: center;">
-<a aria-label="Facebook" href="https://www.facebook.com/MesaJourneyNaz" rel="noopener" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;" target="_blank">
-<svg fill="currentColor" height="20" viewbox="0 0 24 24" width="20"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.65 13.75 5.65c1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.77-1.62 1.56V12h2.77l-.44 3h-2.33v6.8c4.56-.93 8-4.96 8-9.8z"></path></svg>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <nav>
+          <a href="/journeyofgrace-site/about-us">About Us</a>
+          <a href="/journeyofgrace-site/events">Upcoming Events</a>
+          <a href="/journeyofgrace-site/sermons">Sermons</a>
+          <a href="/journeyofgrace-site/spanish">Español</a>
+        </nav>
+      </div>
+      <div class="footer-social">
+        <h4>Connect With Us</h4>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <a href="https://www.facebook.com/MesaJourneyNaz" target="_blank" rel="noopener" aria-label="Facebook" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.65 13.75 5.65c1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.77-1.62 1.56V12h2.77l-.44 3h-2.33v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
             Facebook
           </a>
-<a aria-label="YouTube" href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA" rel="noopener" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;" target="_blank">
-<svg fill="currentColor" height="20" viewbox="0 0 24 24" width="20"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+          <a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA" target="_blank" rel="noopener" aria-label="YouTube" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             YouTube
           </a>
-</div>
-</div>
-</div>
-<div class="footer-copyright">
-      © Journey of Grace Church. All rights reserved.
+        </div>
+      </div>
     </div>
-</footer>
-<!-- Scripts -->
-<script src="js/config.js"></script>
-<script src="js/main.js"></script>
-<script src="assets/vendor-sqsp/leaflet/leaflet.js"></script>
-<script>
+    <div class="footer-copyright">
+      &copy; Journey of Grace Church. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="assets/vendor-sqsp/leaflet/leaflet.js"></script>
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
       var mapEl = document.getElementById('visit-interactive-map');
       if (mapEl && typeof L !== 'undefined') {

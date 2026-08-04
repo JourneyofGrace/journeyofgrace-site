@@ -47,11 +47,26 @@ function initFormThanks() {
     document.querySelectorAll('.form-column .card, #block-ae72ca928664dd12dd05').forEach(function(card) {
       var form = card.querySelector('form.self-hosted-form');
       if (form) {
+        // Hide duplicate static title/description when embedding Church Center widget
+        var cardTitle = card.querySelector('.card-title');
+        var formHeader = card.querySelector('.form-header-text');
+        if (cardTitle) cardTitle.style.display = 'none';
+        if (formHeader) formHeader.style.display = 'none';
+
+        card.style.padding = '1.2rem';
+        card.style.overflow = 'hidden';
+
         var frame = document.createElement('iframe');
-        frame.src = pcoFormUrl.trim();
+        var cleanUrl = pcoFormUrl.trim();
+        if (cleanUrl.indexOf('/embed') === -1) {
+          cleanUrl = cleanUrl.replace('/forms/', '/forms/embed/');
+        }
+        frame.src = cleanUrl;
         frame.style.width = '100%';
-        frame.style.minHeight = '500px';
+        frame.style.height = '620px';
         frame.style.border = 'none';
+        frame.style.borderRadius = '8px';
+        frame.style.overflow = 'hidden';
         frame.title = 'Planning Center Visitor Registration';
         form.parentNode.replaceChild(frame, form);
       }

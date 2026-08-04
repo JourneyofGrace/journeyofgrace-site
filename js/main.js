@@ -63,7 +63,7 @@ function initFormThanks() {
         }
         frame.src = cleanUrl;
         frame.style.width = '100%';
-        frame.style.height = '620px';
+        frame.style.height = '780px';
         frame.style.border = 'none';
         frame.style.borderRadius = '8px';
         frame.style.overflow = 'hidden';

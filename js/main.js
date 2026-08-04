@@ -42,6 +42,23 @@ function initPlanningCenter() {
 }
 
 function initFormThanks() {
+  var pcoFormUrl = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter && window.JOG_CONFIG.planningCenter.visitorFormUrl;
+  if (pcoFormUrl && pcoFormUrl.trim()) {
+    document.querySelectorAll('.form-column .card, #block-ae72ca928664dd12dd05').forEach(function(card) {
+      var form = card.querySelector('form.self-hosted-form');
+      if (form) {
+        var frame = document.createElement('iframe');
+        frame.src = pcoFormUrl.trim();
+        frame.style.width = '100%';
+        frame.style.minHeight = '500px';
+        frame.style.border = 'none';
+        frame.title = 'Planning Center Visitor Registration';
+        form.parentNode.replaceChild(frame, form);
+      }
+    });
+    return;
+  }
+
   var email = (window.JOG_CONFIG && window.JOG_CONFIG.formRecipientEmail) || 'office@journeyofgrace.church';
   document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
     form.action = 'https://formsubmit.co/' + encodeURIComponent(email);

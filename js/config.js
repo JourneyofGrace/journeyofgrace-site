@@ -41,3 +41,10 @@ window.JOG_CONFIG.planningCenter.calendarLink =
 window.JOG_CONFIG.formRecipientEmail =
   window.JOG_CONFIG.formRecipientEmail || "office@journeyofgrace.church";
 
+/*
+ * Planning Center People / Form Embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/embed/123456)
+ * Leave empty ("") to use the default HTML form with FormSubmit/email forwarding.
+ */
+window.JOG_CONFIG.planningCenter.visitorFormUrl =
+  window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
+

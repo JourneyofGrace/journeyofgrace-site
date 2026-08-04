@@ -1,115 +1,619 @@
 <!DOCTYPE html>
-<html xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" lang="en-US" >
+
+<html lang="en-US">
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="initial-scale=1">
-<!-- This is Squarespace. -->
-<!-- ryan-albaugh-5n9p -->
-<base href="">
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Sermon Archive — Journey of Grace</title>
-<meta http-equiv="Accept-CH" content="Sec-CH-UA-Platform-Version, Sec-CH-UA-Model" />
-<link rel="icon" type="image/x-icon" href="assets/img/favicon.ico"/>
-<link rel="canonical" href="https://journeyofgrace.church/sermon-archive"/>
-<meta property="og:site_name" content="Journey of Grace"/>
-<meta property="og:title" content="Sermon Archive — Journey of Grace"/>
-<meta property="og:url" content="https://journeyofgrace.church/sermon-archive"/>
-<meta property="og:type" content="website"/>
-<meta name="twitter:title" content="Sermon Archive — Journey of Grace"/>
-<meta name="twitter:card" content="summary"/>
-<meta name="description" content="Browse our sermon archive" />
-<link rel="stylesheet" type="text/css" href="css/vendor/commerce-d50e5960dc9fd059-min.en-US.css">
-<link rel="stylesheet" type="text/css" href="css/site.css">
-<link rel="stylesheet" type="text/css" href="css/custom.css"><link rel="stylesheet" type="text/css" href="css/style.css">
+<meta content="Browse our sermon archive" name="description"/>
+<link href="assets/img/vendor/584ce91f-6b29-49e6-9b45-be6ca0fe60f5-favicon.ico" rel="icon" type="image/x-icon"/>
+<!-- Shared Site Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Cantata+One&amp;display=swap" rel="stylesheet"/>
+<!-- Leaflet Map CSS -->
+<link href="assets/vendor-sqsp/leaflet/leaflet.css" rel="stylesheet"/>
+<style>
+    :root {
+      --bg-cream: #f4f1ea;
+      --bg-card: #ffffff;
+      --text-dark: #22252a;
+      --text-muted: #5a626c;
+      --brand-amber: #c97a2b;
+      --brand-amber-hover: #a8621d;
+      --brand-navy: #1f242d;
+      --border-subtle: #e6dfd5;
+      --radius-card: 16px;
+      --radius-sm: 10px;
+      --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+      --font-serif: 'Cantata One', Georgia, serif;
+      --font-sans: 'Asap', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body.jog-visit-page {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Utility Notice Bar */
+    .top-announcement {
+      background: var(--brand-navy);
+      color: #dfd7cb;
+      text-align: center;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .top-announcement span {
+      color: var(--brand-amber);
+      font-weight: 700;
+    }
+
+    /* Premium Navigation Header */
+    .jog-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+    .jog-header .logo img {
+      height: 48px;
+      width: auto;
+      display: block;
+    }
+    /* Mobile Navigation Drawer & Toggle */
+    .mobile-nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--brand-navy);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    .mobile-nav-drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 36, 45, 0.98);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .mobile-nav-drawer.open {
+      display: flex;
+    }
+    .mobile-nav-drawer a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.4rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .mobile-nav-drawer a:hover {
+      color: var(--brand-amber);
+    }
+    .mobile-nav-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 850px) {
+      .jog-header {
+        padding: 0.75rem 1.25rem;
+      }
+      .jog-nav {
+        display: none;
+      }
+      .mobile-nav-toggle {
+        display: block;
+      }
+      .hero-banner {
+        height: 280px;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
+      .hero-subtitle {
+        font-size: 0.95rem;
+      }
+      .main-wrapper {
+        margin-top: -20px;
+        padding: 0 1rem;
+      }
+      .card {
+        padding: 1.4rem;
+      }
+    }
+
+
+    /* Page Hero Banner Section */
+    .hero-banner {
+      position: relative;
+      height: 380px;
+      background: url('assets/img/vendor/1660109761561-9RJZZ6YX5WLSK8M29KYI-Journey-Of-Grace_Mesa-Arizona_Sanctuary-Worship.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #ffffff;
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(31, 36, 45, 0.5) 0%, rgba(31, 36, 45, 0.75) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 750px;
+      padding: 0 1.5rem;
+    }
+    .hero-tagline {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+      color: #f3c28b;
+      margin-bottom: 0.6rem;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0 0 1rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: #eae5dc;
+      margin: 0;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* Main Section Container */
+    .main-wrapper {
+      max-width: 1140px;
+      margin: -50px auto 4rem;
+      position: relative;
+      z-index: 10;
+      padding: 0 1.5rem;
+    }
+
+    /* 2-Column Grid Layout */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .hero-banner { height: 320px; }
+      .hero-title { font-size: 2.4rem; }
+      .main-wrapper { margin-top: -30px; }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Cards Styling */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 2.2rem;
+      box-shadow: var(--shadow-premium);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 2rem;
+    }
+    .card-title {
+      font-family: var(--font-serif);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 1.4rem;
+      color: var(--brand-navy);
+      margin: 0 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--border-subtle);
+      margin-left: 1.2rem;
+    }
+
+    /* Service Times Rows */
+    .service-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      background: #faf8f5;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--brand-amber);
+      margin-bottom: 1rem;
+    }
+    .service-row:last-child { margin-bottom: 0; }
+    .service-info h4 {
+      margin: 0 0 0.2rem;
+      font-size: 1.05rem;
+      color: var(--brand-navy);
+    }
+    .service-info p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .service-time {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--brand-amber);
+      white-space: nowrap;
+      padding-left: 1rem;
+    }
+
+    /* Location & Map */
+    .address-box {
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+    .address-box strong {
+      color: var(--brand-navy);
+      font-size: 1.05rem;
+    }
+    .map-frame {
+      height: 250px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    .btn-directions {
+      display: inline-block;
+      background: var(--brand-navy);
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .btn-directions:hover {
+      background: var(--brand-amber);
+    }
+
+    /* What to Expect Grid */
+    .expect-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 550px) {
+      .expect-grid { grid-template-columns: 1fr; }
+    }
+    .expect-card {
+      background: #faf8f5;
+      padding: 1.25rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid #efe8dd;
+    }
+    .expect-card h5 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      margin: 0 0 0.4rem;
+      color: var(--brand-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .expect-card p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Visitor Form Styling */
+    .form-header-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brand-navy);
+      margin-bottom: 0.4rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: #faf9f6;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--brand-amber);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(201, 122, 43, 0.15);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 110px;
+    }
+    .btn-submit-form {
+      width: 100%;
+      background: var(--brand-amber);
+      color: #ffffff;
+      border: none;
+      padding: 0.95rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(201, 122, 43, 0.25);
+    }
+    .btn-submit-form:hover {
+      background: var(--brand-amber-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(201, 122, 43, 0.35);
+    }
+
+    /* Premium Site Footer */
+    .jog-footer {
+      background: var(--brand-navy);
+      color: #b3bac5;
+      padding: 4rem 2rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+    }
+    .footer-brand h3 {
+      font-family: var(--font-serif);
+      color: #ffffff;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 1rem;
+    }
+    .footer-brand p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .footer-links h4 {
+      color: #ffffff;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 1rem;
+    }
+    .footer-links nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .footer-links a {
+      color: #a0aab8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--brand-amber);
+    }
+    .footer-copyright {
+      max-width: 1140px;
+      margin: 3rem auto 0;
+      padding-top: 1.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      font-size: 0.85rem;
+      color: #717c8d;
+    }
+  
+/* WCAG Focus Styles */
+a:focus, button:focus, input:focus, select:focus, textarea:focus { outline: 3px solid var(--brand-amber) !important; outline-offset: 2px; }
+
+/* WCAG Focus Styles */
+a:focus, button:focus, input:focus, select:focus, textarea:focus { outline: 3px solid var(--brand-amber) !important; outline-offset: 2px; }
+</style>
 </head>
-<body id="collection-5a8c711ed55b41ec4db0fa5d" class="tweak-display-social-icons tweak-social-icons-on-right tweak-cart-link-display-hide tweak-cart-icon-style-cart tweak-cart-icon-weight-medium tweak-cart-icon-size-medium tweak-user-account-link-position-with-nav tweak-user-account-icon-weight-medium tweak-user-account-icon-size-medium tweak-show-footer tweak-nav-style-icon tweak-nav-position-right tweak-menu-icon-weight-light tweak-menu-icon-size-medium tweak-nav-link-style-none tweak-mobile-nav-alignment-center tweak-mobile-nav-always-show-tagline tweak-show-page-title-overlay-not-in-index tweak-page-title-overlay-blend-mode-multiply tweak-page-title-position-top-center tweak-show-page-title tweak-show-page-desc tweak-show-page-banner-image-not-in-index collection-5a8c711ed55b41ec4db0fa5d collection-layout-default collection-type-page view-item mobile-style-available has-main-image">
-
-<div class="content-outer-wrapper">
-<div class="content-inner-wrapper" data-content-field="body">
-
-<header class="header" data-controller="HeaderOverflow, NavToggle, HeaderScroll, OverlayNavOverflow, SocialIconFadein, SetActiveNavLink">
-  <div class="header-inner">
-    <div class="site-branding">
-      <a href="/journeyofgrace-site/" class="header-logo">
-        <img src="assets/img/JOG_Logo_Final_03-210x256.png" alt="Journey of Grace" />
-      </a>
-    </div>
-    <nav class="nav-wrapper">
-      <ul class="nav-list">
-        <li class="nav-item collection"><a href="/journeyofgrace-site/">Home</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/about-us">About Us</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/visit">Visit</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/connect">Connect</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/sermons">Sermons</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/events">Events</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/nextstep">Next Step</a></li>        <li class="nav-item header-cta"><a href="/journeyofgrace-site/plan-your-visit">Plan Your Visit</a></li>
-
-      </ul>
-    </nav>
+<body class="jog-visit-page">
+<!-- Top Announcement Bar -->
+<div class="top-announcement">
+    Join Us This Sunday at <span>10:30 AM</span> — 955 E University Dr, Mesa, AZ
   </div>
+<!-- Header Navigation -->
+<header class="jog-header">
+<div class="logo">
+<a href="/journeyofgrace-site/">
+<img alt="Journey of Grace Logo" src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp"/>
+</a>
+</div>
+<button aria-label="Open Mobile Navigation" class="mobile-nav-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')">
+      ☰
+    </button>
+<nav class="jog-nav">
+<a href="/journeyofgrace-site/about-us">About Us</a>
+<a href="/journeyofgrace-site/events">Events</a>
+<a href="/journeyofgrace-site/sermons">Sermons</a>
+<a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+<a href="/journeyofgrace-site/nextstep">Next Step</a>
+<a class="btn-header-cta" href="/journeyofgrace-site/visit">Plan Your Visit</a>
+</nav>
 </header>
-
-<main class="main-content" data-controller="MainContentPositioning, MercuryLoader">
-  <div class="main-content-inner-wrapper">
-    <div class="mercury-transition-wrapper">
-      <div class="page-wrapper">
-        <div class="row sqs-row">
-          <div class="col sqs-col-12 span-12">
-            <div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-title">
-              <div class="sqs-block-content">
-                <h1 style="text-align:center;">Sermon Archive</h1>
-                <p style="text-align:center;">Search and filter past messages by series, speaker, or topic</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row sqs-row">
-          <div class="col sqs-col-12 span-12">
-            <div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-filters">
-              <div class="sqs-block-content">
-                <div class="sermon-filters" role="search" aria-label="Sermon archive filters">
-                  <input type="search" id="sermon-search" placeholder="Search sermons, passages, or topics&hellip;" />
-                  <select id="sermon-series" aria-label="Filter by series">
-                    <option value="">All Series</option>
-                  </select>
-                  <select id="sermon-speaker" aria-label="Filter by speaker">
-                    <option value="">All Speakers</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row sqs-row">
-          <div class="col sqs-col-12 span-12">
-            <div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-content">
-              <div class="sqs-block-content">
-                <p style="text-align:center;">Latest messages are posted on our <a href="/journeyofgrace-site/sermons">Sermons</a> page, and past messages are available on our <a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA?view_as=subscriber">YouTube channel</a>.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+<button aria-label="Close Mobile Navigation" class="mobile-nav-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')">×</button>
+<a href="/journeyofgrace-site/about-us">About Us</a>
+<a href="/journeyofgrace-site/events">Events</a>
+<a href="/journeyofgrace-site/sermons">Sermons</a>
+<a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+<a href="/journeyofgrace-site/nextstep">Next Step</a>
+<a class="btn-header-cta" href="/journeyofgrace-site/visit" style="margin-top: 1rem;">Plan Your Visit</a>
+</div>
+<!-- Hero Banner -->
+<section class="hero-banner">
+<div class="hero-content">
+<span class="hero-tagline">Welcome Home</span>
+<h1 class="hero-title">Plan Your Visit</h1>
+<p class="hero-subtitle">We would love to welcome you this Sunday! Here is everything you need to know for your first visit with our church family.</p>
+</div>
+</section>
+<!-- Main Content Layout -->
+<main class="main-wrapper"><main class="main-content" data-controller="MainContentPositioning, MercuryLoader">
+<div class="main-content-inner-wrapper">
+<div class="mercury-transition-wrapper">
+<div class="page-wrapper">
+<div class="row sqs-row">
+<div class="col sqs-col-12 span-12">
+<div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-title">
+<div class="sqs-block-content">
+<h1 style="text-align:center;">Sermon Archive</h1>
+<p style="text-align:center;">Search and filter past messages by series, speaker, or topic</p>
+</div>
+</div>
+</div>
+</div>
+<div class="row sqs-row">
+<div class="col sqs-col-12 span-12">
+<div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-filters">
+<div class="sqs-block-content">
+<div aria-label="Sermon archive filters" class="sermon-filters" role="search">
+<input aria-label="Input field" id="sermon-search" placeholder="Search sermons, passages, or topics…" type="search"/>
+<select aria-label="Filter by series" id="sermon-series">
+<option value="">All Series</option>
+</select>
+<select aria-label="Filter by speaker" id="sermon-speaker">
+<option value="">All Speakers</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row sqs-row">
+<div class="col sqs-col-12 span-12">
+<div class="sqs-block html-block sqs-block-html" data-block-type="2" data-sqsp-block="text" id="block-sermon-archive-content">
+<div class="sqs-block-content">
+<p style="text-align:center;">Latest messages are posted on our <a href="/journeyofgrace-site/sermons">Sermons</a> page, and past messages are available on our <a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA?view_as=subscriber">YouTube channel</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main></main>
+<!-- Footer -->
+<footer class="jog-footer">
+<div class="footer-inner">
+<div class="footer-brand">
+<h3>Journey of Grace</h3>
+<p>
+          Sunday Worship: 10:30 AM<br/>
+          955 E University Dr. Mesa, AZ 85203<br/>
+          Phone: 480-964-5062
+        </p>
+</div>
+<div class="footer-links">
+<h4>Navigation</h4>
+<nav>
+<a href="/journeyofgrace-site/about-us">About Us</a>
+<a href="/journeyofgrace-site/events">Upcoming Events</a>
+<a href="/journeyofgrace-site/sermons">Sermons</a>
+<a href="/journeyofgrace-site/spanish">Español</a>
+</nav>
+</div>
+<div class="footer-social">
+<h4>Connect With Us</h4>
+<div style="display: flex; gap: 1rem; align-items: center;">
+<a aria-label="Facebook" href="https://www.facebook.com/MesaJourneyNaz" rel="noopener" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;" target="_blank">
+<svg fill="currentColor" height="20" viewbox="0 0 24 24" width="20"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.65 13.75 5.65c1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.77-1.62 1.56V12h2.77l-.44 3h-2.33v6.8c4.56-.93 8-4.96 8-9.8z"></path></svg>
+            Facebook
+          </a>
+<a aria-label="YouTube" href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA" rel="noopener" style="color: #a0aab8; text-decoration: none; display: flex; align-items: center; gap: 0.4rem;" target="_blank">
+<svg fill="currentColor" height="20" viewbox="0 0 24 24" width="20"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+            YouTube
+          </a>
+</div>
+</div>
+</div>
+<div class="footer-copyright">
+      © Journey of Grace Church. All rights reserved.
     </div>
-  </div>
-</main>
-
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-social">
-      <a href="https://www.facebook.com/MesaJourneyNaz" class="social-icon">Facebook</a>
-      <a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA?view_as=subscriber" class="social-icon">YouTube</a>
-    </div>
-    <div class="footer-content">
-      <p>&copy; 2026 Journey of Grace. All rights reserved.</p>
-    </div>
-  </div>
 </footer>
-
-</div>
-</div>
-
+<!-- Scripts -->
+<script src="js/config.js"></script>
 <script src="js/main.js"></script>
-
+<script src="assets/vendor-sqsp/leaflet/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var mapEl = document.getElementById('visit-interactive-map');
+      if (mapEl && typeof L !== 'undefined') {
+        var map = L.map('visit-interactive-map', { scrollWheelZoom: false }).setView([33.4219082, -111.8100475], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+        L.marker([33.4219082, -111.8100475]).addTo(map)
+          .bindPopup('<strong>Journey of Grace</strong><br>955 E University Dr., Mesa, AZ 85203')
+          .openPopup();
+      }
+      if (window.location.hash === '#submitted') {
+        var thanks = document.querySelector('.form-thanks');
+        if (thanks) thanks.hidden = false;
+      }
+    });
+  </script>
 </body>
 </html>

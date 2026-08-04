@@ -1396,33 +1396,11 @@ textarea:focus-visible,
   align-items: center;
   gap: 1.8rem;
 }
-.jog-global-nav a {
-  text-decoration: none;
-  color: #22252a;
-  font-family: 'Asap', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: color 0.2s;
-}
-.jog-global-nav a:hover {
-  color: #c97a2b;
-}
-.jog-btn-cta {
-  background: #c97a2b !important;
-  color: #ffffff !important;
-  padding: 0.65rem 1.4rem !important;
-  border-radius: 50px !important;
-  font-weight: 700 !important;
-  font-size: 0.9rem !important;
-  letter-spacing: 0.02em;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 3px 10px rgba(201, 122, 43, 0.25);
-  text-decoration: none !important;
-}
-.jog-btn-cta:hover {
-  background: #a8621d !important;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(201, 122, 43, 0.35);
+/* Hide Header Social Icons to Keep Header Clean & Uncluttered */
+.header-social-icons-with-nav,
+.header-inner .SocialLinks,
+.sqs-template-social-icons {
+  display: none !important;
 }
 
 /* Mobile Hamburger Navigation Drawer */

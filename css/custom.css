@@ -24,7 +24,7 @@ body {
   margin-bottom: 1.5rem !important;
 }
 
-.sqs-block-html {
+#mainContent .sqs-block-html {
   background: #ffffff !important;
   padding: 2.2rem 2.8rem !important;
   border-radius: 16px !important;
@@ -33,7 +33,7 @@ body {
   margin-bottom: 2rem !important;
 }
 
-p, li {
+#mainContent p, #mainContent li {
   color: #334155 !important;
   font-size: 1.05rem !important;
   line-height: 1.8 !important;

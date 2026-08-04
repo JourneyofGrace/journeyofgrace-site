@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+  initVisitMap();
   initPlanningCenter();
   initMobileNav();
   initSermonArchive();
@@ -190,4 +191,22 @@ function initEventExports() {
     ical.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
     ical.setAttribute('download', 'journey-of-grace-event.ics');
   });
+}
+
+function initVisitMap() {
+  var mapEl = document.getElementById('visit-map');
+  if (!mapEl) return;
+  if (typeof L === 'undefined') return;
+  var map = L.map('visit-map', {
+    scrollWheelZoom: false,
+    zoomControl: true,
+    attributionControl: true
+  }).setView([33.4219082, -111.8100475], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(map);
+  L.marker([33.4219082, -111.8100475]).addTo(map)
+    .bindPopup('<strong>Mesa First Church of the Nazarene</strong><br>955 E University Dr., Mesa, AZ 85203')
+    .openPopup();
 }

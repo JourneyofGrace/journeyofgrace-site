@@ -1236,3 +1236,36 @@ textarea:focus-visible,
   color: var(--color-ink);
   font-weight: 700;
 }
+
+/* === Leaflet Map Overrides === */
+#visit-map {
+  background: var(--color-bg-sand);
+  border-radius: var(--radius);
+}
+.leaflet-container {
+  background: var(--color-bg-sand) !important;
+  border-radius: var(--radius);
+  font-family: var(--font-sans) !important;
+}
+.leaflet-popup-content-wrapper {
+  background: var(--color-surface) !important;
+  color: var(--color-ink) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+.leaflet-popup-tip {
+  background: var(--color-surface) !important;
+}
+.leaflet-popup-content {
+  font-family: var(--font-sans) !important;
+  font-size: 14px !important;
+}
+.leaflet-control-zoom a {
+  background: var(--color-surface) !important;
+  color: var(--color-slate) !important;
+  border-color: #eae4d8 !important;
+}
+.leaflet-control-attribution {
+  background: rgba(250,248,244,0.8) !important;
+  font-size: 10px !important;
+}

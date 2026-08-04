@@ -331,8 +331,9 @@ a:hover {
 }
 
 /* Header CTA (Plan Your Visit Button) */
-.main-navigation .nav-item.header-cta {
-  margin-left: 0.8rem !important;
+.main-navigation .nav-item.header-cta,
+.jog-global-nav a.jog-btn-cta {
+  margin-left: 2rem !important;
 }
 
 .header-cta a, .jog-btn-cta {
@@ -1459,6 +1460,14 @@ textarea:focus-visible,
   display: flex !important;
   align-items: center !important;
   gap: 1.8rem !important;
+}
+.header-social-icons-with-nav,
+.header-social-icons-right,
+.header-social-icons--overlay,
+.nav-social-wrapper .SocialLinks,
+.SocialLinks-link,
+.sqs-template-social-icons {
+  display: none !important;
 }
 .jog-global-nav a {
   text-transform: uppercase !important;

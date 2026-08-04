@@ -77,37 +77,80 @@
       width: auto;
       display: block;
     }
-    .jog-nav {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
+    /* Mobile Navigation Drawer & Toggle */
+    .mobile-nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--brand-navy);
+      cursor: pointer;
+      padding: 0.5rem;
     }
-    .jog-nav a {
+    .mobile-nav-drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 36, 45, 0.98);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .mobile-nav-drawer.open {
+      display: flex;
+    }
+    .mobile-nav-drawer a {
+      color: #ffffff;
       text-decoration: none;
-      color: var(--text-dark);
+      font-size: 1.4rem;
       font-weight: 600;
-      font-size: 0.95rem;
       transition: color 0.2s;
     }
-    .jog-nav a:hover {
+    .mobile-nav-drawer a:hover {
       color: var(--brand-amber);
     }
-    .btn-header-cta {
-      background: var(--brand-amber);
-      color: #ffffff !important;
-      padding: 0.65rem 1.4rem;
-      border-radius: 50px;
-      font-weight: 700 !important;
-      font-size: 0.9rem !important;
-      letter-spacing: 0.02em;
-      transition: all 0.2s ease;
-      box-shadow: 0 3px 10px rgba(201, 122, 43, 0.25);
+    .mobile-nav-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 2rem;
+      cursor: pointer;
     }
-    .btn-header-cta:hover {
-      background: var(--brand-amber-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 5px 14px rgba(201, 122, 43, 0.35);
+
+    @media (max-width: 850px) {
+      .jog-header {
+        padding: 0.75rem 1.25rem;
+      }
+      .jog-nav {
+        display: none;
+      }
+      .mobile-nav-toggle {
+        display: block;
+      }
+      .hero-banner {
+        height: 280px;
+      }
+      .hero-title {
+        font-size: 2rem;
+      }
+      .hero-subtitle {
+        font-size: 0.95rem;
+      }
+      .main-wrapper {
+        margin-top: -20px;
+        padding: 0 1rem;
+      }
+      .card {
+        padding: 1.4rem;
+      }
     }
+
 
     /* Page Hero Banner Section */
     .hero-banner {
@@ -436,15 +479,30 @@
         <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace Logo" />
       </a>
     </div>
+    <button class="mobile-nav-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')" aria-label="Open Mobile Navigation">
+      &#9776;
+    </button>
     <nav class="jog-nav">
       <a href="/journeyofgrace-site/about-us">About Us</a>
       <a href="/journeyofgrace-site/events">Events</a>
       <a href="/journeyofgrace-site/sermons">Sermons</a>
       <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
       <a href="/journeyofgrace-site/nextstep">Next Step</a>
-      <a href="/journeyofgrace-site/plan-your-visit" class="btn-header-cta">Plan Your Visit</a>
+      <a href="/journeyofgrace-site/visit" class="btn-header-cta">Plan Your Visit</a>
     </nav>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="mobile-nav-drawer">
+    <button class="mobile-nav-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
+    <a href="/journeyofgrace-site/about-us">About Us</a>
+    <a href="/journeyofgrace-site/events">Events</a>
+    <a href="/journeyofgrace-site/sermons">Sermons</a>
+    <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+    <a href="/journeyofgrace-site/nextstep">Next Step</a>
+    <a href="/journeyofgrace-site/visit" class="btn-header-cta" style="margin-top: 1rem;">Plan Your Visit</a>
+  </div>
+
 
   <!-- Hero Banner -->
   <section class="hero-banner">

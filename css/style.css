@@ -245,7 +245,7 @@ a:hover {
 
 /* Nav menu polish: tame Squarespace defaults (26px + 3.6vw gaps + orange active) */
 .main-navigation .nav-item {
-  font-size: 15px;
+  font-size: 15px !important;
   font-weight: 600;
   padding-right: 2rem;
   letter-spacing: 0.1em;
@@ -1053,6 +1053,9 @@ textarea:focus-visible,
   }
   .site-header .nav-toggle {
     display: none !important;
+  }
+  .site-header .main-navigation .nav-item {
+    opacity: 1 !important;
   }
 }
 

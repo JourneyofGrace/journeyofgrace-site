@@ -1645,3 +1645,119 @@ footer.jog-footer .footer-bottom {
   opacity: 0.9 !important;
 }
 
+/* Recent YouTube Sermons Section */
+.sermons-yt-section {
+  margin: 3rem 0;
+}
+.sermons-yt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.8rem;
+}
+.sermons-yt-header h2 {
+  margin: 0 !important;
+  border-bottom: none !important;
+  font-family: 'Cantata One', Georgia, serif;
+  color: #0f172a;
+}
+.sermons-yt-header a {
+  background: #c97a2b;
+  color: #ffffff !important;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: background 0.2s ease;
+}
+.sermons-yt-header a:hover {
+  background: #a8621d;
+}
+.sermons-yt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.sermon-yt-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.sermon-yt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+.sermon-yt-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1e242d;
+  overflow: hidden;
+}
+.sermon-yt-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.sermon-yt-card:hover .sermon-yt-thumb img {
+  transform: scale(1.05);
+}
+.sermon-yt-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  background: rgba(201, 122, 43, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.sermon-yt-card:hover .sermon-yt-play-btn {
+  background: #c97a2b;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.sermon-yt-thumb iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.sermon-yt-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.sermon-yt-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+.sermon-yt-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+

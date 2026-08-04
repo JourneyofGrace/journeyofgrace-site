@@ -1040,7 +1040,7 @@ textarea:focus-visible,
     display: none !important;
   }
   .site-header .header-social-icons-right {
-    order: 2;
+    order: -1;
     position: relative !important;
     right: 0 !important;
     margin-right: 0 !important;

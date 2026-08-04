@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 15 * * 0' # Every Sunday at 15:00 UTC (8:00 AM MST)
+    - cron: '15 16 * * 0' # Every Sunday at 9:15 AM MST (16:15 UTC)
   workflow_dispatch:
 
 permissions:

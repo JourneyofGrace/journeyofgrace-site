@@ -33,13 +33,16 @@ body {
   margin-bottom: 2rem !important;
 }
 
-#mainContent p, #mainContent li {
+#mainContent .sqs-block-html p, #mainContent .sqs-block-html li {
   color: #334155 !important;
   font-size: 1.05rem !important;
   line-height: 1.8 !important;
 }
 
-#mainContent h1, #mainContent h2, #mainContent h3, .title-card-title, .hero-title, .page-title {
+#mainContent .sqs-block-html h1, 
+#mainContent .sqs-block-html h2, 
+#mainContent .sqs-block-html h3, 
+.title-card-title, .hero-title, .page-title {
   font-family: 'Cantata One', Georgia, serif !important;
   letter-spacing: 0.02em !important;
   color: #0f172a !important;

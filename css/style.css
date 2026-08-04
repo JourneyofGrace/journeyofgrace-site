@@ -1603,11 +1603,12 @@ footer.jog-footer h4 {
 
 footer.jog-footer p, 
 footer.jog-footer .footer-brand p,
-footer.jog-footer div:not(.footer-social),
+footer.jog-footer div,
 footer.jog-footer span {
-  color: #e2e8f0 !important;
+  color: #ffffff !important;
   font-size: 0.95rem !important;
   line-height: 1.7 !important;
+  opacity: 1 !important;
 }
 
 footer.jog-footer nav a {
@@ -1615,6 +1616,7 @@ footer.jog-footer nav a {
   text-decoration: none !important;
   font-size: 0.95rem !important;
   font-weight: 500 !important;
+  opacity: 1 !important;
   transition: color 0.2s ease !important;
 }
 
@@ -1625,6 +1627,7 @@ footer.jog-footer nav a:hover {
 footer.jog-footer .footer-social a {
   color: #ffffff !important;
   text-decoration: none !important;
+  opacity: 1 !important;
 }
 
 footer.jog-footer .footer-social svg {
@@ -1635,9 +1638,10 @@ footer.jog-footer .footer-bottom {
   max-width: 1100px;
   margin: 2.5rem auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
   font-size: 0.85rem;
-  color: #cbd5e1 !important;
+  color: #ffffff !important;
+  opacity: 0.9 !important;
 }
 

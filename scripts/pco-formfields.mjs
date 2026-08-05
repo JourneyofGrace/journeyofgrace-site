@@ -20,7 +20,7 @@ function api(path, opts) {
         res.on('data', (c) => (data += c.toString()));
         res.on('end', () => {
           try { resolve({ status: res.statusCode, json: JSON.parse(data) }); }
-          catch { resolve({ status: res.statusCode, raw: data.slice(0, 3000) }); }
+          catch { resolve({ status: res.statusCode, raw: data.slice(0, 4000) }); }
         });
       }
     );
@@ -30,35 +30,9 @@ function api(path, opts) {
   });
 }
 
-console.log('\n== full single form raw (relationships + links) ==');
+console.log('\n== GET /people/v2/forms/1284759/fields (full dump) ==');
 try {
-  const r = await api('/people/v2/forms/1284759');
-  const f = r.json && r.json.data;
+  const r = await api('/people/v2/forms/1284759/fields');
   console.log('status', r.status);
-  if (f) {
-    console.log('relationships:', JSON.stringify(f.relationships, null, 1).slice(0, 2000));
-    console.log('links:', JSON.stringify(f.links, null, 1).slice(0, 1000));
-  }
+  console.log(JSON.stringify(r.json, null, 1).slice(0, 7000));
 } catch (e) { console.log('ERR', e.message); }
-
-// Candidate sub-resource endpoints for form fields
-console.log('\n== candidate field endpoints (404/200 check) ==');
-const candidates = [
-  '/people/v2/forms/1284759/form_fields?per_page=5',
-  '/people/v2/forms/1284759/fields?per_page=5',
-  '/people/v2/forms/1284759/form_field_groups?per_page=5',
-  '/people/v2/form_fields?per_page=5',
-  '/people/v2/fields?per_page=5',
-  '/people/v2/forms/1284759/definitions?per_page=5',
-];
-for (const p of candidates) {
-  try {
-    const r = await api(p);
-    const k = r.json && r.json.data && r.json.data[0] ? Object.keys(r.json.data[0]).slice(0, 6).join(',') : '';
-    const n = r.json && r.json.data ? r.json.data.length : '';
-    console.log(r.status, p, '| count:', n, '| keys:', k);
-    if (r.status !== 200 && r.json && r.json.errors) {
-      console.log('   detail:', (r.json.errors[0] && (r.json.errors[0].detail || r.json.errors[0].title)) || '');
-    }
-  } catch (e) { console.log('ERR', p, e.message); }
-}

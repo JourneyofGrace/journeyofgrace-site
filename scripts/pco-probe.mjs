@@ -13,7 +13,7 @@ function api(path) {
         res.on('data', (c) => (body += c.toString()));
         res.on('end', () => {
           try { resolve({ status: res.statusCode, json: JSON.parse(body) }); }
-          catch { resolve({ status: res.statusCode, raw: body.slice(0, 2000) }); }
+          catch { resolve({ status: res.statusCode, raw: body.slice(0, 1500) }); }
         });
       }
     );
@@ -22,56 +22,42 @@ function api(path) {
   });
 }
 
-const summarize = (data, attrs) => (data && data.data || []).map((r) => {
-  const a = r.attributes || {};
-  const out = { id: r.id };
-  for (const k of attrs) if (a[k] !== undefined) out[k] = a[k];
-  return out;
-});
-
-console.log('== /people/v2/forms (list) ==');
+console.log('== forms: id/name/public_url ==');
 try {
   const r = await api('/people/v2/forms?per_page=100');
   console.log('status', r.status);
-  console.log(JSON.stringify(summarize(r.json, ['name']), null, 1));
-} catch (e) { console.log('ERR', e.message); }
-
-console.log('== /people/v2/forms/1284759 (structure keys) ==');
-try {
-  const r = await api('/people/v2/forms/1284759');
-  console.log('status', r.status);
-  const f = r.json && r.json.data;
-  if (f) {
-    const a = f.attributes || {};
-    console.log('name:', a.name);
-    const fs = a.form_structure;
-    console.log('form_structure type:', typeof fs, fs ? (Array.isArray(fs) ? 'array' : Object.keys(fs)) : 'none');
-    const json = JSON.stringify(a);
-    console.log('keys:', Object.keys(a));
-    console.log('structure (compact, first 2500 chars):');
-    console.log(typeof fs === 'object' ? JSON.stringify(fs).slice(0, 2500) : String(fs).slice(0, 2500));
-  } else {
-    console.log('raw:', JSON.stringify(r.json).slice(0, 1000));
+  for (const f of r.json && r.json.data || []) {
+    console.log(f.id, '|', (f.attributes && f.attributes.name) || '', '|', (f.attributes && f.attributes.public_url) || 'NO_PUBLIC_URL');
   }
 } catch (e) { console.log('ERR', e.message); }
 
-console.log('== /groups/v2/events ==');
+console.log('\n== groups/v2/events upcoming (where starts_at>now, order -starts_at) ==');
 try {
-  const r = await api('/groups/v2/events?per_page=3');
+  const now = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+  const r = await api(`/groups/v2/events?where[starts_at][gt]=${now}&order=-starts_at&per_page=10`);
+  console.log('status', r.status);
+  const rows = (r.json && r.json.data || []).map((e) => ({
+    id: e.id,
+    name: e.attributes.name,
+    starts_at: e.attributes.starts_at,
+    ends_at: e.attributes.ends_at,
+    description: (e.attributes.description || '').slice(0, 120),
+    group_id: e.relationships && e.relationships.group && e.relationships.group.data && e.relationships.group.data.id,
+    location: e.relationships && e.relationships.location && e.relationships.location.data && e.relationships.location.data.id,
+  }));
+  console.log('count', rows.length);
+  console.log(JSON.stringify(rows, null, 1));
+} catch (e) { console.log('ERR', e.message); }
+
+console.log('\n== calendar/v1/events sample ==');
+try {
+  const r = await api('/calendar/v1/events?per_page=5');
   console.log('status', r.status);
   const list = r.json && r.json.data;
-  if (list && list.length) {
-    console.log('first event full record (first 2500 chars):');
-    console.log(JSON.stringify(list[0]).slice(0, 2500));
-    console.log('compact all:', JSON.stringify(list.map((e) => ({ id: e.id, attrs: e.attributes || {} }))).slice(0, 2000));
+  if (list) {
+    console.log('count', list.length);
+    console.log(JSON.stringify(list.map((e) => ({ id: e.id, attrs: e.attributes || {} })).slice(0, 2), null, 1).slice(0, 2500));
   } else {
-    console.log('response:', JSON.stringify(r.json).slice(0, 2000));
+    console.log('resp', JSON.stringify(r.json).slice(0, 1200));
   }
-} catch (e) { console.log('ERR', e.message); }
-
-console.log('== /groups/v2/groups (names/ids) ==');
-try {
-  const r = await api('/groups/v2/groups?per_page=100');
-  console.log('status', r.status);
-  console.log(JSON.stringify(summarize(r.json, ['name', 'public', 'state']), null, 1));
 } catch (e) { console.log('ERR', e.message); }

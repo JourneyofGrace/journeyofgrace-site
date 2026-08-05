@@ -1,8 +1,6 @@
 node_modules/
 screenshots/
 test-screenshots.mjs
-package.json
-package-lock.json
 
 # AI-generated / temporary files
 audit-visit.mjs

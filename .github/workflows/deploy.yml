@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Refresh Sermons & Deploy
 
 on:
   push:
@@ -10,23 +10,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  refresh:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,32 +36,24 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Fetch Latest 5 YouTube Sermons
+        run: node scripts/fetch-sermons.mjs
+
+      - name: Commit refreshed sermons.html
+        id: commit
         run: |
-          node scripts/fetch-sermons.mjs
+          if ! git diff --quiet -- sermons.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add sermons.html
+            git commit -m "chore(ci): refresh sermons.html with latest videos and upcoming service"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Inject GitHub Secrets into JS Configuration
+      - name: Push refresh
+        if: steps.commit.outputs.changed == 'true'
         run: |
-          if [ -n "${{ secrets.FORM_RECIPIENT_EMAIL }}" ]; then
-            echo "Injecting secret email into js/config.js"
-            sed -i 's|"office@journeyofgrace.church"|"${{ secrets.FORM_RECIPIENT_EMAIL }}"|g' js/config.js
-          fi
-          if [ -n "${{ secrets.PCO_CLIENT_ID }}" ]; then
-            echo "Injecting PCO_CLIENT_ID into js/config.js"
-            sed -i 's|planningCenter.clientId = ""|planningCenter.clientId = "${{ secrets.PCO_CLIENT_ID }}"|g' js/config.js
-          fi
-          if [ -n "${{ secrets.PCO_WORKER_URL }}" ]; then
-            echo "Injecting PCO_WORKER_URL into js/config.js"
-            sed -i 's|planningCenter.workerUrl = ""|planningCenter.workerUrl = "${{ secrets.PCO_WORKER_URL }}"|g' js/config.js
-          fi
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

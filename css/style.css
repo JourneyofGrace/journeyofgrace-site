@@ -1879,21 +1879,53 @@ footer.jog-footer .footer-bottom {
 }
 
 
-/* Homepage hero: our own crossfade slideshow. The Squarespace universal JS
+/* Homepage hero: full-screen background. The Squarespace universal JS
    (IndexGallery/HeaderOverflow) no longer works in this static clone, so we
-   lay out the 3 hero images ourselves and fade between them. */
+   lay out the hero ourselves: a self-hosted <video> plays behind the title and
+   nav pills, and the 3 hero images remain beneath as a static fallback. */
 .index-gallery-wrapper:not(.index-item-navigation) {
   position: relative !important;
   width: 100% !important;
-  height: 85vh !important;
+  height: 100vh !important;
+  height: 100svh !important;
   min-height: 420px !important;
-  max-height: 920px !important;
   overflow: hidden !important;
   background: #1e242d;
 }
-.index-gallery-wrapper:not(.index-item-navigation) .sqs-video-background,
-.index-gallery-wrapper:not(.index-item-navigation) .index-main-image {
-  display: none !important;
+/* Video slide: shown (transparent until data arrives), fills the hero, sits
+   above the fallback images but below the overlay/text. */
+.index-gallery-wrapper:not(.index-item-navigation) .index-main-image,
+.index-gallery-wrapper:not(.index-item-navigation) .sqs-video-background {
+  display: block !important;
+}
+.index-gallery-wrapper:not(.index-item-navigation) .collection-images .image-container.index-main-image {
+  opacity: 1 !important;
+  z-index: 2.5 !important;
+}
+.index-gallery-wrapper:not(.index-item-navigation) .sqs-video-background {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  z-index: 2.5 !important;
+}
+.index-gallery-wrapper:not(.index-item-navigation) .jog-hero-video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border: 0 !important;
+  background: #1e242d;
+}
+/* Once the video is actually playing, drop the fallback slides so they don’t
+   linger behind the video (only targets the image slides, not the video host). */
+.index-gallery-wrapper:not(.index-item-navigation).jog-video-active .collection-images .image-container.content-fill[data-url-id],
+.index-gallery-wrapper:not(.index-item-navigation).jog-video-active .collection-images .image-container.content-fill.is-active {
+  opacity: 0 !important;
 }
 .index-gallery-wrapper:not(.index-item-navigation) .collection-images,
 .index-gallery-wrapper:not(.index-item-navigation) .collection-images .image-container.content-fill {
@@ -1938,6 +1970,5 @@ footer.jog-footer .footer-bottom {
 @media (max-width: 768px) {
   .index-gallery-wrapper:not(.index-item-navigation) {
     min-height: 320px !important;
-    max-height: 520px !important;
   }
 }

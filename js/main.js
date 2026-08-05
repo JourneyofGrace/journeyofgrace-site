@@ -16,8 +16,68 @@ document.addEventListener('DOMContentLoaded', function() {
   initEventExports();
   initFormThanks();
   initActiveNavHighlight();
+  initHomeVideoBackground();
   initHomeHero();
 });
+
+/**
+ * Homepage hero video background.
+ *
+ * The original Squarespace runtime (which drove the `.sqs-video-background`
+ * Vimeo embed) is gone in this static clone, so instead we render a self-hosted
+ * <video> (assets/videos/) that autoplays muted and looped, filling the hero.
+ * The image slideshow underneath stays visible until the video actually starts
+ * playing; if the file is missing or unsupported, the slideshow remains as the
+ * fallback. `data-config-playback-speed` on the host element is honored
+ * (defaults to 1x when absent).
+ */
+function initHomeVideoBackground() {
+  var video = document.querySelector('.index-gallery-wrapper:not(.index-item-navigation) .jog-hero-video');
+  if (!video) {
+    return;
+  }
+  var host = video.closest('.sqs-video-background');
+  var wrapper = video.closest('.index-gallery-wrapper');
+
+  var speed = parseFloat(host && host.getAttribute('data-config-playback-speed'));
+  if (!isNaN(speed) && speed > 0) {
+    try {
+      video.playbackRate = speed;
+    } catch (e) {
+      /* playbackRate is not supported everywhere — ignore. */
+    }
+  }
+
+  function markPlaying() {
+    if (wrapper) {
+      wrapper.classList.add('jog-video-active');
+    }
+  }
+
+  video.addEventListener('playing', markPlaying);
+  // Some browsers never fire `playing` for an already-cached muted loop;
+  // `canplay` plus a non-paused state is a reliable enough fallback.
+  video.addEventListener('canplay', function() {
+    if (!video.paused && !video.ended) {
+      markPlaying();
+    }
+  });
+
+  var playPromise = video.play();
+  if (playPromise && playPromise.catch) {
+    // Autoplay can be blocked before the user has interacted with the page.
+    // On the first interaction, start the loop so the hero never stays static.
+    playPromise.catch(function() {
+      var onFirst = function() {
+        try { video.play(); } catch (e) {}
+        document.removeEventListener('pointerdown', onFirst);
+        document.removeEventListener('keydown', onFirst);
+      };
+      document.addEventListener('pointerdown', onFirst);
+      document.addEventListener('keydown', onFirst);
+    });
+  }
+}
 
 /**
  * Homepage hero slideshow.

@@ -1430,7 +1430,7 @@ textarea:focus-visible,
   text-transform: uppercase !important;
   letter-spacing: 0.04em !important;
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.95) !important;
-  margin: 0 !important;
+  margin: 0 auto !important;
   line-height: 1.2 !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
@@ -1815,5 +1815,66 @@ footer.jog-footer .footer-bottom {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+/* Upcoming Service Section */
+.sermons-upcoming-section {
+  margin-bottom: 3rem;
+}
+.sermons-upcoming-card {
+  display: flex;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 2px solid #c97a2b;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sermons-upcoming-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+.sermons-upcoming-card .sermon-yt-thumb {
+  flex: 1 1 360px;
+  max-width: 46%;
+  aspect-ratio: 16 / 9;
+}
+.sermons-upcoming-card .sermon-yt-info {
+  flex: 1 1 320px;
+  padding: 1.5rem;
+  justify-content: center;
+}
+.sermons-upcoming-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  background: #c97a2b;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.sermons-upcoming-card .sermon-yt-title {
+  font-size: 1.35rem;
+  color: #0f172a;
+}
+.sermons-upcoming-when {
+  font-size: 0.95rem !important;
+  font-weight: 600;
+  color: #c97a2b !important;
+  margin: 0 0 0.75rem 0;
+}
+@media (max-width: 720px) {
+  .sermons-upcoming-card .sermon-yt-thumb {
+    max-width: 100%;
+    flex-basis: 100%;
+  }
 }
 

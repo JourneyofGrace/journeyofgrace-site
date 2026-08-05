@@ -11,3 +11,6 @@ analyze-visit.py
 .gemini/
 *.mjs.bak
 *.html.bak
+
+# Local dev/verification scratch scripts (not part of the site or CI)
+scratch/

@@ -5,7 +5,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: '15 16 * * 0' # Every Sunday at 9:15 AM MST (16:15 UTC)
+    - cron: '15 16 * * 0' # Every Sunday at 9:15 AM MST (16:15 UTC) - refreshes upcoming service
+    - cron: '15 16 * * 1' # Every Monday at 9:15 AM MST (16:15 UTC) - pulls the newest Sunday sermon
   workflow_dispatch:
 
 permissions:

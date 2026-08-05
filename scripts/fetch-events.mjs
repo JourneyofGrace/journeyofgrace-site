@@ -128,7 +128,13 @@ ${lines}
       ? `          <div class="eventlist-excerpt"><p class="">Part of the ${esc(ev.groupName)} group.</p></div>`
       : '');
 
+  const thumb = ev.imageUrl
+    ? `      <a href="${link}" class="eventlist-column-thumbnail content-fill"><img src="${ev.imageUrl}" data-src="${ev.imageUrl}" data-image="${ev.imageUrl}" data-image-focal-point="0.5,0.5" alt="${esc(ev.name)}" class="eventlist-thumbnail" data-load="false"></a>
+`
+    : '';
+
   return `      <article class="eventlist-event ${allDay ? 'eventlist-event--allday ' : ''}eventlist-event--upcoming">
+${thumb}
         <a href="${link}" class="eventlist-column-date">
           <div class="eventlist-datetag">
             <div class="eventlist-datetag-inner">
@@ -205,8 +211,16 @@ function calendarCard(inst) {
   };
 }
 
+// PCO default header images are generic placeholders (URL contains /defaults/);
+// only surface genuinely uploaded group images on the card.
+function realHeaderImage(url) {
+  if (!url) return '';
+  if (url.indexOf('/defaults/') !== -1) return '';
+  return url;
+}
+
 // Build a card model from a group event.
-function groupCard(ev, groupName, locationName) {
+function groupCard(ev, groupName, locationName, headerImage) {
   const a = ev.attributes;
   const startLocal = phx(a.starts_at);
   const endLocal = phx(a.ends_at || a.starts_at);
@@ -230,8 +244,27 @@ function groupCard(ev, groupName, locationName) {
     addressLines,
     description: (a.description || '').trim(),
     groupName: groupName || '',
+    imageUrl: realHeaderImage(headerImage || ''),
     googleUrl: googleCalendarLink(a.name, a.starts_at, a.ends_at || a.starts_at, false, addressLines.join(', ')),
   };
+}
+
+// Whitelist = GH Actions variable `PCO_GROUP_WHITELIST`:
+// comma/whitespace separated tokens matching a group name, group id, or group type.
+// Empty/unset = show ALL groups.
+function parseWhitelist() {
+  const raw = (process.env.PCO_GROUP_WHITELIST || '').split(/[\s,;]+/).filter(Boolean);
+  return raw.map((t) => t.toLowerCase());
+}
+
+// Filter: token matches group id, group name, or group type name (case-insensitive contains).
+function inWhitelist(whitelist, group) {
+  if (!whitelist || !whitelist.length) return true;
+  return whitelist.some((t) =>
+    (group.id && group.id.toLowerCase() === t) ||
+    (group.name && group.name.toLowerCase().includes(t)) ||
+    (group.typeName && group.typeName.toLowerCase().includes(t))
+  );
 }
 
 async function fetchAll() {
@@ -253,15 +286,21 @@ async function fetchAll() {
       calendarCard({ attributes: { name: 'Mock Calendar Event', starts_at: '2026-08-10T18:00:00Z', ends_at: null, all_day_event: false, location: 'Fireplace Hall', church_center_url: `${CHURCH_CENTER}/calendar/event/999` } }),
       calendarCard(mkAllDay),
     ];
-    const mkGrp = (starts, groupId, locId, locName) => groupCard(
+    const mkGrp = (starts, groupId, locId, locName, img) => groupCard(
       { attributes: { name: 'Mock Group Meeting', starts_at: starts, ends_at: null, description: 'All are welcome!' }, relationships: { group: { data: { id: groupId } }, location: { data: { id: locId } } } },
       groupId === '1998843' ? 'Route 3456' : 'Journey Class - Adult',
-      locName || ''
+      locName || '',
+      img || ''
     );
     const grpCards = [
-      mkGrp('2026-11-29T18:00:00Z', '1998843', null, ''),
-      mkGrp('2026-11-29T16:00:00Z', '1691333', '1080835', 'Fireplace Hall'),
-    ];
+      mkGrp('2026-11-29T18:00:00Z', '1998843', null, '', 'https://groups-production.s3.amazonaws.com/uploads/group/header_image/1998843/medium_real.png'),
+      mkGrp('2026-11-29T16:00:00Z', '1691333', '1080835', 'Fireplace Hall', 'https://groups-production.s3.amazonaws.com/defaults/thumbnail_8.png'),
+      mkGrp('2026-12-01T02:00:00Z', '734809', null, '', 'https://groups-production.s3.amazonaws.com/uploads/group/header_image/734809/medium_RESTORE.jpg'),
+    ].filter((c) => inWhitelist(parseWhitelist(), {
+      id: c.link.replace(`${GROUPS_DIR}/`, ''),
+      name: c.groupName,
+      typeName: '',
+    }));
     return { calCards, grpCards, today };
   }
 
@@ -276,15 +315,50 @@ async function fetchAll() {
     (byType[inc.type] = byType[inc.type] || []).push(inc);
   }
   const groupNames = {};
-  for (const g of byType.Group || []) groupNames[g.id] = g.attributes && g.attributes.name;
+  const groupImages = {};
+  const groupTypes = {};
+  for (const g of byType.Group || []) {
+    groupNames[g.id] = g.attributes && g.attributes.name;
+    const hi = g.attributes && g.attributes.header_image;
+    groupImages[g.id] = (hi && hi.original) || (hi && hi.medium) || '';
+    const gt = g.relationships && g.relationships.group_type && g.relationships.group_type.data;
+    if (gt && gt.id) groupTypes[g.id] = gt.id;
+  }
   const locNames = {};
   for (const l of byType.Location || []) locNames[l.id] = l.attributes && l.attributes.name;
 
+  // Resolve group type names in one call, then build per-group descriptors for whitelist matching.
+  const typeIds = [...new Set(Object.values(groupTypes).filter(Boolean))];
+  const typeNames = {};
+  if (typeIds.length) {
+    const tr = await api(`/groups/v2/group_types?per_page=100`);
+    if (tr.status === 200) {
+      for (const t of tr.json.data || []) typeNames[t.id] = t.attributes && t.attributes.name;
+    }
+  }
+
+  const whitelist = parseWhitelist();
+  let kept = 0;
+  let dropped = 0;
   const grpCards = (grpRes.json.data || []).map((ev) => {
     const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
     const lId = ev.relationships && ev.relationships.location && ev.relationships.location.data && ev.relationships.location.data.id;
-    return groupCard(ev, groupNames[gId], lId ? locNames[lId] : '');
-  });
+    const group = {
+      id: gId,
+      name: groupNames[gId],
+      typeName: groupTypes[gId] ? typeNames[groupTypes[gId]] : '',
+    };
+    if (!inWhitelist(whitelist, group)) {
+      dropped++;
+      return null;
+    }
+    kept++;
+    return groupCard(ev, groupNames[gId], lId ? locNames[lId] : '', groupImages[gId]);
+  }).filter(Boolean);
+
+  if (whitelist && whitelist.length) {
+    console.log(`Group whitelist active (${whitelist.join(', ')}): kept ${kept}, dropped ${dropped}`);
+  }
 
   return { calCards, grpCards, today };
 }

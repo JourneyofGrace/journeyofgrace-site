@@ -1,7 +1,7 @@
 {
   "name": "journeyofgrace-site",
   "version": "1.0.0",
-  "description": "A faithful static clone of the Squarespace site [journeyofgrace.church](https://journeyofgrace.church), hosted on GitHub Pages.",
+  "description": "Independent static site for Journey of Grace (formerly a Squarespace clone), hosted on GitHub Pages.",
   "main": "index.js",
   "scripts": {
     "build": "node scripts/fetch-sermons.mjs",

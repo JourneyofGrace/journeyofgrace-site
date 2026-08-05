@@ -1,5 +1,5 @@
 /* Journey of Grace — Custom Styles
-   Design system layered over the Squarespace template.
+   Design system layered over the static template markup.
    Palette: warm grounded neutrals + deep slate + amber/gold accent.
    Typography: Asap (sans-serif body) + Cantata One (serif headings). */
 
@@ -86,7 +86,7 @@ a:hover {
   color: var(--color-amber);
 }
 
-/* === Buttons (Squarespace button blocks) === */
+/* === Buttons (markup button blocks) === */
 .sqs-button-element--primary,
 .sqs-button-element--secondary,
 .sqs-block-button-element--primary,
@@ -145,7 +145,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* === Header (Squarespace clone pages) === */
+/* === Header (clone pages) === */
 /* Dark slate bar matching the footer: translucent, slim, full-width, amber border */
 .site-header {
   background: rgba(45, 58, 69, 0.92);
@@ -554,6 +554,72 @@ a:hover {
 .eventlist-column-thumbnail {
   border-radius: 6px;
   overflow: hidden;
+}
+
+/* Group event cards with header images: the runtime CSS hides thumbnails via
+   the body:not(.event-thumbnails) and img:not(.loaded) guards (the thumbnails
+   script only checks .eventlist--upcoming / --past). Override them here with a
+   clean flex row so whitelisted group images display properly. */
+.eventlist--groups .eventlist-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.eventlist--groups .eventlist-column-thumbnail {
+  display: block !important;
+  float: none;
+  position: static;
+  flex: 0 0 260px;
+  width: 260px;
+  max-width: 38%;
+  height: auto;
+  padding-bottom: 0;
+  background: transparent;
+}
+
+.eventlist--groups .eventlist-column-thumbnail img {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 1 !important;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.eventlist--groups .eventlist-column-date {
+  position: static !important;
+  float: none;
+  width: 70px;
+  flex: 0 0 70px;
+  text-decoration: none;
+}
+
+.eventlist--groups .eventlist-datetag {
+  position: static !important;
+  top: 0;
+  right: auto;
+}
+
+.eventlist--groups .eventlist-column-info {
+  float: none;
+  flex: 1 1 auto;
+  width: auto;
+  padding: 0;
+  min-width: 0;
+}
+
+@media (max-width: 639px) {
+  .eventlist--groups .eventlist-event {
+    flex-wrap: wrap;
+  }
+
+  .eventlist--groups .eventlist-column-thumbnail {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: none;
+  }
 }
 
 .eventlist-title {
@@ -1412,7 +1478,7 @@ textarea:focus-visible,
 }
 
 /* === Visit Page Hero Banner === */
-/* Hide the Squarespace index-gallery-wrapper on pages with a custom page-banner-wrapper.
+/* Hide the index-gallery-wrapper on pages with a custom page-banner-wrapper.
    The index-gallery-wrapper is position:fixed and creates a full-viewport background that
    pushes the main content down when the page has a custom hero section instead.
    Scoped to the visit-1 page via its unique body collection ID. */
@@ -1993,8 +2059,8 @@ footer.jog-footer .footer-bottom {
 
 
 /* Homepage hero: full-screen self-hosted video.
-   The Squarespace index-gallery structure (IndexGallery/HeaderOverflow) no
-   longer works in this static clone, so the whole hero is a self-contained
+   The original index-gallery structure (IndexGallery/HeaderOverflow) no
+   longer applies in this static site, so the whole hero is a self-contained
    <video> that autoplays muted and loops, covering the full viewport behind
    the caption and nav pills. The solid sticky header sits above it. */
 .jog-hero {

@@ -1624,6 +1624,26 @@ footer.jog-footer nav a:hover {
   color: #c97a2b !important;
 }
 
+footer.jog-footer .footer-social {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+footer.jog-footer .footer-social h4 {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+footer.jog-footer .footer-social-links {
+  display: flex !important;
+  gap: 1.2rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
 footer.jog-footer .footer-social a {
   color: #ffffff !important;
   text-decoration: none !important;

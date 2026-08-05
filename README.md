@@ -1,10 +1,10 @@
-# Journey of Grace — Static Site Clone
+# Journey of Grace — Journey of Grace Website
 
-A faithful static clone of the Squarespace site [journeyofgrace.church](https://journeyofgrace.church), hosted on GitHub Pages.
+The official website for Journey of Grace Church of the Nazarene (Mesa, AZ), hosted on GitHub Pages.
 
 ## Overview
 
-This site is a static HTML/CSS/JS clone of the Journey of Grace Squarespace site. It preserves the original design and layout while hosting all assets locally for independence from Squarespace.
+This is a self-contained static HTML/CSS/JS website. It was originally derived from the church's Squarespace site, but has since been rebuilt as a fully independent, custom site: our own markup, our own stylesheet (`css/style.css`), and our own JavaScript (`js/main.js`). All assets are hosted locally in this repository — no reliance on Squarespace.
 
 ### Integrations
 
@@ -15,9 +15,9 @@ This site is a static HTML/CSS/JS clone of the Journey of Grace Squarespace site
 
 | Page | Description |
 |------|-------------|
-| `index.html` | Home page |
+| `index.html` | Home page (full-screen intro video hero) |
 | `about-us.html` | About Us |
-| `visit-1.html` | Visit / Location |
+| `visit.html` | Visit / Location (Leaflet map) |
 | `connect.html` | Connect / Ministries |
 | `sermons.html` | Sermons |
 | `events.html` | Events (PCO calendar) |
@@ -31,10 +31,10 @@ This site is a static HTML/CSS/JS clone of the Journey of Grace Squarespace site
 | `journey-classes.html` | Journey Classes |
 | `service-teams.html` | Service Teams |
 | `prximo-paso.html` | Próximo Paso |
-| `privacy.html` | Privacy Policy |
 | `plan-your-visit.html` | Plan Your Visit |
-| `blog.html` | Blog |
+| `privacy.html` | Privacy Policy |
 | `sermon-archive.html` | Sermon Archive |
+| `404.html` | Not Found |
 
 ## Setup
 
@@ -60,6 +60,8 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080` in your browser.
 
+Note: page and asset URLs use the GitHub Pages base path `/journeyofgrace-site/`, so for local testing either serve from the parent directory (`python3 -m http.server 8080 --directory ..`) and open `/journeyofgrace-site/`, or a base-path rewrite.
+
 ## Deployment
 
 This site uses GitHub Actions for automatic deployment to GitHub Pages.
@@ -73,10 +75,8 @@ To enable:
 
 ## Assets
 
-- `assets/img/` — All images downloaded from the original Squarespace site (113 files)
-- `css/` — Squarespace CDN CSS files for styling fidelity
-- `js/` — Custom JavaScript for PCO widgets, forms, and interactivity
-
-## Template
-
-Squarespace template: **ryan-albaugh-5n9p**
+- `assets/img/` — Images (including the logo and original site imagery)
+- `assets/videos/` — Self-hosted homepage intro video (`journey-of-grace-intro.mp4`)
+- `assets/vendor-sqsp/` — Self-hosted vendor assets (Leaflet, fonts, etc.)
+- `css/` — Custom stylesheets (`style.css`, plus `site.css`/`custom.css`/`clean-visit.css`)
+- `js/` — Custom JavaScript for PCO widgets, forms, video hero, and interactivity

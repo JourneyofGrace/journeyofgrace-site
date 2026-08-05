@@ -1387,31 +1387,7 @@ textarea:focus-visible,
   overflow: hidden;
   z-index: 1 !important;
 }
-/* Banner image & title overlay system matching about-us */
-.page-banner-wrapper:not(.no-main-image) {
-  position: relative !important;
-  height: 400px !important;
-  overflow: hidden !important;
-}
 
-.page-banner-wrapper .page-banner-image-wrapper {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 1 !important;
-}
-
-.page-banner-wrapper .page-banner-image-wrapper img,
-.page-banner-image {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  margin: 0 !important;
-  display: block !important;
-}
 
 /* ==========================================================================
    GLOBAL DESIGN SYSTEM ENHANCEMENTS (HEADER, MOBILE NAV, FOOTER, ADA)
@@ -1787,36 +1763,3 @@ footer.jog-footer .footer-bottom {
   align-items: center;
   gap: 0.4rem;
 }
-
-/* Banner Title Overlay & Scroll Fade-out */
-.title-card-wrapper {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 90% !important;
-  max-width: 800px !important;
-  text-align: center !important;
-  z-index: 10 !important;
-  transition: opacity 0.3s ease, transform 0.3s ease !important;
-  pointer-events: none !important;
-}
-
-.title-card-wrapper .page-title {
-  font-family: 'Cantata One', Georgia, serif !important;
-  font-size: 2.2rem !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.08em !important;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
-  margin: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .title-card-wrapper .page-title {
-    font-size: 1.6rem !important;
-  }
-}
-
-

@@ -20,7 +20,7 @@ function api(path, opts) {
         res.on('data', (c) => (data += c.toString()));
         res.on('end', () => {
           try { resolve({ status: res.statusCode, json: JSON.parse(data) }); }
-          catch { resolve({ status: res.statusCode, raw: data.slice(0, 4000) }); }
+          catch { resolve({ status: res.statusCode, raw: data.slice(0, 2000) }); }
         });
       }
     );
@@ -30,35 +30,36 @@ function api(path, opts) {
   });
 }
 
-const FORMS = {
-  '1286060': [
-    { field_type: 'text', label: 'Full Name', required: true, sequence: 0 },
-    { field_type: 'email', label: 'Email Address', required: true, sequence: 1 },
-    { field_type: 'phone_number', label: 'Phone Number', required: false, sequence: 2 },
-    { field_type: 'text_area', label: 'Tell us how to help you take your next step', required: false, sequence: 3 },
-  ],
-  '1286061': [
-    { field_type: 'text', label: 'Nombre Completo', required: true, sequence: 0 },
-    { field_type: 'email', label: 'Correo Electrónico', required: true, sequence: 1 },
-    { field_type: 'phone_number', label: 'Número de Teléfono', required: false, sequence: 2 },
-    { field_type: 'text_area', label: 'Cuéntanos cómo podemos ayudarte a dar tu próximo paso', required: false, sequence: 3 },
-  ],
-};
+// Probe candidate field_type enums on form 1286060. POST then DELETE successful
+// ones so we leave no junk behind.
+const candidates = [
+  'text', 'textarea', 'text_area', 'paragraph', 'long_text', 'multi_line',
+  'email', 'email_address', 'email_text', 'emails', 'emailaddy', 'email_add',
+  'phone', 'phone_number', 'phonenumber', 'mobile',
+  'select', 'dropdown', 'single_select', 'choice', 'choose_one',
+  'radio', 'radio_buttons', 'radio_group', 'multiple_choice', 'checkboxes',
+  'checkbox', 'boolean', 'yes_no',
+  'number', 'numeric', 'integer', 'float',
+  'date', 'datetime', 'date_time', 'day', 'month_year',
+  'url', 'website', 'link', 'social',
+  'name', 'full_name', 'first_last_name', 'person_name',
+  'address', 'address_line', 'street_address',
+  'notes', 'comment', 'message', 'long_answer', 'short_answer',
+];
 
-for (const [formId, fields] of Object.entries(FORMS)) {
-  console.log(`\n== POST fields to form ${formId} ==`);
-  for (const f of fields) {
-    try {
-      const r = await api(`/people/v2/forms/${formId}/fields`, {
-        method: 'POST',
-        body: { data: { type: 'FormField', attributes: { field_type: f.field_type, label: f.label, required: f.required, sequence: f.sequence } } },
-      });
-      const d = r.json && r.json.data;
-      if (d) {
-        console.log('OK  ', f.field_type, '|', f.label, '-> id', d.id);
-      } else {
-        console.log('FAIL', f.label, '| status', r.status, '|', JSON.stringify(r.json || r.raw).slice(0, 1200));
-      }
-    } catch (e) { console.log('ERR ', f.label, e.message); }
-  }
+for (const t of candidates) {
+  try {
+    const r = await api(`/people/v2/forms/1286060/fields`, {
+      method: 'POST',
+      body: { data: { type: 'FormField', attributes: { field_type: t, label: 'probe ' + t, required: false } } },
+    });
+    const d = r.json && r.json.data;
+    if (d) {
+      console.log('VALID ', t, '-> id', d.id);
+      const del = await api(`/people/v2/forms/1286060/fields/${d.id}`, { method: 'DELETE' });
+      console.log('       cleanup DELETE status', del.status);
+    } else {
+      console.log('invalid', t, '(' + (r.status || '?') + ')');
+    }
+  } catch (e) { console.log('ERR ', t, e.message); }
 }

@@ -1,0 +1,16 @@
+.git
+.gitignore
+.github
+node_modules
+screenshots
+scratch
+docs
+scripts
+package.json
+package-lock.json
+test-screenshots.mjs
+audit-visit.mjs
+analyze-detail.py
+analyze-visit.py
+*.mjs.bak
+*.html.bak

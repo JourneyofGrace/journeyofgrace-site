@@ -93,6 +93,17 @@ Then open `http://localhost:8080` in your browser.
 
 Note: page and asset URLs use the GitHub Pages base path `/journeyofgrace-site/`, so for local testing either serve from the parent directory (`python3 -m http.server 8080 --directory ..`) and open `/journeyofgrace-site/`, or a base-path rewrite.
 
+#### Docker
+
+The site can also be run in a container (served by nginx under the same `/journeyofgrace-site/` base path, so no markup changes are needed):
+
+```bash
+docker build -f docker/Dockerfile -t journeyofgrace-site .
+docker run --rm -p 8080:80 journeyofgrace-site
+```
+
+Then open `http://localhost:8080/journeyofgrace-site/`. The nginx config in `docker/nginx.conf` maps extensionless page links (`/journeyofgrace-site/about-us`) to their `.html` files, mirroring GitHub Pages clean-URL behaviour.
+
 ## Deployment
 
 This site uses GitHub Actions for automatic deployment to GitHub Pages.

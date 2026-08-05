@@ -11,21 +11,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initBannerScrollFade() {
   var titleCard = document.querySelector('.title-card-wrapper');
-  if (!titleCard) return;
+  var banner = document.querySelector('.page-banner-wrapper');
+  if (!titleCard || !banner) return;
 
-  window.addEventListener('scroll', function() {
+  function handleScroll() {
     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    var fadeThreshold = 180;
-    
-    if (scrollTop > fadeThreshold) {
+    var bannerHeight = banner.offsetHeight || 350;
+    var fadeThreshold = bannerHeight * 0.6;
+
+    if (scrollTop <= 0) {
+      titleCard.style.opacity = '1';
+      titleCard.style.transform = 'translate(-50%, -50%)';
+      titleCard.style.visibility = 'visible';
+    } else if (scrollTop >= fadeThreshold) {
       titleCard.style.opacity = '0';
-      titleCard.style.transform = 'translate(-50%, -70%)';
+      titleCard.style.transform = 'translate(-50%, calc(-50% - ' + (scrollTop * 0.4) + 'px))';
+      titleCard.style.visibility = 'hidden';
     } else {
-      var opacity = Math.max(0, 1 - (scrollTop / fadeThreshold));
+      var progress = scrollTop / fadeThreshold;
+      var opacity = Math.max(0, 1 - progress);
       titleCard.style.opacity = opacity.toFixed(2);
-      titleCard.style.transform = 'translate(-50%, calc(-50% - ' + (scrollTop * 0.2) + 'px))';
+      titleCard.style.transform = 'translate(-50%, calc(-50% - ' + (scrollTop * 0.3) + 'px))';
+      titleCard.style.visibility = 'visible';
     }
-  });
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
 }
 
 function initActiveNavHighlight() {

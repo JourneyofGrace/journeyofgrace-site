@@ -1,0 +1,19 @@
+name: PCO Probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run API probe (read-only)
+        env:
+          PCO_CLIENT_ID: ${{ secrets.PCO_CLIENT_ID }}
+          PCO_SECRET: ${{ secrets.PCO_SECRET }}
+        run: node scripts/pco-probe.mjs

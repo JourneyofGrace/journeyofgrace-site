@@ -1467,11 +1467,35 @@ textarea:focus-visible,
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
   min-height: 70px !important;
 }
-/* Homepage: the full-screen video hero starts at the top of the viewport, so
-   the solid header is fixed and overlays it (like the original Squarespace
-   page) instead of pushing it down. Other pages keep the sticky header. */
-#collection-5c3ba438352f53368c055aa2 .jog-global-header {
-  position: fixed !important;
+/* Homepage layout: the full-screen video hero must always fill the whole page
+   below the shared sticky header (header keeps the same code as other pages;
+   no footer on the homepage). Flex towers keep the hero edge-to-edge and flush
+   with the bottom of the viewport at any size, without hardcoding the header
+   height. */
+#collection-5c3ba438352f53368c055aa2 {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+#collection-5c3ba438352f53368c055aa2 .mercury-transition-wrapper {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+#collection-5c3ba438352f53368c055aa2 .content-outer-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+#collection-5c3ba438352f53368c055aa2 #mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+#collection-5c3ba438352f53368c055aa2 .jog-hero {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
 }
 .jog-global-header .header-brand a {
   display: flex !important;

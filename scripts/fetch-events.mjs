@@ -194,7 +194,9 @@ function calendarCard(inst) {
   if (locName) addressLines.push(locName);
   addressLines.push('955 East University Drive', 'Mesa, AZ, 85203');
   if (!locName) addressLines.push('United States');
+  const eventId = inst.relationships && inst.relationships.event && inst.relationships.event.data && inst.relationships.event.data.id;
   return {
+    eventId: eventId || '',
     name: a.name || 'Church Event',
     link: a.church_center_url || `${CHURCH_CENTER}/calendar`,
     allDay: !!a.all_day_event,
@@ -250,21 +252,90 @@ function groupCard(ev, groupName, locationName, headerImage) {
 }
 
 // Whitelist = GH Actions variable `PCO_GROUP_WHITELIST`:
-// comma/whitespace separated tokens matching a group name, group id, or group type.
-// Empty/unset = show ALL groups.
+// COMMA-separated list (spaces allowed in names) of group identifiers.
+// An entry may be a group id token, a group name, or a group type name.
+// Entries are matched against group names/types using the closest match,
+// so friendly names (e.g. "ROC Youth Group") work even if slightly different
+// from the exact name in PCO. FAIL-CLOSED: an empty/unset whitelist matches
+// NOTHING (nothing shows) — a whitelist, not a blacklist.
 function parseWhitelist() {
-  const raw = (process.env.PCO_GROUP_WHITELIST || '').split(/[\s,;]+/).filter(Boolean);
-  return raw.map((t) => t.toLowerCase());
+  return (process.env.PCO_GROUP_WHITELIST || '')
+    .split(',')
+    .map((t) => t.trim().replace(/^["']|["']$/g, ''))
+    .filter(Boolean);
 }
 
-// Filter: token matches group id, group name, or group type name (case-insensitive contains).
-function inWhitelist(whitelist, group) {
-  if (!whitelist || !whitelist.length) return true;
-  return whitelist.some((t) =>
-    (group.id && group.id.toLowerCase() === t) ||
-    (group.name && group.name.toLowerCase().includes(t)) ||
-    (group.typeName && group.typeName.toLowerCase().includes(t))
-  );
+// Optional calendar filter = GH Actions variable `PCO_CALENDAR_TAG`:
+// comma-separated tag names. Only calendar events carrying at least one of
+// these tags are shown. FAIL-CLOSED: empty/unset = no calendar events shown.
+function parseCalendarTags() {
+  return (process.env.PCO_CALENDAR_TAG || '')
+    .split(',')
+    .map((t) => t.trim().toLowerCase().replace(/^["']|["']$/g, ''))
+    .filter(Boolean);
+}
+
+// Collapse a string to lowercase alphanumeric words for fuzzy comparison.
+function norm(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+}
+
+function bigrams(s) {
+  const out = new Set();
+  for (let i = 0; i < s.length - 1; i++) out.add(s.slice(i, i + 2));
+  return out;
+}
+
+// 0..1 similarity: exact = 1, containment = 0.85, else bigram Dice overlap.
+function similarity(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  if (a.includes(b) || b.includes(a)) return 0.85;
+  const A = bigrams(a);
+  const B = bigrams(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const g of A) if (B.has(g)) inter++;
+  return (2 * inter) / (A.size + B.size);
+}
+
+// Resolve the whitelist to the set of matching group ids.
+// Order: exact id -> exact name/type -> closest fuzzy name/type match.
+function buildMatchedGroupIds(groupsById, whitelist) {
+  const matched = new Set();
+  if (!whitelist || !whitelist.length) return matched; // fail closed: nothing
+  for (const token of whitelist) {
+    const t = norm(token);
+    const entries = Object.values(groupsById);
+    // 1. exact id
+    let hit = false;
+    for (const g of entries) {
+      if (String(g.id) === token.trim()) { matched.add(g.id); hit = true; }
+    }
+    if (hit) continue;
+    // 2. exact name or type
+    for (const g of entries) {
+      if (norm(g.name) === t || norm(g.typeName) === t) { matched.add(g.id); hit = true; }
+    }
+    if (hit) continue;
+    // 3. closest fuzzy match on name/type
+    let bestScore = 0;
+    const bestIds = [];
+    for (const g of entries) {
+      const s = Math.max(similarity(t, norm(g.name)), similarity(t, norm(g.typeName)));
+      if (s > bestScore) { bestScore = s; bestIds.length = 0; bestIds.push(g.id); }
+      else if (s === bestScore && s > 0) bestIds.push(g.id);
+    }
+    if (bestScore >= 0.5) bestIds.forEach((id) => matched.add(id));
+  }
+  return matched;
+}
+
+// Does a card's tag set match any configured calendar tag? Empty filter = no.
+function inCalendarTag(cardTags, tags) {
+  if (!tags || !tags.length) return false; // fail closed
+  const card = (cardTags || []).map((t) => t.toLowerCase());
+  return tags.some((t) => card.includes(t));
 }
 
 async function fetchAll() {
@@ -281,32 +352,70 @@ async function fetchAll() {
         location: '',
         church_center_url: `${CHURCH_CENTER}/calendar/event/998`,
       },
+      relationships: { event: { data: { id: 'ev-998' } } },
     };
     const calCards = [
-      calendarCard({ attributes: { name: 'Mock Calendar Event', starts_at: '2026-08-10T18:00:00Z', ends_at: null, all_day_event: false, location: 'Fireplace Hall', church_center_url: `${CHURCH_CENTER}/calendar/event/999` } }),
+      calendarCard({ attributes: { name: 'Mock Website Sunday', starts_at: '2026-08-10T18:00:00Z', ends_at: null, all_day_event: false, location: 'Fireplace Hall', church_center_url: `${CHURCH_CENTER}/calendar/event/999` }, relationships: { event: { data: { id: 'ev-999' } } } }),
       calendarCard(mkAllDay),
     ];
-    const mkGrp = (starts, groupId, locId, locName, img) => groupCard(
-      { attributes: { name: 'Mock Group Meeting', starts_at: starts, ends_at: null, description: 'All are welcome!' }, relationships: { group: { data: { id: groupId } }, location: { data: { id: locId } } } },
-      groupId === '1998843' ? 'Route 3456' : 'Journey Class - Adult',
-      locName || '',
-      img || ''
+    const calTagMap = { 'ev-999': ['website'], 'ev-998': ['unlisted'] };
+    const tagFilteredCal = calCards.filter((c) => inCalendarTag(calTagMap[c.eventId], parseCalendarTags()));
+
+    // Mock real PCO group names so closest-match can be exercised (e.g. a
+    // fuzzy entry like "ROC Youth Club" still resolves to "ROC Youth Group").
+    const mockGroups = {
+      '1998843': { id: '1998843', name: 'ROC Youth Group', typeName: 'Youth' },
+      '1691333': { id: '1691333', name: 'Men\u2019s Breakfast', typeName: 'Fellowship' },
+      '734809': { id: '734809', name: 'Sunday Morning Life Group', typeName: 'Life Group' },
+    };
+    const mkGrp = (starts, groupId, locId, locName, img) => (
+      Object.assign(
+        groupCard(
+          { attributes: { name: mockGroups[groupId].name, starts_at: starts, ends_at: null, description: 'All are welcome!' }, relationships: { group: { data: { id: groupId } }, location: { data: { id: locId } } } },
+          mockGroups[groupId].name,
+          locName || '',
+          img || ''
+        ),
+        { groupId }
+      )
     );
     const grpCards = [
       mkGrp('2026-11-29T18:00:00Z', '1998843', null, '', 'https://groups-production.s3.amazonaws.com/uploads/group/header_image/1998843/medium_real.png'),
       mkGrp('2026-11-29T16:00:00Z', '1691333', '1080835', 'Fireplace Hall', 'https://groups-production.s3.amazonaws.com/defaults/thumbnail_8.png'),
       mkGrp('2026-12-01T02:00:00Z', '734809', null, '', 'https://groups-production.s3.amazonaws.com/uploads/group/header_image/734809/medium_RESTORE.jpg'),
-    ].filter((c) => inWhitelist(parseWhitelist(), {
-      id: c.link.replace(`${GROUPS_DIR}/`, ''),
-      name: c.groupName,
-      typeName: '',
-    }));
-    return { calCards, grpCards, today };
+    ];
+    const matchedMock = buildMatchedGroupIds(mockGroups, parseWhitelist());
+    const whitelistedGrp = grpCards.filter((c) => matchedMock.has(c.groupId));
+    if (parseWhitelist().length) {
+      console.log(`Group whitelist active (${parseWhitelist().join(', ')}): kept ${whitelistedGrp.length}, dropped ${grpCards.length - whitelistedGrp.length}`);
+    }
+    return { calCards: tagFilteredCal, grpCards: whitelistedGrp, today };
   }
 
-  const calRes = await api(`/calendar/v2/event_instances?where[starts_at][gt]=${today}&order=starts_at&per_page=30`);
+  const calRes = await api(`/calendar/v2/event_instances?where[starts_at][gt]=${today}&order=starts_at&per_page=30&include=event`);
   if (calRes.status !== 200) throw new Error(`calendar event_instances HTTP ${calRes.status}`);
   const calCards = (calRes.json.data || []).map((inst) => calendarCard(inst));
+
+  // Optional: fetch event tags so calendar events can be whitelisted by tag.
+  let calTagMap = {};
+  const calTags = parseCalendarTags();
+  if (calTags.length) {
+    const evRes = await api(`/calendar/v2/events?per_page=100&include=tags`);
+    if (evRes.status !== 200) throw new Error(`calendar events (tags) HTTP ${evRes.status}`);
+    const tagNames = {};
+    for (const t of evRes.json.included || []) {
+      if (t.type === 'Tag') tagNames[t.id] = (t.attributes && t.attributes.name) || '';
+    }
+    for (const ev of evRes.json.data || []) {
+      const tagIds = (ev.relationships && ev.relationships.tags && ev.relationships.tags.data || []).map((r) => r.id);
+      calTagMap[ev.id] = tagIds.map((id) => tagNames[id]).filter(Boolean);
+    }
+  }
+  const filteredCal = calTags.length ? calCards.filter((c) => inCalendarTag(calTagMap[c.eventId], calTags)) : calCards;
+  if (calTags.length) {
+    const droppedCal = calCards.length - filteredCal.length;
+    console.log(`Calendar tag filter active (${calTags.join(', ')}): kept ${filteredCal.length}, dropped ${droppedCal}`);
+  }
 
   const grpRes = await api(`/groups/v2/events?where[starts_at][gt]=${today}&order=starts_at&per_page=30&include=group,location`);
   if (grpRes.status !== 200) throw new Error(`group events HTTP ${grpRes.status}`);
@@ -338,29 +447,38 @@ async function fetchAll() {
   }
 
   const whitelist = parseWhitelist();
+  const groupsById = {};
+  for (const ev of grpRes.json.data || []) {
+    const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
+    if (gId && !(gId in groupsById)) {
+      groupsById[gId] = {
+        id: gId,
+        name: groupNames[gId],
+        typeName: groupTypes[gId] ? typeNames[groupTypes[gId]] : '',
+      };
+    }
+  }
+  const matchedGroupIds = buildMatchedGroupIds(groupsById, whitelist);
   let kept = 0;
   let dropped = 0;
   const grpCards = (grpRes.json.data || []).map((ev) => {
     const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
-    const lId = ev.relationships && ev.relationships.location && ev.relationships.location.data && ev.relationships.location.data.id;
-    const group = {
-      id: gId,
-      name: groupNames[gId],
-      typeName: groupTypes[gId] ? typeNames[groupTypes[gId]] : '',
-    };
-    if (!inWhitelist(whitelist, group)) {
+    if (!matchedGroupIds.has(gId)) {
       dropped++;
       return null;
     }
     kept++;
+    const lId = ev.relationships && ev.relationships.location && ev.relationships.location.data && ev.relationships.location.data.id;
     return groupCard(ev, groupNames[gId], lId ? locNames[lId] : '', groupImages[gId]);
   }).filter(Boolean);
 
   if (whitelist && whitelist.length) {
     console.log(`Group whitelist active (${whitelist.join(', ')}): kept ${kept}, dropped ${dropped}`);
+  } else {
+    console.log('Group whitelist not configured — no group events shown (fail closed).');
   }
 
-  return { calCards, grpCards, today };
+  return { calCards: filteredCal, grpCards, today };
 }
 
 async function regenerate() {
@@ -387,7 +505,11 @@ ${calCards.map((c) => renderCard(c)).join('\n')}
     <div class="eventlist eventlist--groups">
 ${grpCards.map((c) => renderCard(c)).join('\n')}
     </div>`
-    : '';
+    : `    <!-- Group Events -->
+    <h2 class="eventlist-section-heading">Small Group &amp; Life Group Events</h2>
+    <div class="eventlist eventlist--groups">
+      <p class="eventlist-empty">No upcoming group events right now. Check back soon!</p>
+    </div>`;
 
   const newRegion = `${calHtml}\n${grpHtml}`;
 

@@ -44,6 +44,7 @@ jobs:
           PCO_CLIENT_ID: ${{ secrets.PCO_CLIENT_ID }}
           PCO_SECRET: ${{ secrets.PCO_SECRET }}
           PCO_GROUP_WHITELIST: ${{ vars.PCO_GROUP_WHITELIST }}
+          PCO_CALENDAR_TAG: ${{ vars.PCO_CALENDAR_TAG }}
 
       - name: Commit refreshed sermons.html & events.html
         id: commit

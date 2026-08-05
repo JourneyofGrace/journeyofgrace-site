@@ -11,6 +11,37 @@ This is a self-contained static HTML/CSS/JS website. It was originally derived f
 - **Planning Center Online (PCO)** — Events, Groups, and Giving widgets (IDs need to be configured in `js/main.js`)
 - **Formspree** — Contact form backend (form ID needs to be configured in `js/main.js`)
 
+## Events page filtering (fail-closed whitelist)
+
+The Events page (`events.html`) is regenerated from Planning Center by
+`scripts/fetch-events.mjs` in CI (see `.github/workflows/deploy.yml`). Two
+repository **variables** control what appears. Both are whitelists — **nothing
+shows unless explicitly listed**: if a variable is empty/unset, that section
+renders a "no upcoming events" message instead of listing everything.
+
+| Variable | Contents | Effect |
+|----------|----------|--------|
+| `PCO_GROUP_WHITELIST` | Comma-separated group **ids**, **names**, or **type names** | Only events from matching groups are shown. Name entries use closest-match, so friendly names (e.g. `ROC Youth Group`, `Men's Breakfast`) resolve even if they differ slightly from the exact name in PCO. |
+| `PCO_CALENDAR_TAG` | Comma-separated **tag names** | Only calendar events carrying at least one of these tags are shown. |
+
+Both must be set as **Actions variables** (not secrets):
+
+```bash
+gh variable set PCO_GROUP_WHITELIST -b "ROC Youth Group, Men's Breakfast" --repo JourneyOfGrace/journeyofgrace-site
+gh variable set PCO_CALENDAR_TAG -b "website" --repo JourneyOfGrace/journeyofgrace-site
+```
+
+Group identifiers are matched in this order: exact id match → exact name/type
+match → closest fuzzy name/type match (bigram similarity score ≥ 0.5), so
+entries like `ROC Youth Club` still resolve to the `ROC Youth Group`.
+
+To preview locally without PCO credentials, run with mock data:
+
+```bash
+MOCK=1 node scripts/fetch-events.mjs                            # everything empty -> both sections show placeholders
+MOCK=1 PCO_CALENDAR_TAG=website PCO_GROUP_WHITELIST="ROC Youth Group, Men's Breakfast" node scripts/fetch-events.mjs
+```
+
 ## Pages
 
 | Page | Description |

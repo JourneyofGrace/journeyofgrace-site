@@ -20,7 +20,7 @@ function api(path, opts) {
         res.on('data', (c) => (data += c.toString()));
         res.on('end', () => {
           try { resolve({ status: res.statusCode, json: JSON.parse(data) }); }
-          catch { resolve({ status: res.statusCode, raw: data.slice(0, 3000) }); }
+          catch { resolve({ status: res.statusCode, raw: data.slice(0, 2000) }); }
         });
       }
     );
@@ -30,27 +30,33 @@ function api(path, opts) {
   });
 }
 
-const FORMS = {
-  '1286060': { description: 'Next steps for new visitors and current attenders at Journey of Grace Church.' },
-  '1286061': { description: 'Próximos pasos para nuevos visitantes y asistentes actuales en Journey of Grace Church.' },
+// Remove the redundant custom Full Name / Email fields we added (PCO already
+// provides standard "Your name / Last name / Email address" identity fields),
+// keeping Phone Number + the "next step" message field.
+const DELETIONS = {
+  '1286060': ['Full Name', 'Email Address'],
+  '1286061': ['Nombre Completo', 'Correo Electrónico'],
 };
 
-for (const [formId, attrs] of Object.entries(FORMS)) {
-  console.log(`\n== form ${formId}: pre-PATCH state ==`);
-  const g = await api(`/people/v2/forms/${formId}`);
-  const fa = g.json && g.json.data && g.json.data.attributes;
-  console.log('active:', fa.active, '| description:', fa.description, '| archived:', fa.archived);
-
-  console.log('PATCH active=true + description...');
-  const r = await api(`/people/v2/forms/${formId}`, {
-    method: 'PATCH',
-    body: { data: { type: 'Form', id: formId, attributes: { active: true, description: attrs.description } } },
-  });
-  console.log('PATCH status', r.status);
-  if (r.json && r.json.data) {
-    const a2 = r.json.data.attributes;
-    console.log('post: active:', a2.active, '| description:', a2.description, '| public_url:', a2.public_url);
-  } else {
-    console.log('resp', JSON.stringify(r.json || r.raw).slice(0, 1500));
+for (const [formId, labelsToDelete] of Object.entries(DELETIONS)) {
+  console.log(`\n== form ${formId}: list fields ==`);
+  const r = await api(`/people/v2/forms/${formId}/fields`);
+  const fields = r.json && r.json.data || [];
+  for (const f of fields) {
+    const label = f.attributes.label;
+    if (labelsToDelete.includes(label)) {
+      const d = await api(`/people/v2/forms/${formId}/fields/${f.id}`, { method: 'DELETE' });
+      console.log(`DELETE "${label}" (id ${f.id}) -> status ${d.status}`);
+    } else {
+      console.log(`keep   "${label}" (id ${f.id}, ${f.attributes.field_type})`);
+    }
   }
+}
+
+console.log('\n== final state ==');
+for (const formId of Object.keys(DELETIONS)) {
+  const r = await api(`/people/v2/forms/${formId}/fields?per_page=100`);
+  const list = (r.json && r.json.data || []).sort((a, b) => a.attributes.sequence - b.attributes.sequence)
+    .map((f) => `${f.attributes.sequence}.${f.attributes.field_type}:"${f.attributes.label}"${f.attributes.required ? '(req)' : ''}`);
+  console.log(formId + ':', list.join(' | '));
 }

@@ -89,24 +89,32 @@ try {
   console.log('include types:', Object.keys(itypes).join(','), 'counts', Object.fromEntries(Object.entries(itypes).map(([k, v]) => [k, v.length])));
 } catch (e) { console.log('ERR', e.message); }
 
-console.log('\n== calendar/v2 events filtered/related instances ==');
+console.log('\n== calendar v2 event_instances deep (upcoming filter + includes) ==');
 try {
-  const pset = [
-    '/calendar/v2/events/18441760',
-    '/calendar/v2/event_instances?per_page=3',
-    '/calendar/v2/calendars/162766/events?per_page=3',
+  const now = new Date().toISOString().slice(0, 10);
+  const tries = [
+    `/calendar/v2/event_instances?where[published_starts_at][gt]=${now}&per_page=3&include=location,event`,
+    `/calendar/v2/event_instances?where[starts_at][gt]=${now}&per_page=3&include=location,event`,
+    `/calendar/v2/event_instances?order=published_starts_at&per_page=3&include=location,event`,
   ];
-  for (const p of pset) {
+  for (const p of tries) {
     const r = await api(p);
-    const n = r.json && r.json.data && (Array.isArray(r.json.data) ? r.json.data.length : 'object');
-    console.log(r.status, p, '| shape:', n);
-    if (r.json && r.json.data) {
-      const d = Array.isArray(r.json.data) ? r.json.data[0] : r.json.data;
-      if (d && d.attributes) {
-        const keys = Object.keys(d.attributes);
-        console.log('   attr keys:', keys.join(','));
-        if (keys.includes('starts_at')) console.log('   starts_at:', d.attributes.starts_at, '| ends_at:', d.attributes.ends_at);
+    const d = r.json && r.json.data || [];
+    const inc = r.json && r.json.included || [];
+    const itypes = {};
+    for (const i of inc) { (itypes[i.type] = itypes[i.type] || []).push(i); }
+    console.log(r.status, p, '| count:', d.length, '| includeTypes:', Object.keys(itypes).join(','));
+    if (d[0]) {
+      const s = d[0];
+      console.log('   first name:', s.attributes.name, '| ps:', s.attributes.published_starts_at, '| pe:', s.attributes.published_ends_at);
+      console.log('   rels:', JSON.stringify(s.relationships, null, 1).slice(0, 800));
+      for (const t of Object.keys(itypes)) {
+        if (t.toLowerCase().includes('location')) {
+          console.log('   ' + t + ':', itypes[t].slice(0, 5).map((x) => x.id + '=' + (x.attributes.name)).join(' | '));
+        }
       }
+      if (d[0].attributes.church_center_url) console.log('   cc_url:', d[0].attributes.church_center_url);
+      if (d[0].attributes.all_day_event !== undefined) console.log('   all_day:', d[0].attributes.all_day_event);
     }
   }
 } catch (e) { console.log('ERR', e.message); }

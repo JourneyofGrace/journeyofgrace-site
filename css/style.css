@@ -1113,6 +1113,15 @@ textarea:focus-visible,
   overflow: hidden;
 }
 
+/* Next Step / Próximo Paso pages contain a content H1 ("What's your Next
+   Step?" / "¿Cuál es tu próximo paso?") above the form. The PCO form embed
+   renders its own title inside the cross-origin iframe (not hideable), so we
+   hide the redundant content H1 — the page banner + intro paragraph remain. */
+#block-fa0bbbf2219e7bf9b81a h1,
+#block-fd65ee276dcc0b1c0cc7 h1 {
+  display: none;
+}
+
 /* The PCO embed iframe is 480px wide; on grid layouts (visit / plan-your-visit
    use an inline .content-grid) the fixed width would blow out the 1fr track on
    narrow screens, so let grid children shrink below 900px (where the page's own

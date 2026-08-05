@@ -21,14 +21,11 @@ async function fetchLatestSermons() {
       anchors.forEach(a => {
         const text = (a.innerText || a.textContent || '').trim();
         const aria = a.getAttribute('aria-label') || '';
-        // Skip timestamp badges like "1:23:52"
         if (text && !text.match(/^\d+:\d+(:\d+)?$/)) {
           const id = a.href.split('v=')[1]?.split('&')[0];
           if (id && !map.has(id)) {
-            // Use the title portion of aria-label or innerText
             let title = text;
             if (aria) {
-              // Strip trailing durations like "1 hour, 23 minutes"
               const match = aria.match(/^(.*?)(?:\s+\d+\s+(?:hour|hours|minute|minutes).*)/i);
               if (match && match[1]) {
                 title = match[1].trim();
@@ -91,7 +88,7 @@ ${cardsHtml}
   const sermonsFilePath = path.join(__dirname, '../sermons.html');
   let content = fs.readFileSync(sermonsFilePath, 'utf8');
 
-  const regex = /<!-- Recent YouTube Sermons Section -->[\s\S]*?<\/div>\s*<\/div>/;
+  const regex = /<!-- Recent YouTube Sermons Section -->[\s\S]*?<div class="sermons-yt-grid">[\s\S]*?<\/div>\s*<\/div>/;
   if (regex.test(content)) {
     content = content.replace(regex, fullSectionHtml);
     fs.writeFileSync(sermonsFilePath, content, 'utf8');

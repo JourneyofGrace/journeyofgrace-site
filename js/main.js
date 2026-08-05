@@ -6,7 +6,27 @@ document.addEventListener('DOMContentLoaded', function() {
   initEventExports();
   initFormThanks();
   initActiveNavHighlight();
+  initBannerScrollFade();
 });
+
+function initBannerScrollFade() {
+  var titleCard = document.querySelector('.title-card-wrapper');
+  if (!titleCard) return;
+
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var fadeThreshold = 180;
+    
+    if (scrollTop > fadeThreshold) {
+      titleCard.style.opacity = '0';
+      titleCard.style.transform = 'translate(-50%, -70%)';
+    } else {
+      var opacity = Math.max(0, 1 - (scrollTop / fadeThreshold));
+      titleCard.style.opacity = opacity.toFixed(2);
+      titleCard.style.transform = 'translate(-50%, calc(-50% - ' + (scrollTop * 0.2) + 'px))';
+    }
+  });
+}
 
 function initActiveNavHighlight() {
   var path = window.location.pathname.replace(/\/$/, '');

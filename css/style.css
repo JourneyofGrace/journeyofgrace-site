@@ -1796,3 +1796,35 @@ footer.jog-footer .footer-bottom {
   gap: 0.4rem;
 }
 
+/* Banner Title Overlay & Scroll Fade-out */
+.title-card-wrapper {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90% !important;
+  max-width: 800px !important;
+  text-align: center !important;
+  z-index: 10 !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+  pointer-events: none !important;
+}
+
+.title-card-wrapper .page-title {
+  font-family: 'Cantata One', Georgia, serif !important;
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .title-card-wrapper .page-title {
+    font-size: 1.6rem !important;
+  }
+}
+
+

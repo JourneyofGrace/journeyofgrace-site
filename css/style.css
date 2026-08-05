@@ -1588,10 +1588,10 @@ textarea:focus-visible,
     padding: 0.75rem 1.25rem;
   }
   .jog-global-nav {
-    display: none;
+    display: none !important;
   }
   .jog-mobile-toggle {
-    display: block;
+    display: block !important;
   }
 }
 
@@ -1878,3 +1878,46 @@ footer.jog-footer .footer-bottom {
   }
 }
 
+
+/* Homepage hero: static fallback for the Squarespace index-gallery (its JS
+   no longer initializes after replacing the Squarespace site-header). */
+.index-gallery-wrapper {
+  position: relative !important;
+  width: 100% !important;
+  height: 85vh !important;
+  min-height: 420px !important;
+  max-height: 920px !important;
+  overflow: hidden !important;
+}
+.index-gallery-wrapper .collection-images,
+.index-gallery-wrapper .image-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.index-gallery-wrapper .sqs-video-background,
+.index-gallery-wrapper .index-main-image {
+  display: none !important;
+}
+.index-gallery-wrapper .image-container.content-fill {
+  display: none !important;
+}
+.index-gallery-wrapper .image-container.content-fill[data-url-id="visit-1"] {
+  display: block !important;
+}
+.index-gallery-wrapper .image-container.content-fill img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+}
+.index-gallery-wrapper .index-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}

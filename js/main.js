@@ -137,6 +137,7 @@ function initPlanningCenter() {
  */
 function initFormThanks() {
   var pageName = (window.location.pathname.split('/').pop() || '').toLowerCase() || 'index.html';
+  if (!/\.html$/.test(pageName)) pageName += '.html';
   var pco = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
   var pageForms = (pco && pco.pageForms) || {};
   var pcoFormUrl = (pageForms[pageName] || (pco && pco.visitorFormUrl) || '').trim();

@@ -80,7 +80,7 @@ async function fetchLatestSermons() {
   const fullSectionHtml = `<!-- Recent YouTube Sermons Section -->
 <div class="sermons-yt-section">
   <div class="sermons-yt-header">
-    <h2>Recent YouTube Services & Sermons</h2>
+    <h2>Recent Worship Services & Sermons</h2>
     <a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA" target="_blank" rel="noopener">Visit Our YouTube Channel &rarr;</a>
   </div>
   <div class="sermons-yt-grid">

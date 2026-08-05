@@ -130,18 +130,22 @@ function initPlanningCenter() {
 /**
  * Visitor/contact form handling.
  *
- * If a Planning Center visitor form URL is configured, its embed replaces the
- * static self-hosted form. Otherwise the static form posts to FormSubmit so
- * submissions land in the church office inbox, and the "thanks" message is
- * revealed after a `#submitted` redirect.
+ * If a Planning Center form URL is configured for the current page, its embed
+ * replaces every static self-hosted form on the page. Otherwise the static
+ * forms post to FormSubmit so submissions land in the church office inbox, and
+ * the "thanks" message is revealed after a `#submitted` redirect.
  */
 function initFormThanks() {
-  var pcoFormUrl = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter && window.JOG_CONFIG.planningCenter.visitorFormUrl;
-  if (pcoFormUrl && pcoFormUrl.trim()) {
-    document.querySelectorAll('.form-column .card, #block-ae72ca928664dd12dd05').forEach(function(card) {
-      var form = card.querySelector('form.self-hosted-form');
-      if (form) {
-        // Hide the static heading so it isn't duplicated by the embed widget.
+  var pageName = (window.location.pathname.split('/').pop() || '').toLowerCase() || 'index.html';
+  var pco = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
+  var pageForms = (pco && pco.pageForms) || {};
+  var pcoFormUrl = (pageForms[pageName] || (pco && pco.visitorFormUrl) || '').trim();
+
+  if (pcoFormUrl) {
+    document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
+      var card = form.closest('.card, .form-wrapper');
+      if (card) {
+        // Hide nearby static heading/text so it isn't duplicated by the embed.
         var cardTitle = card.querySelector('.card-title');
         var formHeader = card.querySelector('.form-header-text');
         if (cardTitle) {
@@ -150,25 +154,24 @@ function initFormThanks() {
         if (formHeader) {
           formHeader.style.display = 'none';
         }
-
         card.style.padding = '1.2rem';
         card.style.overflow = 'hidden';
-
-        // Request the embeddable variant of the form URL.
-        var frame = document.createElement('iframe');
-        var cleanUrl = pcoFormUrl.trim();
-        if (cleanUrl.indexOf('/embed') === -1) {
-          cleanUrl = cleanUrl.replace('/forms/', '/forms/embed/');
-        }
-        frame.src = cleanUrl;
-        frame.style.width = '100%';
-        frame.style.height = '780px';
-        frame.style.border = 'none';
-        frame.style.borderRadius = '8px';
-        frame.style.overflow = 'hidden';
-        frame.title = 'Planning Center Visitor Registration';
-        form.parentNode.replaceChild(frame, form);
       }
+
+      // Request the embeddable variant of the form URL.
+      var frame = document.createElement('iframe');
+      var cleanUrl = pcoFormUrl;
+      if (cleanUrl.indexOf('/embed') === -1) {
+        cleanUrl = cleanUrl.replace('/forms/', '/forms/embed/');
+      }
+      frame.src = cleanUrl;
+      frame.style.width = '100%';
+      frame.style.height = '780px';
+      frame.style.border = 'none';
+      frame.style.borderRadius = '8px';
+      frame.style.overflow = 'hidden';
+      frame.title = 'Planning Center Form';
+      form.parentNode.replaceChild(frame, form);
     });
     return;
   }

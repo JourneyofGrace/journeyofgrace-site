@@ -38,14 +38,20 @@ jobs:
       - name: Fetch Latest 5 YouTube Sermons
         run: node scripts/fetch-sermons.mjs
 
-      - name: Commit refreshed sermons.html
+      - name: Fetch Events from Planning Center
+        run: node scripts/fetch-events.mjs
+        env:
+          PCO_CLIENT_ID: ${{ secrets.PCO_CLIENT_ID }}
+          PCO_SECRET: ${{ secrets.PCO_SECRET }}
+
+      - name: Commit refreshed sermons.html & events.html
         id: commit
         run: |
-          if ! git diff --quiet -- sermons.html; then
+          if ! git diff --quiet -- sermons.html events.html; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add sermons.html
-            git commit -m "chore(ci): refresh sermons.html with latest videos and upcoming service"
+            git add sermons.html events.html
+            git commit -m "chore(ci): refresh sermons.html and events.html with latest content"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"

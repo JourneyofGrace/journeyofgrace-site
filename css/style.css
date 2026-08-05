@@ -517,6 +517,20 @@ a:hover {
   margin: 0 auto;
 }
 
+.eventlist-section-heading {
+  font-family: var(--font-serif);
+  color: var(--color-slate);
+  font-size: 1.6rem;
+  margin: 0 auto 0.25rem;
+  max-width: 960px;
+}
+
+.eventlist-empty {
+  color: var(--color-ink-muted);
+  margin: 0 auto 1.5rem;
+  max-width: 960px;
+}
+
 .eventlist-event {
   background: var(--color-surface);
   border: 1px solid #eae4d8;

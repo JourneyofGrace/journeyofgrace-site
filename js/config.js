@@ -54,6 +54,24 @@ window.JOG_CONFIG.planningCenter.workerUrl = window.JOG_CONFIG.planningCenter.wo
 window.JOG_CONFIG.planningCenter.visitorFormUrl =
   window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
 
+/*
+ * Per-page Planning Center form embeds.
+ *
+ * Each contact form on the site swaps its static self-hosted form for a
+ * Planning Center People form embed. The map is keyed by the page's file name
+ * (window.location.pathname basename). Values are the form's public embed URL
+ * (https://journeyofgrace.churchcenter.com/people/forms/embed/<form_id>).
+ *
+ * A page without an entry keeps its static HTML form (FormSubmit/email).
+ * Form fields must be created by staff in Planning Center > People > Forms.
+ */
+window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pageForms || {
+  "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1284759",
+  "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1284759",
+  "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1286060",
+  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1286061"
+};
+
 
 
 

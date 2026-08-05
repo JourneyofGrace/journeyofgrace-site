@@ -57,23 +57,29 @@ try {
   console.log(JSON.stringify(rows, null, 1));
 } catch (e) { console.log('ERR', e.message); }
 
-console.log('\n== calendar access probe (find a working endpoint) ==');
-const calCandidates = [
-  '/calendar/v1/events?per_page=3',
-  '/calendar/v2/events?per_page=3',
-  '/calendar/v1/event_types?per_page=3',
-  '/calendar/v1/events/instances?per_page=3',
-  '/calendar/v1/events?where[start_date][gt]=2026-08-04&per_page=3',
-];
-for (const p of calCandidates) {
-  try {
-    const r = await api(p);
-    const keys = r.json && r.json.data && r.json.data[0] ? Object.keys(r.json.data[0]).slice(0, 8) : [];
-    console.log(r.status, p, '| keys:', keys.join(','), '| count:', r.json && r.json.data && r.json.data.length);
-  } catch (e) { console.log('ERR', p, e.message); }
-}
+console.log('\n== calendar/v2/events attributes dump ==');
+try {
+  const r = await api('/calendar/v2/events?per_page=5&include=location');
+  console.log('status', r.status);
+  const list = r.json && r.json.data || [];
+  console.log('count', list.length);
+  if (list[0]) {
+    console.log('top-level keys:', Object.keys(list[0]).join(','));
+    console.log('attrs:', JSON.stringify(list[0].attributes, null, 1).slice(0, 1800));
+    console.log('rels:', JSON.stringify(list[0].relationships, null, 1).slice(0, 1200));
+  }
+  const inc = r.json && r.json.included || [];
+  if (inc.length) {
+    const byType = {};
+    for (const i of inc) { (byType[i.type] = byType[i.type] || []).push(i); }
+    console.log('included types:', Object.keys(byType).join(','));
+    for (const t of Object.keys(byType)) {
+      console.log(t + ':', byType[t].slice(0, 5).map((x) => x.id + '=' + ((x.attributes && (x.attributes.name || x.attributes.name_plural || x.attributes.title)) || '?')).join(' | '));
+    }
+  }
+} catch (e) { console.log('ERR', e.message); }
 
-console.log('\n== group event with location/group includes ==');
+console.log('\n== group event with location/group includes (capitalized types) ==');
 try {
   const now = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
   const r = await api(`/groups/v2/events?where[starts_at][gt]=${now}&order=starts_at&per_page=5&include=location,group`);
@@ -82,26 +88,7 @@ try {
   const byType = {};
   for (const i of inc) { (byType[i.type] = byType[i.type] || []).push(i); }
   console.log('included types:', Object.keys(byType).join(','));
-  if (byType.location) console.log('locations:', byType.location.map((l) => l.id + '=' + (l.attributes && l.attributes.name)).join(' | '));
-  if (byType.group) console.log('groups:', byType.group.slice(0, 10).map((g) => g.id + '=' + (g.attributes && g.attributes.name)).join(' | '));
-  const rows = (r.json && r.json.data || []).map((e) => ({
-    id: e.id,
-    name: e.attributes.name,
-    starts_at: e.attributes.starts_at,
-    location: e.relationships.location && e.relationships.location.data && e.relationships.location.data.id,
-  }));
-  console.log(JSON.stringify(rows, null, 1).slice(0, 1800));
+  for (const t of Object.keys(byType)) {
+    console.log(t + ':', byType[t].slice(0, 10).map((x) => x.id + '=' + (x.attributes && x.attributes.name)).join(' | '));
+  }
 } catch (e) { console.log('ERR', e.message); }
-
-console.log('\n== POST /people/v2/forms test (Next Step + Próximo Paso) ==');
-for (const name of ['Next Step', 'Próximo Paso']) {
-  try {
-    const r = await api('/people/v2/forms', { method: 'POST', body: { data: { type: 'Form', attributes: { name } } } });
-    const f = r.json && r.json.data;
-    if (f) {
-      console.log('CREATED', name, '->', f.id, '|', f.attributes && f.attributes.name, '|', f.attributes && f.attributes.public_url);
-    } else {
-      console.log('FAILED', name, 'status', r.status, '|', JSON.stringify(r.json || r.raw).slice(0, 1500));
-    }
-  } catch (e) { console.log('ERR', name, e.message); }
-}

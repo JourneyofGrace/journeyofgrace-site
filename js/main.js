@@ -161,7 +161,37 @@ function initFormThanks() {
       frame.src = pcoFormUrl;
       frame.className = 'pco-form-embed';
       frame.title = 'Planning Center Form';
-      form.parentNode.replaceChild(frame, form);
+
+      // The PCO form page renders at a fixed 480px width even inside an
+      // iframe, so on narrow screens we scale it down to fit the card
+      // instead of letting it clip off the right edge.
+      var wrap = document.createElement('div');
+      wrap.className = 'pco-form-scale-wrap';
+      wrap.appendChild(frame);
+      form.parentNode.replaceChild(wrap, form);
+
+      var fitPcoForm = function() {
+        if (window.innerWidth >= 700) {
+          frame.style.transform = 'none';
+          wrap.style.height = '';
+          return;
+        }
+        var scale = wrap.clientWidth / 480;
+        frame.style.transform = 'scale(' + scale + ')';
+        wrap.style.height = Math.round(960 * scale) + 'px';
+      };
+      fitPcoForm();
+      window.addEventListener('resize', debounce(fitPcoForm, 150));
+    });
+
+    // The PCO form renders its own title and description, so hide the
+    // redundant "Please complete the form below" heading beside the embed.
+    document.querySelectorAll('h3').forEach(function(h3) {
+      var text = (h3.textContent || '').toLowerCase();
+      if (text.indexOf('complete the form') !== -1 || text.indexOf('complete el siguiente formulario') !== -1) {
+        var block = h3.closest('.sqs-block') || h3.parentElement;
+        block.style.display = 'none';
+      }
     });
     return;
   }
@@ -402,4 +432,21 @@ function initVisitMap() {
   L.marker([33.4219082, -111.8100475]).addTo(map)
     .bindPopup('<strong>Journey of Grace</strong><br>955 E University Dr., Mesa, AZ 85203')
     .openPopup();
+}
+
+/**
+ * Debounce helper.
+ *
+ * Returns a function that delays invoking `fn` until `wait` ms have passed
+ * since the last call (used for resize handlers).
+ */
+function debounce(fn, wait) {
+  var timer;
+  return function() {
+    var args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      fn.apply(null, args);
+    }, wait);
+  };
 }

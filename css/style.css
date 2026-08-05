@@ -1418,11 +1418,13 @@ textarea:focus-visible,
 
 .title-card-wrapper .title-card {
   text-align: center !important;
+  max-width: 90% !important;
+  margin: 0 auto !important;
 }
 
 .title-card-wrapper .page-title {
   font-family: 'Cantata One', Georgia, serif !important;
-  font-size: 4rem !important;
+  font-size: clamp(1.8rem, 4.5vw, 3.8rem) !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   text-transform: uppercase !important;
@@ -1430,14 +1432,13 @@ textarea:focus-visible,
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.95) !important;
   margin: 0 !important;
   line-height: 1.2 !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 @media (max-width: 768px) {
   .page-banner-wrapper {
-    height: 300px !important;
-  }
-  .title-card-wrapper .page-title {
-    font-size: 2rem !important;
+    height: 260px !important;
   }
 }
 

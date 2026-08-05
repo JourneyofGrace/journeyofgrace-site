@@ -373,209 +373,36 @@ function makeElementsFullWidth(e,t,i){$(document).ready(function(){function o(){
             
           </div>
         </div>
-        <header id="siteHeader" class="site-header">
-          <div class="site-branding" data-content-field="site-title">
-          
-            <h1 class="image">
-              <a href="/journeyofgrace-site/">
-                
-                <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace" />
-                
-              </a>
-            </h1>
-            
-          
-          </div>
-
-          <a class="nav-toggle flex-item" id="navToggle">
-            <div>
-              <svg class="Icon Icon--hamburger nav-toggle-label-icon" viewBox="0 0 24 18">
-                <g class="svg-icon use--even">
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="2" x2="24" y2="2"/>
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="9" x2="24" y2="9"/>
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="16" x2="24" y2="16"/>
-                </g>
-                <g class="svg-icon use--odd">
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="1.5" x2="24" y2="1.5"/>
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="8.5" x2="24" y2="8.5"/>
-                  <line fill="none" stroke-miterlimit="10" x1="0" y1="15.5" x2="24" y2="15.5"/>
-                </g>
-              </svg>
-              <svg class="Icon Icon--close nav-toggle-label-icon" viewBox="0 0 18 18">
-                <g class="svg-icon">
-                  <line fill="none" stroke-miterlimit="10" stroke-linecap="butt" x1="0" y1="0" x2="18" y2="18"/>
-                  <line fill="none" stroke-miterlimit="10" stroke-linecap="butt" x1="18" y1="0" x2="0" y2="18"/>
-                </g>
-              </svg>
-            </div>
-          </a>
-
-          <a class="header-cta-mobile" href="/journeyofgrace-site/visit">Plan Your Visit</a>
-
-          <div class="nav-social-wrapper" data-content-field="navigation" data-annotation-alignment="bottom">
-            <nav id="mainNavigation" class='main-navigation has-cart  has-items'>
-              
-  
-    
-      
-
-      
-
-        
-        <div class="nav-item collection" id="id-5c3d46b603ce64c5572e8d6e">
-          <a href="/journeyofgrace-site/about-us">
-            <span>About Us</span>
-          </a>
-        </div>
-        
-
-      
-    
-    
-  
-    
-      
-
-      
-
-        
-        <div class="nav-item collection" id="id-5c3bafd44d7a9c2781825085">
-          <a href="/journeyofgrace-site/events">
-            <span>Events</span>
-          </a>
-        </div>
-        
-
-      
-    
-    
-  
-    
-      
-
-      
-
-        
-        <div class="nav-item collection" id="id-5c3bb13270a6ad9840c9f0e9">
-          <a href="/journeyofgrace-site/sermons">
-            <span>Sermons</span>
-          </a>
-        </div>
-        
-
-      
-    
-    
-  
-    
-      
-      <div class="nav-item external">
-        <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true">
-          <span>Giving</span>
-        </a>
-      </div>
-      
-
-    
-  
-    
-      
-
-      
-
-        
-        <div class="nav-item collection" id="id-5c70d1d3f9619ae6c8345e62">
-          <a href="/journeyofgrace-site/nextstep">
-            <span>Next Step</span>
-          </a>
-        </div>
-        
-
-      
-    
-    
-  
-
-
-              
-
-              
-<div class="nav-item collection header-cta">
-          <a href="/journeyofgrace-site/visit"><span>Plan Your Visit</span></a>
-        </div>
-        
-
-
-            </nav>
-            
-            <div class="header-social-icons-with-nav">
-               <nav class="sqs-template-social-icons sqs-svg-icon--list">
-                 
-  <nav class="SocialLinks" data-content-field="connected-accounts">
-    <div class="SocialLinks-inner">
-    <a href="https://www.facebook.com/MesaJourneyNaz" target="_blank" class="SocialLinks-link facebook-unauth" style="">
-        <div>
-          <svg class="SocialLinks-link-svg" viewBox="0 0 64 64">
-            
-            <use class="SocialLinks-link-icon" xlink:href="#facebook-unauth-icon"></use>
-            <use class="SocialLinks-link-mask" xlink:href="#facebook-unauth-mask"></use>
-          </svg>
-        </div>
-      </a><a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA?view_as=subscriber" target="_blank" class="SocialLinks-link youtube-unauth" style="">
-        <div>
-          <svg class="SocialLinks-link-svg" viewBox="0 0 64 64">
-            
-            <use class="SocialLinks-link-icon" xlink:href="#youtube-unauth-icon"></use>
-            <use class="SocialLinks-link-mask" xlink:href="#youtube-unauth-mask"></use>
-          </svg>
-        </div>
+          <!-- Header Navigation -->
+  <header class="jog-global-header">
+    <div class="header-brand">
+      <a href="/journeyofgrace-site/">
+        <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace Logo" />
       </a>
     </div>
-  </nav>
+    <button class="jog-mobile-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')" aria-label="Open Mobile Navigation">
+      &#9776;
+    </button>
+    <nav class="jog-global-nav">
+      <a href="/journeyofgrace-site/about-us">About Us</a>
+      <a href="/journeyofgrace-site/events">Events</a>
+      <a href="/journeyofgrace-site/sermons">Sermons</a>
+      <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+      <a href="/journeyofgrace-site/nextstep">Next Step</a>
+      <a href="/journeyofgrace-site/visit" class="jog-btn-cta">Plan Your Visit</a>
+    </nav>
+  </header>
 
-               </nav>
-            </div>
-            
-          </div>
-
-
-          
-          <div class="header-social-icons-right">
-             <nav class="sqs-template-social-icons sqs-svg-icon--list">
-               
-  <nav class="SocialLinks" data-content-field="connected-accounts">
-    <div class="SocialLinks-inner">
-    <a href="https://www.facebook.com/MesaJourneyNaz" target="_blank" class="SocialLinks-link facebook-unauth" style="">
-        <div>
-          <svg class="SocialLinks-link-svg" viewBox="0 0 64 64">
-            
-            <use class="SocialLinks-link-icon" xlink:href="#facebook-unauth-icon"></use>
-            <use class="SocialLinks-link-mask" xlink:href="#facebook-unauth-mask"></use>
-          </svg>
-        </div>
-      </a><a href="https://www.youtube.com/channel/UCFd2ErAm4sACMG6C-XoxIlA?view_as=subscriber" target="_blank" class="SocialLinks-link youtube-unauth" style="">
-        <div>
-          <svg class="SocialLinks-link-svg" viewBox="0 0 64 64">
-            
-            <use class="SocialLinks-link-icon" xlink:href="#youtube-unauth-icon"></use>
-            <use class="SocialLinks-link-mask" xlink:href="#youtube-unauth-mask"></use>
-          </svg>
-        </div>
-      </a>
-    </div>
-  </nav>
-
-             </nav>
-          </div>
-          
-
-          
-
-          
-  
-
-
-        </header>
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="jog-mobile-drawer">
+    <button class="jog-mobile-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
+    <a href="/journeyofgrace-site/about-us">About Us</a>
+    <a href="/journeyofgrace-site/events">Events</a>
+    <a href="/journeyofgrace-site/sermons">Sermons</a>
+    <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+    <a href="/journeyofgrace-site/nextstep">Next Step</a>
+    <a href="/journeyofgrace-site/visit" class="jog-btn-cta" style="margin-top: 1rem;">Plan Your Visit</a>
+  </div>
 
     		<div id="mainContent" class="main-content" role="main">
 

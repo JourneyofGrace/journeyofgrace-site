@@ -1476,10 +1476,25 @@ textarea:focus-visible,
   font-size: 14px !important;
   letter-spacing: 0.05em !important;
   text-decoration: none !important;
+  position: relative !important;
+  padding-bottom: 4px !important;
   transition: color 0.2s ease !important;
 }
 .jog-global-nav a:hover {
   color: #c97a2b !important;
+}
+.jog-global-nav a.active:not(.jog-btn-cta) {
+  color: #c97a2b !important;
+}
+.jog-global-nav a.active:not(.jog-btn-cta)::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 2px !important;
+  background-color: #c97a2b !important;
+  border-radius: 2px !important;
 }
 .jog-global-nav a.jog-btn-cta {
   background: #c97a2b !important;

@@ -28,27 +28,36 @@
 <div class="content-outer-wrapper">
 <div class="content-inner-wrapper" data-content-field="body">
 
-<header class="header" data-controller="HeaderOverflow, NavToggle, HeaderScroll, OverlayNavOverflow, SocialIconFadein, SetActiveNavLink">
-  <div class="header-inner">
-    <div class="site-branding">
-      <a href="/journeyofgrace-site/" class="header-logo">
-        <img src="assets/img/JOG_Logo_Final_03-210x256.png" alt="Journey of Grace" />
+  <!-- Header Navigation -->
+  <header class="jog-global-header">
+    <div class="header-brand">
+      <a href="/journeyofgrace-site/">
+        <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace Logo" />
       </a>
     </div>
-    <nav class="nav-wrapper">
-      <ul class="nav-list">
-        <li class="nav-item collection"><a href="/journeyofgrace-site/">Home</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/about-us">About Us</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/visit">Visit</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/connect">Connect</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/sermons">Sermons</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/events">Events</a></li>
-        <li class="nav-item collection"><a href="/journeyofgrace-site/nextstep">Next Step</a></li>        <li class="nav-item header-cta"><a href="/journeyofgrace-site/visit">Plan Your Visit</a></li>
-
-      </ul>
+    <button class="jog-mobile-toggle" onclick="document.getElementById('mobileNavDrawer').classList.add('open')" aria-label="Open Mobile Navigation">
+      &#9776;
+    </button>
+    <nav class="jog-global-nav">
+      <a href="/journeyofgrace-site/about-us">About Us</a>
+      <a href="/journeyofgrace-site/events">Events</a>
+      <a href="/journeyofgrace-site/sermons">Sermons</a>
+      <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+      <a href="/journeyofgrace-site/nextstep">Next Step</a>
+      <a href="/journeyofgrace-site/visit" class="jog-btn-cta">Plan Your Visit</a>
     </nav>
+  </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="jog-mobile-drawer">
+    <button class="jog-mobile-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
+    <a href="/journeyofgrace-site/about-us">About Us</a>
+    <a href="/journeyofgrace-site/events">Events</a>
+    <a href="/journeyofgrace-site/sermons">Sermons</a>
+    <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+    <a href="/journeyofgrace-site/nextstep">Next Step</a>
+    <a href="/journeyofgrace-site/visit" class="jog-btn-cta" style="margin-top: 1rem;">Plan Your Visit</a>
   </div>
-</header>
 
 <main class="main-content" data-controller="MainContentPositioning, MercuryLoader">
   <div class="main-content-inner-wrapper">

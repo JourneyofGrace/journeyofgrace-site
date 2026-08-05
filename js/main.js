@@ -5,7 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
   initSermonArchive();
   initEventExports();
   initFormThanks();
+  initActiveNavHighlight();
 });
+
+function initActiveNavHighlight() {
+  var path = window.location.pathname.replace(/\/$/, '');
+  var links = document.querySelectorAll('.jog-global-nav a, .footer-links nav a, .jog-mobile-drawer a');
+  links.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (!href) return;
+    var cleanHref = href.replace(/\/$/, '');
+    if (path.endsWith(cleanHref) || (cleanHref !== '' && path.includes(cleanHref))) {
+      link.classList.add('active');
+    }
+  });
+}
 
 function initPlanningCenter() {
   var cfg = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;

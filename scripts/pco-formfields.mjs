@@ -30,31 +30,35 @@ function api(path, opts) {
   });
 }
 
-// Step 1: dump the FULL attribute set of the existing populated form (Plan Your Visit)
-console.log('\n== GET /people/v2/forms/1284759 (populated Visit form — full attrs) ==');
+console.log('\n== full single form raw (relationships + links) ==');
 try {
   const r = await api('/people/v2/forms/1284759');
-  console.log('status', r.status);
   const f = r.json && r.json.data;
+  console.log('status', r.status);
   if (f) {
-    console.log('attribute keys:', Object.keys(f.attributes).join(', '));
-    console.log('form_structure:', JSON.stringify(f.attributes.form_structure, null, 1).slice(0, 6000));
-  } else {
-    console.log('resp', JSON.stringify(r.json || r.raw).slice(0, 2000));
+    console.log('relationships:', JSON.stringify(f.relationships, null, 1).slice(0, 2000));
+    console.log('links:', JSON.stringify(f.links, null, 1).slice(0, 1000));
   }
 } catch (e) { console.log('ERR', e.message); }
 
-// Step 2: dump the two new empty forms to see their current form_structure
-for (const id of ['1286060', '1286061']) {
-  console.log(`\n== GET /people/v2/forms/${id} ==`);
+// Candidate sub-resource endpoints for form fields
+console.log('\n== candidate field endpoints (404/200 check) ==');
+const candidates = [
+  '/people/v2/forms/1284759/form_fields?per_page=5',
+  '/people/v2/forms/1284759/fields?per_page=5',
+  '/people/v2/forms/1284759/form_field_groups?per_page=5',
+  '/people/v2/form_fields?per_page=5',
+  '/people/v2/fields?per_page=5',
+  '/people/v2/forms/1284759/definitions?per_page=5',
+];
+for (const p of candidates) {
   try {
-    const r = await api(`/people/v2/forms/${id}`);
-    const f = r.json && r.json.data;
-    if (f) {
-      console.log('name:', f.attributes && f.attributes.name, '| keys:', f.attributes && Object.keys(f.attributes).join(', '));
-      console.log('form_structure:', JSON.stringify(f.attributes && f.attributes.form_structure).slice(0, 2000));
-    } else {
-      console.log('status', r.status, '|', JSON.stringify(r.json || r.raw).slice(0, 1500));
+    const r = await api(p);
+    const k = r.json && r.json.data && r.json.data[0] ? Object.keys(r.json.data[0]).slice(0, 6).join(',') : '';
+    const n = r.json && r.json.data ? r.json.data.length : '';
+    console.log(r.status, p, '| count:', n, '| keys:', k);
+    if (r.status !== 200 && r.json && r.json.errors) {
+      console.log('   detail:', (r.json.errors[0] && (r.json.errors[0].detail || r.json.errors[0].title)) || '');
     }
-  } catch (e) { console.log('ERR', e.message); }
+  } catch (e) { console.log('ERR', p, e.message); }
 }

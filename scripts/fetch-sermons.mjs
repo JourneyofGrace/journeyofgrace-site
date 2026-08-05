@@ -26,14 +26,7 @@ async function dismissConsent(page) {
 }
 
 async function scrapeGridIds(page) {
-  await page.goto(GRID_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await dismissConsent(page);
-  for (let i = 0; i < 6; i++) {
-    await page.evaluate(() => window.scrollBy(0, 2500));
-    await page.waitForTimeout(800);
-  }
-  await page.waitForTimeout(1500);
-  return page.evaluate(() => {
+  const collectIds = () => page.evaluate(() => {
     const ids = [];
     const seen = new Set();
     for (const a of document.querySelectorAll('a[href*="/watch?v="]')) {
@@ -46,6 +39,25 @@ async function scrapeGridIds(page) {
     }
     return ids;
   });
+  const scrapePass = async () => {
+    await page.goto(GRID_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await dismissConsent(page);
+    for (let i = 0; i < 8; i++) {
+      await page.evaluate(() => window.scrollBy(0, 2500));
+      await page.waitForTimeout(900);
+    }
+    await page.waitForTimeout(1500);
+    return collectIds();
+  };
+  const first = await scrapePass();
+  if (first.length < 3) {
+    console.log('Grid scrape returned few ids (' + first.length + '); retrying once...');
+    await page.goto('about:blank');
+    await page.waitForTimeout(500);
+    const second = await scrapePass();
+    return second.length > first.length ? second : first;
+  }
+  return first;
 }
 
 async function fetchVideoMeta(page, id) {
@@ -99,10 +111,7 @@ async function fetchLatestSermons() {
       .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
       .slice(0, 5)
       .map(({ id, title }) => ({ id, title }));
-    videos = published.length ? published : metas
-      .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-      .slice(0, 5)
-      .map(({ id, title }) => ({ id, title }));
+    videos = published;
     console.log('Latest 5 videos (by publish date, newest first):', videos);
   } catch (err) {
     console.error('Error scraping YouTube:', err);
@@ -177,17 +186,20 @@ ${cardsHtml}
   const sermonsFilePath = path.join(__dirname, '../sermons.html');
   let content = fs.readFileSync(sermonsFilePath, 'utf8');
 
+  const upcomingMarker = '<!-- Upcoming Service Section -->';
   const marker = '<!-- Recent YouTube Sermons Section -->';
   const boundary = '<div class="sqs-block website-component-block sqs-block-website-component sqs-block-horizontalrule';
-  const start = content.indexOf(marker);
-  const end = start >= 0 ? content.indexOf(boundary, start + marker.length) : -1;
+  let start = content.indexOf(upcomingMarker);
+  const recentStart = content.indexOf(marker);
+  if (start < 0 || (recentStart >= 0 && recentStart < start)) start = recentStart;
+  const end = start >= 0 ? content.indexOf(boundary, start) : -1;
 
   if (start >= 0 && end > start) {
     content = content.slice(0, start) + fullRegionHtml + '\n' + content.slice(end);
     fs.writeFileSync(sermonsFilePath, content, 'utf8');
     console.log('Successfully updated sermons.html with latest 5 videos (deduplicated, newest first)!');
   } else {
-    console.error('Could not find Recent YouTube Sermons Section marker or horizontal-rule boundary in sermons.html');
+    console.error('Could not find Upcoming/Recent section marker or horizontal-rule boundary in sermons.html');
   }
 }
 

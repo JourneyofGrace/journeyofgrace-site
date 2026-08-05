@@ -42,7 +42,7 @@ window.JOG_CONFIG.formRecipientEmail =
   window.JOG_CONFIG.formRecipientEmail || "office@journeyofgrace.church";
 
 /*
- * Planning Center People / Form Embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/embed/123456)
+ * Planning Center People / Form embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/123456)
  * Leave empty ("") to use the default HTML form with FormSubmit/email forwarding.
  */
 /*
@@ -59,17 +59,19 @@ window.JOG_CONFIG.planningCenter.visitorFormUrl =
  *
  * Each contact form on the site swaps its static self-hosted form for a
  * Planning Center People form embed. The map is keyed by the page's file name
- * (window.location.pathname basename). Values are the form's public embed URL
- * (https://journeyofgrace.churchcenter.com/people/forms/embed/<form_id>).
+ * (window.location.pathname basename). Values are the form's public URL
+ * (https://journeyofgrace.churchcenter.com/people/forms/<form_id>) — the form
+ * page detects the iframe and renders without the site chrome. (There is no
+ * "/people/forms/embed/<id>" route; that path 404s.)
  *
  * A page without an entry keeps its static HTML form (FormSubmit/email).
  * Form fields must be created by staff in Planning Center > People > Forms.
  */
 window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pageForms || {
-  "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1284759",
-  "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1284759",
-  "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1286060",
-  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/embed/1286061"
+  "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
+  "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
+  "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
+  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061"
 };
 
 

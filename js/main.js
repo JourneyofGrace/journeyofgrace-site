@@ -145,7 +145,7 @@ function initFormThanks() {
     document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
       var card = form.closest('.card, .form-wrapper');
       if (card) {
-        // Hide nearby static heading/text so it isn't duplicated by the embed.
+        card.classList.add('pco-form-frame');
         var cardTitle = card.querySelector('.card-title');
         var formHeader = card.querySelector('.form-header-text');
         if (cardTitle) {
@@ -154,35 +154,22 @@ function initFormThanks() {
         if (formHeader) {
           formHeader.style.display = 'none';
         }
-        card.style.padding = '1.2rem';
-        card.style.overflow = 'hidden';
       }
 
-      // Request the embeddable variant of the form URL.
       var frame = document.createElement('iframe');
-      var cleanUrl = pcoFormUrl;
-      if (cleanUrl.indexOf('/embed') === -1) {
-        cleanUrl = cleanUrl.replace('/forms/', '/forms/embed/');
-      }
-      frame.src = cleanUrl;
-      frame.style.width = '100%';
-      frame.style.height = '780px';
-      frame.style.border = 'none';
-      frame.style.borderRadius = '8px';
-      frame.style.overflow = 'hidden';
+      frame.src = pcoFormUrl;
+      frame.className = 'pco-form-embed';
       frame.title = 'Planning Center Form';
       form.parentNode.replaceChild(frame, form);
     });
     return;
   }
 
-  // Default path: post submissions through FormSubmit to the church inbox.
   var email = (window.JOG_CONFIG && window.JOG_CONFIG.formRecipientEmail) || 'office@journeyofgrace.church';
   document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
     form.action = 'https://formsubmit.co/' + encodeURIComponent(email);
   });
 
-  // Show the thanks message when the user is redirected back with #submitted.
   if (window.location.hash === '#submitted') {
     document.querySelectorAll('.form-thanks').forEach(function(el) {
       el.hidden = false;

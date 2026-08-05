@@ -449,8 +449,9 @@ a:hover {
 }
 
 /* === Hero (homepage full-screen video) === */
+/* Very light wash for caption legibility; keep the video rich and vibrant. */
 .jog-hero-overlay {
-  background: linear-gradient(180deg, rgba(45, 58, 69, 0.30) 0%, rgba(45, 58, 69, 0.55) 100%);
+  background: linear-gradient(180deg, rgba(45, 58, 69, 0.05) 0%, rgba(45, 58, 69, 0.30) 100%);
 }
 
 .jog-hero-desc {

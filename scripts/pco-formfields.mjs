@@ -30,48 +30,27 @@ function api(path, opts) {
   });
 }
 
-// Desired final field sets (sequence order matters for the rendered form).
-const PLANS = {
-  '1286060': [
-    { label: 'Full Name', field_type: 'text', required: true, seq: 0, existsSeq: 0 },
-    { label: 'Email Address', field_type: 'text', required: true, seq: 1 },
-    { label: 'Phone Number', field_type: 'phone_number', required: false, seq: 2, existsSeq: 2 },
-    { label: "Tell us how you'd like to take your next step", field_type: 'text', required: false, seq: 3 },
-  ],
-  '1286061': [
-    { label: 'Nombre Completo', field_type: 'text', required: true, seq: 0, existsSeq: 0 },
-    { label: 'Correo Electrónico', field_type: 'text', required: true, seq: 1 },
-    { label: 'Número de Teléfono', field_type: 'phone_number', required: false, seq: 2, existsSeq: 2 },
-    { label: 'Cuéntanos cómo te gustaría dar tu próximo paso', field_type: 'text', required: false, seq: 3 },
-  ],
+const FORMS = {
+  '1286060': { description: 'Next steps for new visitors and current attenders at Journey of Grace Church.' },
+  '1286061': { description: 'Próximos pasos para nuevos visitantes y asistentes actuales en Journey of Grace Church.' },
 };
 
-for (const [formId, plan] of Object.entries(PLANS)) {
-  console.log(`\n== form ${formId}: current fields ==`);
-  const cur = await api(`/people/v2/forms/${formId}/fields`);
-  const existing = (cur.json && cur.json.data || []).map((f) => ({ id: f.id, label: f.attributes.label, type: f.attributes.field_type, seq: f.attributes.sequence }));
-  console.log(JSON.stringify(existing, null, 1));
+for (const [formId, attrs] of Object.entries(FORMS)) {
+  console.log(`\n== form ${formId}: pre-PATCH state ==`);
+  const g = await api(`/people/v2/forms/${formId}`);
+  const fa = g.json && g.json.data && g.json.data.attributes;
+  console.log('active:', fa.active, '| description:', fa.description, '| archived:', fa.archived);
 
-  for (const want of plan) {
-    const match = existing.find((f) => f.label === want.label);
-    if (match) {
-      console.log(`EXISTS ${match.type} "${match.label}" (id ${match.id}) — skipping`);
-      continue;
-    }
-    const r = await api(`/people/v2/forms/${formId}/fields`, {
-      method: 'POST',
-      body: { data: { type: 'FormField', attributes: { field_type: want.field_type, label: want.label, required: want.required, sequence: want.seq } } },
-    });
-    const d = r.json && r.json.data;
-    if (d) console.log(`ADDED  ${want.field_type} "${want.label}" (seq ${want.seq}) -> id ${d.id}`);
-    else console.log(`FAIL   "${want.label}": status ${r.status} ${JSON.stringify(r.json || r.raw).slice(0, 800)}`);
+  console.log('PATCH active=true + description...');
+  const r = await api(`/people/v2/forms/${formId}`, {
+    method: 'PATCH',
+    body: { data: { type: 'Form', id: formId, attributes: { active: true, description: attrs.description } } },
+  });
+  console.log('PATCH status', r.status);
+  if (r.json && r.json.data) {
+    const a2 = r.json.data.attributes;
+    console.log('post: active:', a2.active, '| description:', a2.description, '| public_url:', a2.public_url);
+  } else {
+    console.log('resp', JSON.stringify(r.json || r.raw).slice(0, 1500));
   }
-}
-
-console.log('\n== final verification (fields per form) ==');
-for (const formId of Object.keys(PLANS)) {
-  const r = await api(`/people/v2/forms/${formId}/fields?per_page=100`);
-  const list = (r.json && r.json.data || []).sort((a, b) => a.attributes.sequence - b.attributes.sequence)
-    .map((f) => `${f.attributes.sequence}.${f.attributes.field_type}:"${f.attributes.label}"${f.attributes.required ? '(req)' : ''}`);
-  console.log(formId + ':', list.join(' | '));
 }

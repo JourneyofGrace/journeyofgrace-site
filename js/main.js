@@ -16,52 +16,32 @@ document.addEventListener('DOMContentLoaded', function() {
   initEventExports();
   initFormThanks();
   initActiveNavHighlight();
-  initHomeVideoBackground();
-  initHomeHero();
+  initHomeVideo();
 });
 
 /**
  * Homepage hero video background.
  *
- * The original Squarespace runtime (which drove the `.sqs-video-background`
- * Vimeo embed) is gone in this static clone, so instead we render a self-hosted
- * <video> (assets/videos/) that autoplays muted and looped, filling the hero.
- * The image slideshow underneath stays visible until the video actually starts
- * playing; if the file is missing or unsupported, the slideshow remains as the
- * fallback. `data-config-playback-speed` on the host element is honored
- * (defaults to 1x when absent).
+ * The original Squarespace runtime (which drove the Vimeo embed) is gone in
+ * this static clone, so we render a self-hosted <video> (assets/videos/) that
+ * autoplays muted and loops, covering the full-screen `.jog-hero` section.
+ * `data-playback-rate` on the hero is honored (defaults to 1x when absent).
+ * If autoplay is blocked, playback starts on the first user interaction.
  */
-function initHomeVideoBackground() {
-  var video = document.querySelector('.index-gallery-wrapper:not(.index-item-navigation) .jog-hero-video');
+function initHomeVideo() {
+  var video = document.querySelector('.jog-hero-video');
   if (!video) {
     return;
   }
-  var host = video.closest('.sqs-video-background');
-  var wrapper = video.closest('.index-gallery-wrapper');
-
-  var speed = parseFloat(host && host.getAttribute('data-config-playback-speed'));
-  if (!isNaN(speed) && speed > 0) {
+  var hero = video.closest('.jog-hero');
+  var rate = parseFloat(hero && hero.getAttribute('data-playback-rate'));
+  if (!isNaN(rate) && rate > 0 && Math.abs(rate - 1) > 0.001) {
     try {
-      video.playbackRate = speed;
+      video.playbackRate = rate;
     } catch (e) {
       /* playbackRate is not supported everywhere — ignore. */
     }
   }
-
-  function markPlaying() {
-    if (wrapper) {
-      wrapper.classList.add('jog-video-active');
-    }
-  }
-
-  video.addEventListener('playing', markPlaying);
-  // Some browsers never fire `playing` for an already-cached muted loop;
-  // `canplay` plus a non-paused state is a reliable enough fallback.
-  video.addEventListener('canplay', function() {
-    if (!video.paused && !video.ended) {
-      markPlaying();
-    }
-  });
 
   var playPromise = video.play();
   if (playPromise && playPromise.catch) {
@@ -77,39 +57,6 @@ function initHomeVideoBackground() {
       document.addEventListener('keydown', onFirst);
     });
   }
-}
-
-/**
- * Homepage hero slideshow.
- *
- * The Squarespace universal JS (IndexGallery/HeaderOverflow) no longer runs in
- * this static clone, so the three hero images are laid out by css/style.css
- * and we just cycle an `.is-active` class every 6s. The CSS crossfades between
- * the images and applies a slow Ken Burns zoom. Counts every slide container
- * carrying a `data-url-id` (skips the legacy video `.index-main-image` slide).
- */
-function initHomeHero() {
-  var wrapper = document.querySelector('.index-gallery-wrapper:not(.index-item-navigation)');
-  if (!wrapper) {
-    return;
-  }
-  var slides = Array.prototype.filter.call(
-    wrapper.querySelectorAll('.image-container.content-fill'),
-    function(slide) {
-      return slide.getAttribute('data-url-id') !== null;
-    }
-  );
-  if (slides.length < 2) {
-    return;
-  }
-  // Show the first image immediately; `.is-active` is what CSS uses to fade in.
-  slides[0].classList.add('is-active');
-  var index = 0;
-  setInterval(function() {
-    slides[index].classList.remove('is-active');
-    index = (index + 1) % slides.length;
-    slides[index].classList.add('is-active');
-  }, 6000);
 }
 
 /**

@@ -57,31 +57,58 @@ try {
   console.log(JSON.stringify(rows, null, 1));
 } catch (e) { console.log('ERR', e.message); }
 
-console.log('\n== calendar/v2/events instances + calendars ==');
+console.log('\n== calendar v1 access check ==');
 try {
-  const r = await api('/calendar/v2/events?per_page=2');
+  for (const p of ['/calendar/v1/calendars?per_page=5', '/calendar/v1/events/18441760', '/calendar/v1/event_instances?per_page=3']) {
+    const r = await api(p);
+    console.log(r.status, p, '|', JSON.stringify(r.json || r.raw).slice(0, 300));
+  }
+} catch (e) { console.log('ERR', e.message); }
+
+console.log('\n== calendar/v2/events full attr union + include==');
+try {
+  const r = await api('/calendar/v2/events?per_page=30&include=owner,calendar,location');
   const evs = r.json && r.json.data || [];
-  if (evs[0]) {
-    const eid = evs[0].id;
-    console.log('event id', eid, '| name', evs[0].attributes.name, '| rel keys', Object.keys(evs[0].relationships).join(','));
-    const inst = await api(`/calendar/v2/events/${eid}/instances?per_page=3`);
-    console.log('instances status', inst.status, 'count', inst.json && inst.json.data && inst.json.data.length);
-    if (inst.json && inst.json.data && inst.json.data[0]) {
-      console.log('instance keys:', Object.keys(inst.json.data[0]).join(','));
-      console.log('instance attrs:', JSON.stringify(inst.json.data[0].attributes, null, 1).slice(0, 900));
-      console.log('instance rels:', JSON.stringify(inst.json.data[0].relationships, null, 1).slice(0, 900));
-    }
-    const again = await api(`/calendar/v2/events?per_page=1&include=instances`);
-    if (again.json && again.json.included) {
-      const types = {};
-      for (const i of again.json.included) { (types[i.type] = types[i.type] || []).push(i); }
-      console.log('include=instances types:', Object.keys(types).join(','));
-      if (types.Instance) console.log('Instance:', types.Instance.slice(0, 3).map((x) => x.id + '|' + (x.attributes && x.attributes.starts_at) + '~' + (x.attributes && x.attributes.ends_at)).join(' || '));
+  console.log('status', r.status, 'count', evs.length);
+  const attrKeys = new Set();
+  const relKeys = new Set();
+  const samples = [];
+  for (const e of evs) {
+    Object.keys(e.attributes || {}).forEach((k) => attrKeys.add(k));
+    Object.keys(e.relationships || {}).forEach((k) => relKeys.add(k));
+    samples.push({ id: e.id, name: (e.attributes.name || '').slice(0, 40), all: e.attributes });
+  }
+  console.log('attr keys:', [...attrKeys].sort().join(','));
+  console.log('rel keys:', [...relKeys].sort().join(','));
+  const withTime = samples.filter((s) => s.all.starts_at || s.all.starts_at_override || s.all.starts);
+  console.log('events with any start-ish key:', withTime.length, 'of', samples.length);
+  console.log('sample1 full attrs:', JSON.stringify(samples[0].all, null, 1).slice(0, 1500));
+  const inc = r.json && r.json.included || [];
+  const itypes = {};
+  for (const i of inc) { (itypes[i.type] = itypes[i.type] || []).push(i); }
+  console.log('include types:', Object.keys(itypes).join(','), 'counts', Object.fromEntries(Object.entries(itypes).map(([k, v]) => [k, v.length])));
+} catch (e) { console.log('ERR', e.message); }
+
+console.log('\n== calendar/v2 events filtered/related instances ==');
+try {
+  const pset = [
+    '/calendar/v2/events/18441760',
+    '/calendar/v2/event_instances?per_page=3',
+    '/calendar/v2/calendars/162766/events?per_page=3',
+  ];
+  for (const p of pset) {
+    const r = await api(p);
+    const n = r.json && r.json.data && (Array.isArray(r.json.data) ? r.json.data.length : 'object');
+    console.log(r.status, p, '| shape:', n);
+    if (r.json && r.json.data) {
+      const d = Array.isArray(r.json.data) ? r.json.data[0] : r.json.data;
+      if (d && d.attributes) {
+        const keys = Object.keys(d.attributes);
+        console.log('   attr keys:', keys.join(','));
+        if (keys.includes('starts_at')) console.log('   starts_at:', d.attributes.starts_at, '| ends_at:', d.attributes.ends_at);
+      }
     }
   }
-  const cals = await api('/calendar/v2/calendars?per_page=10');
-  console.log('calendars status', cals.status, 'count', cals.json && cals.json.data && cals.json.data.length);
-  console.log('calendars:', (cals.json && cals.json.data || []).map((c) => c.id + '=' + c.attributes.name).join(' | '));
 } catch (e) { console.log('ERR', e.message); }
 
 console.log('\n== group event with location/group includes (capitalized types) ==');

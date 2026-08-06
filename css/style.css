@@ -2445,8 +2445,109 @@ footer.jog-footer .footer-bottom {
 .jog-map {
   width: 100%;
   height: 380px;
-  border: 0;
+  border: 1px solid #ded7c8;
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  background: var(--color-bg-sand);
+  z-index: 0;
+}
+.jog-address-box {
+  color: var(--color-ink-muted);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.jog-address-box strong {
+  color: var(--color-slate);
+  font-size: 1.05rem;
+}
+.jog-map-actions {
+  text-align: center;
+  margin: 1.4rem 0 1rem;
+}
+.jog-directions-btn {
+  display: inline-block;
+  background: var(--color-slate);
+  color: #fff !important;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.65rem 1.3rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.jog-directions-btn:hover {
+  background: var(--color-amber);
+}
+.jog-form-card {
+  background: var(--color-surface);
+  border: 2px solid #ded7c8;
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem;
+  box-shadow: var(--shadow-soft);
+}
+.jog-form-row {
+  margin: 0 0 1.1rem;
+}
+.jog-form-label {
   display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-slate);
+  margin-bottom: 0.4rem;
+}
+.jog-required {
+  color: var(--color-amber-deep);
+}
+.jog-form-input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-ink);
+  padding: 0.7rem 0.9rem;
+  border: 2px solid #ded7c8;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--color-bg);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.jog-form-input:focus {
+  outline: none;
+  border-color: var(--color-amber);
+}
+.jog-form-actions {
+  text-align: center;
+  margin-top: 1.2rem;
+}
+.jog-form-submit {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--color-amber);
+  border: 2px solid var(--color-amber);
+  border-radius: var(--radius-pill);
+  padding: 0.8rem 2.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(201, 157, 61, 0.35);
+  transition: background 0.2s, transform 0.2s;
+}
+.jog-form-submit:hover {
+  background: var(--color-amber-deep);
+  border-color: var(--color-amber-deep);
+  transform: translateY(-2px);
+}
+.form-thanks {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-amber-deep);
+  text-align: center;
+  margin: 1rem 0 0;
 }

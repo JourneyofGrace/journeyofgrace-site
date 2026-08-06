@@ -4,7 +4,8 @@
   "description": "Independent static site for Journey of Grace (formerly a Squarespace clone), hosted on GitHub Pages.",
   "main": "index.js",
   "scripts": {
-    "build": "node scripts/fetch-sermons.mjs",
+    "build": "node scripts/build-content.mjs && node scripts/layout.mjs && node scripts/fetch-sermons.mjs",
+    "content": "node scripts/build-content.mjs && node scripts/layout.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

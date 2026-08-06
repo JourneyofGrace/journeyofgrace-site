@@ -1297,14 +1297,6 @@ textarea:focus-visible,
   background: var(--color-bg);
 }
 
-.church-calendar-note {
-  color: var(--color-ink-muted);
-  padding: 1rem 1.25rem;
-  background: var(--color-bg-sand);
-  border: 1px dashed #d8d2c6;
-  border-radius: var(--radius);
-}
-
 /* === Visit Page === */
 .visit-service-times {
   max-width: 960px;

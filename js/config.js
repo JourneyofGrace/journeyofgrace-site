@@ -20,8 +20,8 @@ window.JOG_CONFIG.planningCenter = window.JOG_CONFIG.planningCenter || {};
  * (Calendar > event > Church Center visibility = "Published"), otherwise the
  * embed will be empty.
  *
- * Leave calendarEmbedUrl as "" to hide the embed; a "coming soon" note with a
- * link to the full calendar shows instead.
+ * Leave calendarEmbedUrl as "" to hide the embed; upcoming events are rendered
+ * directly on the page by scripts/fetch-events.mjs instead.
  */
 window.JOG_CONFIG.planningCenter.calendarEmbedUrl =
   window.JOG_CONFIG.planningCenter.calendarEmbedUrl || "";

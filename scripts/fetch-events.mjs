@@ -491,10 +491,12 @@ async function regenerate() {
 
   const calHtml = calCards && calCards.length
     ? `    <!-- Upcoming Events -->
+    <h2 class="eventlist-section-heading">Upcoming Events</h2>
     <div class="eventlist eventlist--upcoming">
 ${calCards.map((c) => renderCard(c)).join('\n')}
     </div>`
     : `    <!-- Upcoming Events -->
+    <h2 class="eventlist-section-heading">Upcoming Events</h2>
     <div class="eventlist eventlist--upcoming">
       <p class="eventlist-empty">No upcoming calendar events right now. Check back soon!</p>
     </div>`;

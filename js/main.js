@@ -102,12 +102,12 @@ function initPlanningCenter() {
 
   var embed = cfg && cfg.calendarEmbedUrl ? cfg.calendarEmbedUrl.trim() : '';
   if (!embed) {
-    // No embed configured — show a friendly fallback link.
-    var note = document.createElement('p');
-    note.className = 'church-calendar-note';
-    note.innerHTML = 'Our live calendar is being set up. You can view upcoming events on our ' +
-      '<a href="' + (cfg && cfg.calendarLink ? cfg.calendarLink : '#') + '">Church Center calendar</a>.';
-    el.appendChild(note);
+    // No embed configured — events are rendered directly on the page by
+    // scripts/fetch-events.mjs, so hide the embed section entirely.
+    var section = el.closest('.church-calendar-section');
+    if (section) {
+      section.style.display = 'none';
+    }
     return;
   }
 

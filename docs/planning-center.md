@@ -16,8 +16,8 @@ configured in one file: [`js/config.js`](../js/config.js).
 | Giving | Header nav → "Giving" | Working (Church Center giving link) |
 
 The embed container and JavaScript are in place on `events.html`. Nothing else on the
-site is affected if you leave the embed empty — a friendly "coming soon" note with a
-calendar link is shown instead.
+site is affected if you leave the embed empty — the embed section is hidden and
+upcoming events are rendered directly on the page from the PCO API instead.
 
 ---
 
@@ -117,7 +117,7 @@ auto-deploys to <https://journeyofgrace.github.io/journeyofgrace-site/>.
 
 | Symptom | Cause / fix |
 | --- | --- |
-| Embed area shows the "coming soon" note | `calendarEmbedUrl` is empty — paste the URL from the embed code. |
+| Embed section is hidden on the Events page | `calendarEmbedUrl` is empty — events are rendered directly on the page instead; paste the embed URL to show the live embed. |
 | Embed iframe is blank/empty | Events are not **published** in Church Center (see above). |
 | "We seem to have strayed off course" (404) | The URL isn't a valid embed URL — re-copy it from Calendar → Actions → Share events → Embed → iFrame. |
 | Calendar looks unstyled / tiny | Iframes are fixed-size; the embed handles its own styling. If it looks squished, paste the code from the "List" style, which adapts to container width. |

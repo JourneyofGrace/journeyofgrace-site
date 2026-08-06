@@ -2133,3 +2133,26 @@ footer.jog-footer .footer-bottom {
     min-height: 320px;
   }
 }
+
+/* === Gallery (sqs slider blocks) ===
+   The static site has no slider JS, so Squarespace "slider" galleries
+   (youth group, kids) currently stack every photo full-width. Render them as
+   a tidy responsive grid instead. */
+.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery .thumb-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+}
+
+.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery-controls {
+  display: none;
+}
+

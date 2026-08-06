@@ -14,7 +14,9 @@ function replaceHeader(html) {
   const start = lines.findIndex((l) => l.includes('<!-- Header Navigation -->'));
   if (start === -1) return null;
   const mainAt = lines.findIndex(
-    (l, i) => i > start && /id="mainContent"|<main class="main-content"|<main class="main-wrapper"/.test(l)
+    (l, i) =>
+      i > start &&
+      /id="mainContent"|<main class="main-content"|<main class="main-wrapper"|<!-- Hero Banner -->|<section class="hero-banner"/.test(l)
   );
   if (mainAt === -1) return null;
   return lines.slice(0, start).join('\n') + '\n' + header + lines.slice(mainAt).join('\n');

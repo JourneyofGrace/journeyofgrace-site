@@ -2193,9 +2193,9 @@ footer.jog-footer .footer-bottom {
   gap: 0.5rem;
   margin: 0 auto 2.5rem;
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-ink-muted);
 }

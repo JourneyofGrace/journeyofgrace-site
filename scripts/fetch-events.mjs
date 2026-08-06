@@ -119,7 +119,7 @@ ${lines}
   const exportLi = `            <li class="eventlist-meta-item eventlist-meta-export event-meta-item">
               <a href="${ev.googleUrl}" class="eventlist-meta-export-google" target="_blank" rel="noopener">Google Calendar</a>
               <span class="eventlist-meta-export-divider"></span>
-              <a href="/journeyofgrace-site/events" class="eventlist-meta-export-ical">ICS</a>
+              <a href="events" class="eventlist-meta-export-ical">ICS</a>
             </li>`;
 
   const excerpt = ev.description

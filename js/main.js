@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initEventExports();
   initFormThanks();
   initActiveNavHighlight();
+  initBreadcrumb();
   initHomeVideo();
 });
 
@@ -199,6 +200,13 @@ function initFormThanks() {
   var email = (window.JOG_CONFIG && window.JOG_CONFIG.formRecipientEmail) || 'office@journeyofgrace.church';
   document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
     form.action = 'https://formsubmit.co/' + encodeURIComponent(email);
+
+    // Send the submitter back to the exact page they came from, regardless of
+    // which root (/, /journeyofgrace-site/, ...) the site is served under.
+    var next = form.querySelector('input[name="_next"]');
+    if (next) {
+      next.value = window.location.origin + window.location.pathname + '#submitted';
+    }
   });
 
   if (window.location.hash === '#submitted') {
@@ -335,7 +343,11 @@ function initSermonArchive() {
 function initEventExports() {
   document.querySelectorAll('.eventlist-event').forEach(function(article) {
     var ical = article.querySelector('.eventlist-meta-export-ical');
-    if (!ical || !ical.href || ical.href.indexOf('/journeyofgrace-site/events') === -1) {
+    // The ICS link is a stub that always points at the events page in the same
+    // directory as the current page, whatever root the site is served under.
+    var icalPath = ical && ical.href ? new URL(ical.href, window.location.href).pathname : '';
+    var root = window.location.pathname.replace(/[^/]+$/, '');
+    if (icalPath !== root + 'events') {
       return;
     }
 
@@ -432,6 +444,44 @@ function initVisitMap() {
   L.marker([33.4219082, -111.8100475]).addTo(map)
     .bindPopup('<strong>Journey of Grace</strong><br>955 E University Dr., Mesa, AZ 85203')
     .openPopup();
+}
+
+/**
+ * Journey-trail breadcrumb.
+ *
+ * Pages ship a static Home / <page> crumb as a no-JS fallback. Pages that
+ * belong to a hub (every ministry reachable from the Connect page) get the
+ * full trail inserted — Home / Connect / <page> — using relative hrefs so it
+ * works at any deploy root.
+ */
+function initBreadcrumb() {
+  var crumb = document.querySelector('.jog-breadcrumb');
+  if (!crumb) {
+    return;
+  }
+  var page = (window.location.pathname.split('/').filter(Boolean).pop() || 'index.html').replace(/\.html$/, '');
+  var parents = {
+    'kids-min': 'Connect',
+    'youth-group': 'Connect',
+    'mens-ministry': 'Connect',
+    'womens-ministry': 'Connect',
+    'life-groups': 'Connect',
+    'journey-classes': 'Connect'
+  };
+  var parentLabel = parents[page];
+  if (!parentLabel) {
+    return;
+  }
+  var homeLink = crumb.querySelector('.jog-breadcrumb-home');
+  var arrow = crumb.querySelector('.jog-breadcrumb-arrow');
+  var currentEl = crumb.querySelector('.jog-breadcrumb-current');
+  var currentLabel = currentEl ? currentEl.textContent.trim() : page;
+  crumb.innerHTML =
+    (homeLink ? homeLink.outerHTML : '<a class="jog-breadcrumb-home" href="./">Home</a>') +
+    (arrow ? arrow.outerHTML : '<span class="jog-breadcrumb-arrow" aria-hidden="true">&rsaquo;</span>') +
+    '<a class="jog-breadcrumb-parent" href="connect"><span>' + parentLabel + '</span></a>' +
+    (arrow ? arrow.outerHTML : '<span class="jog-breadcrumb-arrow" aria-hidden="true">&rsaquo;</span>') +
+    '<span class="jog-breadcrumb-current" aria-current="page">' + currentLabel + '</span>';
 }
 
 /**

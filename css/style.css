@@ -2183,3 +2183,234 @@ footer.jog-footer .footer-bottom {
 #collection-5cb2b2e79b747a58e8a70c21 .jog-block.image-block .intrinsic {
   max-width: 100% !important;
 }
+
+/* === Breadcrumb (journey trail) === */
+.jog-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 auto 2.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.jog-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-slate-soft);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.jog-breadcrumb a:hover {
+  color: var(--color-amber-deep);
+}
+.jog-breadcrumb svg {
+  color: var(--color-amber);
+}
+.jog-breadcrumb-current {
+  color: var(--color-slate);
+  font-weight: 700;
+}
+.jog-breadcrumb-arrow {
+  color: var(--color-amber);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* === Bible verse pull-quote === */
+.jog-verse {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto 3rem;
+  padding: 2.4rem 2.6rem;
+  background: var(--color-bg-sand);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+.jog-verse-text {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  line-height: 1.7;
+  font-weight: 400;
+  color: var(--color-slate);
+  margin: 0 0 1.4rem;
+}
+.jog-verse-icon {
+  display: block;
+  margin: 0 auto 1.1rem;
+  color: var(--color-amber-deep);
+  opacity: 0.85;
+}
+.jog-verse-ref {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-amber-deep);
+}
+.jog-verse-ref a {
+  color: var(--color-amber-deep);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.jog-verse-ref a:hover {
+  color: var(--color-slate);
+  border-bottom-color: var(--color-amber);
+}
+
+/* === Ministry gateway tiles === */
+.jog-ministry {
+  max-width: 720px;
+  margin: 0 auto 3.5rem;
+}
+.jog-ministry-heading {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  color: var(--color-slate);
+  text-align: center;
+  margin: 0 0 1.75rem;
+}
+.jog-ministry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+.jog-ministry-tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.35rem 1.5rem;
+  background: var(--color-surface);
+  border: 2px solid #ded7c8;
+  border-radius: var(--radius);
+  color: var(--color-slate);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.jog-ministry-tile svg {
+  color: var(--color-amber);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.jog-ministry-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--color-amber);
+  color: var(--color-slate);
+}
+.jog-ministry-tile:hover svg {
+  transform: translateX(4px);
+  color: var(--color-amber-deep);
+}
+@media (max-width: 640px) {
+  .jog-ministry-grid {
+    grid-template-columns: 1fr;
+  }
+  .jog-verse {
+    padding: 1.75rem 1.5rem;
+  }
+}
+
+/* === Clean content sections (rewritten pages) === */
+.jog-section {
+  max-width: 720px;
+  margin: 0 auto 3.5rem;
+}
+.jog-section-heading {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  color: var(--color-slate);
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+.jog-lead {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--color-ink);
+  text-align: center;
+}
+.jog-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.jog-list li {
+  position: relative;
+  padding: 0 0 0 1.7rem;
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+.jog-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.65rem;
+  height: 0.65rem;
+  transform: rotate(45deg);
+  background: var(--color-amber);
+}
+.jog-list a {
+  color: var(--color-amber-deep);
+}
+.jog-actions {
+  text-align: center;
+  margin: 0 auto 3.5rem;
+}
+.jog-cta {
+  display: inline-block;
+  padding: 1rem 2.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-amber);
+  border: 2px solid var(--color-amber);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(201, 151, 61, 0.35);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.jog-cta:hover {
+  background: var(--color-amber-deep);
+  border-color: var(--color-amber-deep);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+.jog-section-full {
+  max-width: 1080px;
+}
+.jog-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.jog-photo-grid img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+  display: block;
+}

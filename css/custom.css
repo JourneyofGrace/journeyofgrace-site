@@ -20,11 +20,11 @@ body {
 }
 
 /* Elegant Content Cards & High Contrast Text */
-.sqs-layout .sqs-row {
+.jog-layout .jog-row {
   margin-bottom: 1.5rem !important;
 }
 
-#mainContent .sqs-block-html {
+#mainContent .jog-block-html {
   background: #ffffff !important;
   padding: 2.2rem 2.8rem !important;
   border-radius: 16px !important;
@@ -33,15 +33,15 @@ body {
   margin-bottom: 2rem !important;
 }
 
-#mainContent .sqs-block-html p, #mainContent .sqs-block-html li {
+#mainContent .jog-block-html p, #mainContent .jog-block-html li {
   color: #334155 !important;
   font-size: 1.05rem !important;
   line-height: 1.8 !important;
 }
 
-#mainContent .sqs-block-html h1, 
-#mainContent .sqs-block-html h2, 
-#mainContent .sqs-block-html h3, 
+#mainContent .jog-block-html h1, 
+#mainContent .jog-block-html h2, 
+#mainContent .jog-block-html h3, 
 .title-card-title, .hero-title, .page-title {
   font-family: 'Cantata One', Georgia, serif !important;
   letter-spacing: 0.02em !important;
@@ -100,7 +100,7 @@ footer.jog-footer nav a {
 }
 
 /* Card Containers Polish */
-#mainContent .sqs-block-html, .card {
+#mainContent .jog-block-html, .card {
   line-height: 1.8 !important;
 }
 #mainContent p {

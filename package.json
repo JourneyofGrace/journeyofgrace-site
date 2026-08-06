@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/JourneyofGrace/journeyofgrace-site#readme",
   "dependencies": {
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
     "playwright": "^1.62.1"
   }
 }

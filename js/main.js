@@ -189,7 +189,7 @@ function initFormThanks() {
     document.querySelectorAll('h3').forEach(function(h3) {
       var text = (h3.textContent || '').toLowerCase();
       if (text.indexOf('complete the form') !== -1 || text.indexOf('complete el siguiente formulario') !== -1) {
-        var block = h3.closest('.sqs-block') || h3.parentElement;
+        var block = h3.closest('.jog-block') || h3.parentElement;
         block.style.display = 'none';
       }
     });

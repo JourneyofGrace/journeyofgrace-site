@@ -48,10 +48,10 @@ h1, h2, h3, h4, h5, h6,
 .eventlist-title,
 .eventlist-title-link,
 .collection-desc,
-.sqs-html-content h1,
-.sqs-html-content h2,
-.sqs-html-content h3,
-.sqs-html-content h4 {
+.jog-html-content h1,
+.jog-html-content h2,
+.jog-html-content h3,
+.jog-html-content h4 {
   font-family: var(--font-serif);
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -59,10 +59,10 @@ h1, h2, h3, h4, h5, h6,
   color: var(--color-slate);
 }
 
-.sqs-html-content h1 { font-size: 2.2rem; }
-.sqs-html-content h2 { font-size: 1.8rem; }
-.sqs-html-content h3 { font-size: 1.4rem; }
-.sqs-html-content h4 { font-size: 1.15rem; }
+.jog-html-content h1 { font-size: 2.2rem; }
+.jog-html-content h2 { font-size: 1.8rem; }
+.jog-html-content h3 { font-size: 1.4rem; }
+.jog-html-content h4 { font-size: 1.15rem; }
 
 /* === Body links === */
 a {
@@ -78,19 +78,19 @@ a:hover {
   text-decoration-color: var(--color-amber);
 }
 
-.sqs-html-content a {
+.jog-html-content a {
   color: var(--color-amber-deep);
 }
 
-.sqs-html-content a:hover {
+.jog-html-content a:hover {
   color: var(--color-amber);
 }
 
 /* === Buttons (markup button blocks) === */
-.sqs-button-element--primary,
-.sqs-button-element--secondary,
-.sqs-block-button-element--primary,
-.sqs-block-button-element--secondary,
+.jog-button-element--primary,
+.jog-button-element--secondary,
+.jog-block-button-element--primary,
+.jog-block-button-element--secondary,
 .eventlist-button {
   border-radius: var(--radius-pill);
   font-family: var(--font-sans);
@@ -100,16 +100,16 @@ a:hover {
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.sqs-button-element--primary,
-.sqs-block-button-element--primary {
+.jog-button-element--primary,
+.jog-block-button-element--primary {
   background-color: var(--color-amber);
   border-color: var(--color-amber);
   color: var(--color-ink);
   box-shadow: 0 4px 14px rgba(201, 151, 61, 0.35);
 }
 
-.sqs-button-element--primary:hover,
-.sqs-block-button-element--primary:hover {
+.jog-button-element--primary:hover,
+.jog-block-button-element--primary:hover {
   background-color: var(--color-amber-deep);
   border-color: var(--color-amber-deep);
   color: #ffffff;
@@ -117,15 +117,15 @@ a:hover {
   transform: translateY(-2px);
 }
 
-.sqs-button-element--secondary,
-.sqs-block-button-element--secondary {
+.jog-button-element--secondary,
+.jog-block-button-element--secondary {
   background-color: transparent;
   border: 2px solid var(--color-amber);
   color: var(--color-slate);
 }
 
-.sqs-button-element--secondary:hover,
-.sqs-block-button-element--secondary:hover {
+.jog-button-element--secondary:hover,
+.jog-block-button-element--secondary:hover {
   background-color: var(--color-slate);
   border-color: var(--color-slate);
   color: #ffffff;
@@ -158,7 +158,7 @@ a:hover {
 }
 
 /* Announcement strip (JS-injected): slim, translucent, full-width */
-.sqs-announcement-bar {
+.jog-announcement-bar {
   background: rgba(45, 58, 69, 0.72) !important;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
@@ -168,11 +168,11 @@ a:hover {
   right: 0 !important;
 }
 
-.sqs-announcement-bar-text {
+.jog-announcement-bar-text {
   padding: 0 !important;
 }
 
-.sqs-announcement-bar-text p {
+.jog-announcement-bar-text p {
   padding: 0.3em 2em !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
@@ -180,18 +180,18 @@ a:hover {
   text-overflow: ellipsis;
 }
 
-.sqs-announcement-bar-close {
+.jog-announcement-bar-close {
   display: none !important;
 }
 
-.sqs-announcement-bar .sqs-announcement-bar-url,
-.sqs-announcement-bar .sqs-announcement-bar-text,
-.sqs-announcement-bar .sqs-announcement-bar-text p {
+.jog-announcement-bar .jog-announcement-bar-url,
+.jog-announcement-bar .jog-announcement-bar-text,
+.jog-announcement-bar .jog-announcement-bar-text p {
   color: #f4f1ea !important;
 }
 
-.sqs-announcement-bar .sqs-announcement-bar-url:hover .sqs-announcement-bar-text,
-.sqs-announcement-bar .sqs-announcement-bar-url:hover .sqs-announcement-bar-text p {
+.jog-announcement-bar .jog-announcement-bar-url:hover .jog-announcement-bar-text,
+.jog-announcement-bar .jog-announcement-bar-url:hover .jog-announcement-bar-text p {
   color: var(--color-amber-pale) !important;
 }
 
@@ -206,7 +206,7 @@ a:hover {
 }
 
 .site-header .main-navigation .active > a,
-.site-header .main-navigation .active > a span:not(.sqs-cart-quantity) {
+.site-header .main-navigation .active > a span:not(.jog-cart-quantity) {
   color: #f4f1ea !important;
   text-decoration: underline;
   text-decoration-color: var(--color-amber);
@@ -262,7 +262,7 @@ a:hover {
 }
 
 .main-navigation .active > a,
-.main-navigation .active > a span:not(.sqs-cart-quantity) {
+.main-navigation .active > a span:not(.jog-cart-quantity) {
   color: #c97a2b !important;
   font-weight: 700 !important;
   text-decoration: none !important;
@@ -502,12 +502,12 @@ a:hover {
   padding: clamp(2.5rem, 5vw, 5rem) clamp(1.25rem, 6vw, 6rem) clamp(4rem, 7vw, 7rem);
 }
 
-.main-content-inner-wrapper .sqs-block {
+.main-content-inner-wrapper .jog-block {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
 
-.main-content-inner-wrapper .row.sqs-row {
+.main-content-inner-wrapper .row.jog-row {
   margin-bottom: 1rem;
 }
 
@@ -860,8 +860,8 @@ p.eventlist-empty {
   padding: 2.5rem 1.5rem;
 }
 
-.site-footer .sqs-html-content p,
-.site-footer .sqs-html-content a {
+.site-footer .jog-html-content p,
+.site-footer .jog-html-content a {
   color: #d9d2c4;
 }
 
@@ -869,8 +869,8 @@ p.eventlist-empty {
   color: var(--color-amber-pale);
 }
 
-.site-footer .sqs-button-element--primary,
-.site-footer .sqs-block-button-element--primary {
+.site-footer .jog-button-element--primary,
+.site-footer .jog-block-button-element--primary {
   background-color: var(--color-amber);
   color: var(--color-ink);
 }
@@ -1096,7 +1096,7 @@ textarea:focus-visible,
 }
 
 /* ==== Self-hosted contact forms (FormSubmit) ==== */
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element {
   background: var(--color-surface);
   border: 1px solid #d8d2c6;
   border-radius: var(--radius);
@@ -1109,17 +1109,17 @@ textarea:focus-visible,
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element:focus {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field .field-element:focus {
   border-color: var(--color-amber);
   box-shadow: 0 0 0 3px rgba(201, 151, 61, 0.25);
   outline: none;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field textarea.field-element {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field textarea.field-element {
   min-height: 140px;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
@@ -1129,21 +1129,21 @@ textarea:focus-visible,
   margin-bottom: 2px;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title .required-mark {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .title .required-mark {
   color: var(--color-amber-deep);
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .field {
   margin: 0 0 20px;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .field-list .description {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .field-list .description {
   color: var(--color-ink-muted);
   font-size: 13px;
   opacity: 1;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit] {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit] {
   background-color: var(--color-amber);
   border-radius: var(--radius-pill);
   color: var(--color-ink);
@@ -1158,12 +1158,12 @@ textarea:focus-visible,
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit]:hover {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper input[type=submit]:hover {
   background-color: var(--color-amber-deep);
   color: #fff;
 }
 
-.sqs-block[data-definition-name="website.components.form"] .form-wrapper .form-thanks {
+.jog-block[data-definition-name="website.components.form"] .form-wrapper .form-thanks {
   margin-top: 20px;
   padding: 18px 20px;
   border: 1px solid var(--color-amber);
@@ -1374,7 +1374,7 @@ textarea:focus-visible,
   margin-bottom: 0.5rem;
   color: var(--color-ink);
 }
-.visit-address .sqs-button-element--primary {
+.visit-address .jog-button-element--primary {
   display: inline-block;
   margin-top: 1rem;
 }
@@ -1438,7 +1438,7 @@ textarea:focus-visible,
   color: #d9d2c4;
   margin-bottom: 1.5rem;
 }
-.visit-cta .sqs-button-element--primary {
+.visit-cta .jog-button-element--primary {
   background: var(--color-amber);
   color: var(--color-ink);
   font-weight: 700;
@@ -1508,21 +1508,21 @@ textarea:focus-visible,
   padding: 0 !important;
 }
 
-/* Remove the sqs-layout padding that creates an indent around the hero banner */
-#collection-5fe2ceca4aff1019af48766b .sqs-layout {
+/* Remove the jog-layout padding that creates an indent around the hero banner */
+#collection-5fe2ceca4aff1019af48766b .jog-layout {
   padding: 0 !important;
 }
 
 /* The col/span-12 that wraps the hero also removes padding */
-#collection-5fe2ceca4aff1019af48766b .sqs-col-12,
+#collection-5fe2ceca4aff1019af48766b .jog-col-12,
 #collection-5fe2ceca4aff1019af48766b .span-12,
-#collection-5fe2ceca4aff1019af48766b .sqs-row {
+#collection-5fe2ceca4aff1019af48766b .jog-row {
   padding: 0 !important;
   margin: 0 !important;
 }
 
 /* Make the main content blocks (after the banner) use standard page padding */
-#collection-5fe2ceca4aff1019af48766b .sqs-block-html {
+#collection-5fe2ceca4aff1019af48766b .jog-block-html {
   padding-left: 6vw;
   padding-right: 6vw;
 }
@@ -1666,7 +1666,7 @@ textarea:focus-visible,
 .header-social-icons--overlay,
 .nav-social-wrapper .SocialLinks,
 .SocialLinks-link,
-.sqs-template-social-icons {
+.jog-template-social-icons {
   display: none !important;
 }
 .jog-global-nav a {
@@ -2138,21 +2138,48 @@ footer.jog-footer .footer-bottom {
    The static site has no slider JS, so Squarespace "slider" galleries
    (youth group, kids) currently stack every photo full-width. Render them as
    a tidy responsive grid instead. */
-.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery {
+.jog-gallery-container.jog-gallery-block-slider .jog-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
 }
 
-.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery .thumb-image {
+.jog-gallery-container.jog-gallery-block-slider .jog-gallery .thumb-image {
   width: 100%;
   height: auto;
   display: block;
   border-radius: 6px;
   box-shadow: var(--shadow-soft);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  object-position: center;
 }
 
-.sqs-gallery-container.sqs-gallery-block-slider .sqs-gallery-controls {
+.jog-gallery-container.jog-gallery-block-slider .jog-gallery-controls {
   display: none;
 }
 
+
+/* === Full-bleed block replacement ===
+   The page used to full-bleed its first image block (and gallery blocks on
+   the kids & youth pages) via the Squarespace Fullwidth jQuery plugin, which
+   has been removed. Reproduce that effect in pure CSS so pages look the same. */
+#collection-5d55ccd9c3c43a0001f0e133 .jog-block.image-block, /* connect */
+#collection-5c3ba27bc2241bdece806eda .jog-block.image-block, /* spanish */
+#collection-5cb2b2e79b747a58e8a70c21 .jog-block.image-block, /* mens-ministry */
+#collection-5cb2626cfa0d60178b1c3c60 .jog-block.gallery-block, /* kids-min */
+#collection-5cb2af22e79c70e52f2292b5 .jog-block.gallery-block /* youth-group */ {
+  width: 100vw;
+  max-width: none;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#collection-5d55ccd9c3c43a0001f0e133 .jog-block.image-block .intrinsic,
+#collection-5c3ba27bc2241bdece806eda .jog-block.image-block .intrinsic,
+#collection-5cb2b2e79b747a58e8a70c21 .jog-block.image-block .intrinsic {
+  max-width: 100% !important;
+}

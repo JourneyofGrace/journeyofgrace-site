@@ -35,15 +35,8 @@ window.JOG_CONFIG.planningCenter.calendarLink =
   "https://journeyofgrace.churchcenter.com/calendar";
 
 /*
- * Recipient email address for self-hosted contact forms (FormSubmit).
- * Can be overridden globally via JS config or populated during CI build.
- */
-window.JOG_CONFIG.formRecipientEmail =
-  window.JOG_CONFIG.formRecipientEmail || "office@journeyofgrace.church";
-
-/*
  * Planning Center People / Form embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/123456)
- * Leave empty ("") to use the default HTML form with FormSubmit/email forwarding.
+ * Planning Center is the church's only form provider; there is no email fallback.
  */
 /*
  * Planning Center Online API integration parameters.
@@ -64,14 +57,15 @@ window.JOG_CONFIG.planningCenter.visitorFormUrl =
  * page detects the iframe and renders without the site chrome. (There is no
  * "/people/forms/embed/<id>" route; that path 404s.)
  *
- * A page without an entry keeps its static HTML form (FormSubmit/email).
- * Form fields must be created by staff in Planning Center > People > Forms.
+ * A page without an entry (but rendering a form) logs an explicit error: staff
+ * must add an entry here. Form fields are created in Planning Center > People > Forms.
  */
 window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pageForms || {
   "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
-  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061"
+  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
+  "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061"
 };
 
 

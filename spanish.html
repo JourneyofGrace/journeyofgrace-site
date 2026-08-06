@@ -330,7 +330,7 @@
               <span style="font-size: 0.9rem;">Tel&eacute;fono: 480-964-5062</span>
             </div>
             <div class="jog-map-actions">
-              <a href="https://maps.app.goo.gl/Xod8cZfR4v1zZprd9" target="_blank" rel="noopener" class="jog-directions-btn">C&oacute;mo Llegar</a>
+              <a href="https://www.google.com/maps/dir//955+E+University+Dr,+Mesa,+AZ+85203?hl=es" target="_blank" rel="noopener" class="jog-directions-btn">C&oacute;mo Llegar</a>
             </div>
             <div id="spanish-interactive-map" class="jog-map" aria-label="Mapa de la ubicaci&oacute;n de Journey of Grace"></div>
           </section>
@@ -338,11 +338,10 @@
           <section class="jog-section jog-section-full">
             <h2 class="jog-section-heading">Cont&aacute;ctanos</h2>
             <div class="jog-form-card">
-              <form class="self-hosted-form" action="https://formsubmit.co/office@journeyofgrace.church" method="POST">
+              <form class="self-hosted-form" onsubmit="return false;" method="POST">
                 <input type="hidden" name="_subject" value="Formulario en Espa&ntilde;ol - Journey of Grace">
                 <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="">
                 <div class="jog-form-row">
                   <label class="jog-form-label" for="jog-nombre">Nombre <span class="jog-required">*</span></label>
                   <input class="jog-form-input" id="jog-nombre" name="Nombre" type="text" required />
@@ -411,6 +410,7 @@
   </footer>
     </div>
   </div>
+  <script src="js/config.js"></script>
   <script src="js/main.js"></script>
   <script src="assets/vendor-sqsp/leaflet/leaflet.js"></script>
   <script>

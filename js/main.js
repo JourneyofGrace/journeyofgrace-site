@@ -131,10 +131,11 @@ function initPlanningCenter() {
 /**
  * Visitor/contact form handling.
  *
- * If a Planning Center form URL is configured for the current page, its embed
- * replaces every static self-hosted form on the page. Otherwise the static
- * forms post to FormSubmit so submissions land in the church office inbox, and
- * the "thanks" message is revealed after a `#submitted` redirect.
+ * Planning Center (PCO) is the church's only form provider. If a PCO form URL
+ * is configured for the current page its embed replaces every static form on
+ * the page. There is no email-forwarding fallback: a page that renders a form
+ * without a configured PCO URL logs an explicit error telling staff to add one
+ * (js/config.js -> planningCenter.pageForms).
  */
 function initFormThanks() {
   var pageName = (window.location.pathname.split('/').pop() || '').toLowerCase() || 'index.html';
@@ -143,77 +144,70 @@ function initFormThanks() {
   var pageForms = (pco && pco.pageForms) || {};
   var pcoFormUrl = (pageForms[pageName] || (pco && pco.visitorFormUrl) || '').trim();
 
-  if (pcoFormUrl) {
-    document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
-      var card = form.closest('.card, .form-wrapper');
-      if (card) {
-        card.classList.add('pco-form-frame');
-        var cardTitle = card.querySelector('.card-title');
-        var formHeader = card.querySelector('.form-header-text');
-        if (cardTitle) {
-          cardTitle.style.display = 'none';
-        }
-        if (formHeader) {
-          formHeader.style.display = 'none';
-        }
-      }
+  var forms = document.querySelectorAll('form.self-hosted-form');
 
-      var frame = document.createElement('iframe');
-      frame.src = pcoFormUrl;
-      frame.className = 'pco-form-embed';
-      frame.title = 'Planning Center Form';
-
-      // The PCO form page renders at a fixed 480px width even inside an
-      // iframe, so on narrow screens we scale it down to fit the card
-      // instead of letting it clip off the right edge.
-      var wrap = document.createElement('div');
-      wrap.className = 'pco-form-scale-wrap';
-      wrap.appendChild(frame);
-      form.parentNode.replaceChild(wrap, form);
-
-      var fitPcoForm = function() {
-        if (window.innerWidth >= 700) {
-          frame.style.transform = 'none';
-          wrap.style.height = '';
-          return;
-        }
-        var scale = wrap.clientWidth / 480;
-        frame.style.transform = 'scale(' + scale + ')';
-        wrap.style.height = Math.round(960 * scale) + 'px';
-      };
-      fitPcoForm();
-      window.addEventListener('resize', debounce(fitPcoForm, 150));
-    });
-
-    // The PCO form renders its own title and description, so hide the
-    // redundant "Please complete the form below" heading beside the embed.
-    document.querySelectorAll('h3').forEach(function(h3) {
-      var text = (h3.textContent || '').toLowerCase();
-      if (text.indexOf('complete the form') !== -1 || text.indexOf('complete el siguiente formulario') !== -1) {
-        var block = h3.closest('.jog-block') || h3.parentElement;
-        block.style.display = 'none';
-      }
-    });
+  if (!pcoFormUrl) {
+    if (forms.length) {
+      console.error('[jog] No Planning Center form configured for ' + pageName +
+        '. Add a planningCenter.pageForms entry in js/config.js so the form can be embedded.');
+    }
     return;
   }
 
-  var email = (window.JOG_CONFIG && window.JOG_CONFIG.formRecipientEmail) || 'office@journeyofgrace.church';
-  document.querySelectorAll('form.self-hosted-form').forEach(function(form) {
-    form.action = 'https://formsubmit.co/' + encodeURIComponent(email);
+  forms.forEach(function(form) {
+    // The static form is only a placeholder; a PCO iframe replaces it, so
+    // never let it submit anywhere itself.
+    form.addEventListener('submit', function(e) { e.preventDefault(); });
 
-    // Send the submitter back to the exact page they came from, regardless of
-    // which root (/, /journeyofgrace-site/, ...) the site is served under.
-    var next = form.querySelector('input[name="_next"]');
-    if (next) {
-      next.value = window.location.origin + window.location.pathname + '#submitted';
+    var card = form.closest('.card, .form-wrapper');
+    if (card) {
+      card.classList.add('pco-form-frame');
+      var cardTitle = card.querySelector('.card-title');
+      var formHeader = card.querySelector('.form-header-text');
+      if (cardTitle) {
+        cardTitle.style.display = 'none';
+      }
+      if (formHeader) {
+        formHeader.style.display = 'none';
+      }
     }
+
+    var frame = document.createElement('iframe');
+    frame.src = pcoFormUrl;
+    frame.className = 'pco-form-embed';
+    frame.title = 'Planning Center Form';
+
+    // The PCO form page renders at a fixed 480px width even inside an
+    // iframe, so on narrow screens we scale it down to fit the card
+    // instead of letting it clip off the right edge.
+    var wrap = document.createElement('div');
+    wrap.className = 'pco-form-scale-wrap';
+    wrap.appendChild(frame);
+    form.parentNode.replaceChild(wrap, form);
+
+    var fitPcoForm = function() {
+      if (window.innerWidth >= 700) {
+        frame.style.transform = 'none';
+        wrap.style.height = '';
+        return;
+      }
+      var scale = wrap.clientWidth / 480;
+      frame.style.transform = 'scale(' + scale + ')';
+      wrap.style.height = Math.round(960 * scale) + 'px';
+    };
+    fitPcoForm();
+    window.addEventListener('resize', debounce(fitPcoForm, 150));
   });
 
-  if (window.location.hash === '#submitted') {
-    document.querySelectorAll('.form-thanks').forEach(function(el) {
-      el.hidden = false;
-    });
-  }
+  // The PCO form renders its own title and description, so hide the
+  // redundant "Please complete the form below" heading beside the embed.
+  document.querySelectorAll('h3').forEach(function(h3) {
+    var text = (h3.textContent || '').toLowerCase();
+    if (text.indexOf('complete the form') !== -1 || text.indexOf('complete el siguiente formulario') !== -1) {
+      var block = h3.closest('.jog-block') || h3.parentElement;
+      block.style.display = 'none';
+    }
+  });
 }
 
 /**

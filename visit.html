@@ -610,11 +610,10 @@
           <h2 class="card-title">Tell Us You're Coming</h2>
           <p class="form-header-text">Let us know a bit about your family so we can greet you at the entrance and help you get checked in!</p>
 
-          <form class="self-hosted-form" action="https://formsubmit.co/office@journeyofgrace.church" method="POST">
+          <form class="self-hosted-form" onsubmit="return false;" method="POST">
             <input type="hidden" name="_subject" value="Plan Your Visit Form — Journey of Grace">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="">
 
             <div class="form-group">
               <label for="name">Your Name *</label>

@@ -159,7 +159,7 @@ function initFormThanks() {
     // never let it submit anywhere itself.
     form.addEventListener('submit', function(e) { e.preventDefault(); });
 
-    var card = form.closest('.card, .form-wrapper');
+    var card = form.closest('.card, .form-wrapper, .jog-form-card');
     if (card) {
       card.classList.add('pco-form-frame');
       var cardTitle = card.querySelector('.card-title');

@@ -12,3 +12,13 @@ analyze-visit.py
 
 # Local dev/verification scratch scripts (not part of the site or CI)
 scratch/
+
+# Root-level dev verify/debug scripts (kept local, not deployed)
+/blockdump.mjs
+/blockdump2.mjs
+/debug-*.mjs
+/heights*.mjs
+/imgrect*.mjs
+/shoot-*.mjs
+/snap-*.mjs
+/verify-*.mjs

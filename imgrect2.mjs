@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const url=process.argv[2];
+const id=process.argv[3];
+const browser = await chromium.launch({headless:true});
+const ctx = await browser.newContext({viewport:{width:1440,height:900}});
+const page = await ctx.newPage();
+await page.goto(url,{waitUntil:'domcontentloaded',timeout:20000});
+await page.waitForTimeout(3000);
+await page.addStyleTag({content:'*,*::before,*::after{animation:none!important;transition:none!important;}'});
+const out=await page.evaluate((id)=>{const b=document.getElementById(id); if(!b)return{missing:true}; const r=b.getBoundingClientRect(); return {rect:{t:r.top,l:r.left,w:r.width,h:r.height},cls:b.className,display:getComputedStyle(b).display};},id);
+console.log(url,id,JSON.stringify(out));
+await browser.close();

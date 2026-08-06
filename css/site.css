@@ -96,16 +96,16 @@
 
 @font-face {
   font-family:'squarespace-ui-font';
-  src:url('../assets/vendor-sqsp/universal/fonts/squarespace-ui-font.eot');
-  src:url('../assets/vendor-sqsp/universal/fonts/squarespace-ui-font.eot?#iefix') format('embedded-opentype'),url('../assets/vendor-sqsp/universal/fonts/squarespace-ui-font.svg#squarespace-ui-font') format('svg'),url('../assets/vendor-sqsp/universal/fonts/squarespace-ui-font.woff') format('woff'),url('../assets/vendor-sqsp/universal/fonts/squarespace-ui-font.ttf') format('truetype');
+  src:url('../assets/vendor/universal/fonts/squarespace-ui-font.eot');
+  src:url('../assets/vendor/universal/fonts/squarespace-ui-font.eot?#iefix') format('embedded-opentype'),url('../assets/vendor/universal/fonts/squarespace-ui-font.svg#squarespace-ui-font') format('svg'),url('../assets/vendor/universal/fonts/squarespace-ui-font.woff') format('woff'),url('../assets/vendor/universal/fonts/squarespace-ui-font.ttf') format('truetype');
   font-weight:normal;
   font-style:normal;
 }
 
 @font-face {
   font-family:'social-icon-font';
-  src:url('../assets/vendor-sqsp/universal/fonts/social-20141119/social-icon-font.eot');
-  src:url('../assets/vendor-sqsp/universal/fonts/social-20141119/social-icon-font.eot?#iefix') format('embedded-opentype'),url('../assets/vendor-sqsp/universal/fonts/social-20141119/social-icon-font.woff') format('woff'),url('../assets/vendor-sqsp/universal/fonts/social-20141119/social-icon-font.ttf') format('truetype'),url('../assets/vendor-sqsp/universal/fonts/social-20141119/social-icon-font.svg#social-icon-font') format('svg');
+  src:url('../assets/vendor/universal/fonts/social-20141119/social-icon-font.eot');
+  src:url('../assets/vendor/universal/fonts/social-20141119/social-icon-font.eot?#iefix') format('embedded-opentype'),url('../assets/vendor/universal/fonts/social-20141119/social-icon-font.woff') format('woff'),url('../assets/vendor/universal/fonts/social-20141119/social-icon-font.ttf') format('truetype'),url('../assets/vendor/universal/fonts/social-20141119/social-icon-font.svg#social-icon-font') format('svg');
   font-weight:normal;
   font-style:normal;
 }
@@ -1013,7 +1013,7 @@ body:not(.event-thumbnails) .eventlist-column-info {
 }
 .field-error {
   border-radius:2px;
-  background:#cc3b3b url('../assets/vendor-sqsp/universal/images-v6/standard/icon_close_7_light.png') no-repeat 9px 50%;
+  background:#cc3b3b url('../assets/vendor/universal/images-v6/standard/icon_close_7_light.png') no-repeat 9px 50%;
   color:#fff;
   display:inline-block;
   font-size:13px;

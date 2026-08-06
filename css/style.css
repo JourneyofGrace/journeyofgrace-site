@@ -2416,3 +2416,37 @@ footer.jog-footer .footer-bottom {
   box-shadow: var(--shadow-soft);
   display: block;
 }
+
+/* Spanish ministry page */
+.jog-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+@media (max-width: 640px) {
+  .jog-service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.jog-service-card {
+  background: var(--color-surface);
+  border: 2px solid #ded7c8;
+  border-radius: var(--radius);
+  padding: 1.5rem 1.6rem;
+  box-shadow: var(--shadow-soft);
+}
+.jog-service-heading {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--color-slate);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+.jog-map {
+  width: 100%;
+  height: 380px;
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  display: block;
+}

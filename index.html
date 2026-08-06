@@ -277,7 +277,8 @@
             </div>
           </div>
         </div>
-        <header class="jog-global-header">
+          <!-- Header Navigation -->
+  <header class="jog-global-header">
     <div class="header-brand">
       <a href="./">
         <img src="assets/img/vendor/50522729-7c91-47a4-82cb-25d859f33ffd-JOG+Logo+Final+03-210x256.webp" alt="Journey of Grace Logo" />
@@ -288,13 +289,25 @@
     </button>
     <nav class="jog-global-nav">
       <a href="about-us">About Us</a>
+      <a href="connect">Connect</a>
       <a href="events">Events</a>
       <a href="sermons">Sermons</a>
       <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
       <a href="nextstep">Next Step</a>
-      <a href="visit" class="jog-btn-cta">Plan Your Visit</a>
+      <a href="spanish">Español</a>
     </nav>
   </header>
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="jog-mobile-drawer">
+    <button class="jog-mobile-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
+    <a href="about-us">About Us</a>
+    <a href="connect">Connect</a>
+    <a href="events">Events</a>
+    <a href="sermons">Sermons</a>
+    <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
+    <a href="nextstep">Next Step</a>
+    <a href="spanish">Español</a>
+  </div>
     		<div id="mainContent" class="main-content" role="main">
   <section class="jog-hero" data-playback-rate="1.5" aria-label="Welcome to Journey of Grace">
     <video class="jog-hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
@@ -302,12 +315,8 @@
     </video>
     <div class="jog-hero-overlay"></div>
     <div class="jog-hero-caption">
-      <p class="jog-hero-desc">Join Us on The Journey of Grace!</p>
-      <nav class="jog-hero-nav" aria-label="Explore">
-        <a class="jog-hero-pill" href="visit">Visit</a>
-        <a class="jog-hero-pill" href="connect">Connect</a>
-        <a class="jog-hero-pill" href="spanish">Español</a>
-      </nav>
+      <p class="jog-hero-desc">Join Us on the Journey of Grace</p>
+      <a class="jog-hero-cta" href="visit">Plan Your Visit</a>
     </div>
    </section>
      		</div>
@@ -322,11 +331,12 @@
   <div id="mobileNavDrawer" class="jog-mobile-drawer">
     <button class="jog-mobile-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
     <a href="about-us">About Us</a>
+    <a href="connect">Connect</a>
     <a href="events">Events</a>
     <a href="sermons">Sermons</a>
     <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
     <a href="nextstep">Next Step</a>
-    <a href="visit" class="jog-btn-cta" style="margin-top: 1rem;">Plan Your Visit</a>
   </div>
 </body>
 </html>
+

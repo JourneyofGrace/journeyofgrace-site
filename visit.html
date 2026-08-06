@@ -273,6 +273,15 @@
       font-size: 0.88rem;
       color: var(--text-muted);
     }
+    .service-info a {
+      color: var(--color-amber-deep);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .service-info a:hover {
+      color: var(--color-slate);
+    }
     .service-time {
       font-family: var(--font-serif);
       font-size: 1.2rem;
@@ -474,8 +483,7 @@
     Join Us This Sunday at <span>10:30 AM</span> &mdash; 955 E University Dr, Mesa, AZ
   </div>
 
-  <!-- Header Navigation -->
-    <!-- Header Navigation -->
+          <!-- Header Navigation -->
   <header class="jog-global-header">
     <div class="header-brand">
       <a href="./">
@@ -487,37 +495,25 @@
     </button>
     <nav class="jog-global-nav">
       <a href="about-us">About Us</a>
+      <a href="connect">Connect</a>
       <a href="events">Events</a>
       <a href="sermons">Sermons</a>
       <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
       <a href="nextstep">Next Step</a>
-      <a href="visit" class="jog-btn-cta">Plan Your Visit</a>
+      <a href="spanish">Español</a>
     </nav>
   </header>
-
   <!-- Mobile Navigation Drawer -->
   <div id="mobileNavDrawer" class="jog-mobile-drawer">
     <button class="jog-mobile-close" onclick="document.getElementById('mobileNavDrawer').classList.remove('open')" aria-label="Close Mobile Navigation">&times;</button>
     <a href="about-us">About Us</a>
+    <a href="connect">Connect</a>
     <a href="events">Events</a>
     <a href="sermons">Sermons</a>
     <a href="https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true" target="_blank">Giving</a>
     <a href="nextstep">Next Step</a>
-    <a href="visit" class="jog-btn-cta" style="margin-top: 1rem;">Plan Your Visit</a>
+    <a href="spanish">Español</a>
   </div>
-
-
-
-  <!-- Hero Banner -->
-  <section class="hero-banner">
-    <div class="hero-content">
-      <span class="hero-tagline">Welcome Home</span>
-      <h1 class="hero-title">Plan Your Visit</h1>
-      <p class="hero-subtitle">We would love to welcome you this Sunday! Here is everything you need to know for your first visit with our church family.</p>
-    </div>
-  </section>
-
-  <!-- Main Content Layout -->
   <main class="main-wrapper">
     <div class="content-grid">
 
@@ -540,6 +536,14 @@
             <div class="service-info">
               <h4>Sunday School</h4>
               <p>Journey Classes for all ages</p>
+            </div>
+            <div class="service-time">9:00 AM</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <h4>Servicio en Espa&ntilde;ol</h4>
+              <p><a href="spanish">Spanish worship service &mdash; Sundays, 9:00 AM &ndash; 10:10 AM. See details on the Espa&ntilde;ol page.</a></p>
             </div>
             <div class="service-time">9:00 AM</div>
           </div>
@@ -700,3 +704,4 @@
   </script>
 </body>
 </html>
+

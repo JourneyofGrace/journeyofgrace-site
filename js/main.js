@@ -11,6 +11,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   initVisitMap();
   initPlanningCenter();
+  initConnectionCard();
   initMobileNav();
   initSermonArchive();
   initEventExports();
@@ -138,7 +139,7 @@ function initPlanningCenter() {
  * (js/config.js -> planningCenter.pageForms).
  */
 function initFormThanks() {
-  var pageName = (window.location.pathname.split('/').pop() || '').toLowerCase() || 'index.html';
+  var pageName = (window.location.pathname.split('/').filter(Boolean).pop() || '').toLowerCase() || 'index.html';
   if (!/\.html$/.test(pageName)) pageName += '.html';
   var pco = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
   var pageForms = (pco && pco.pageForms) || {};
@@ -172,31 +173,65 @@ function initFormThanks() {
       }
     }
 
+    // PCO's flexible embed mode flows the form to the iframe width (responsive
+    // on every screen), and layout=embed strips the PCO page chrome. Both are
+    // the documented way to embed a form at an arbitrary size.
+    var suffix = pcoFormUrl.indexOf('?') === -1
+      ? '?layout=embed&flexible=true'
+      : '&layout=embed&flexible=true';
     var frame = document.createElement('iframe');
-    frame.src = pcoFormUrl;
+    frame.src = pcoFormUrl + suffix;
     frame.className = 'pco-form-embed';
     frame.title = 'Planning Center Form';
+    frame.loading = 'lazy';
 
-    // The PCO form page renders at a fixed 480px width even inside an
-    // iframe, so on narrow screens we scale it down to fit the card
-    // instead of letting it clip off the right edge.
+    // The PCO form is sized to its own preferred width/height on every
+    // screen, so the iframe is never scaled.
     var wrap = document.createElement('div');
     wrap.className = 'pco-form-scale-wrap';
     wrap.appendChild(frame);
     form.parentNode.replaceChild(wrap, form);
 
+    // PCO's embed uses a fixed-width field canvas (the form column stays a
+    // constant width at every iframe size - only the spacing reflows between
+    // two measured layouts). So the iframe is drawn at its natural size and
+    // then scaled to fill the card's content width, so the form grows with
+    // the card instead of floating small in the middle of it.
+    var PCO_CANVAS_W = 480; // widest canvas with no internal h-overflow (verified cliW==scrW==480) // ~20px wider than 430px form column (buffer, no h-scrollbar) // iframe canvas - a bit wider than the 430px form column (+buffer, no h-scrollbar)
+    // Each PCO form embeds with a different number of fields, so the content
+    // height differs per form. The canvas height must be >= that content or
+    // the bottom of the form is clipped. Measured embed content heights:
+    // 1284759 (visit / plan-your-visit) = 911px, others = 885px.
+    var PCO_FORM_ID = (pcoFormUrl.match(/\/forms\/(\d+)/) || [])[1] || '';
+    var PCO_CANVAS_H = PCO_FORM_ID === '1284759' ? 918 : 885; // content + a little air
     var fitPcoForm = function() {
-      if (window.innerWidth >= 700) {
-        frame.style.transform = 'none';
-        wrap.style.height = '';
+      if (!card) {
         return;
       }
-      var scale = wrap.clientWidth / 480;
+      var cs = getComputedStyle(card);
+      var w = card.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 30;
+      if (w <= 0) {
+        return;
+      }
+      var widthScale = w / PCO_CANVAS_W;
+      // The card is wider than the canvas, so the form is scaled up. Reduce
+      // the vertical size by a fixed amount (about 100px on desktop) by
+      // scaling down from the pure width-fill so nothing gets clipped - the
+      // whole form stays visible, just a bit shorter. Below 1:1 (mobile),
+      // fall back to width-fill so it never gets smaller than the card.
+      var heightScale = (PCO_CANVAS_H * widthScale - 100) / PCO_CANVAS_H;
+      var scale = widthScale > 1 ? Math.min(widthScale, heightScale) : widthScale;
+      wrap.style.width = Math.round(PCO_CANVAS_W * scale) + 'px';
+      wrap.style.height = Math.round(PCO_CANVAS_H * scale) + 'px';
+      wrap.style.margin = '0 auto';
+      frame.style.width = PCO_CANVAS_W + 'px';
+      frame.style.height = PCO_CANVAS_H + 'px';
       frame.style.transform = 'scale(' + scale + ')';
-      wrap.style.height = Math.round(960 * scale) + 'px';
+      frame.style.transformOrigin = 'top left';
     };
     fitPcoForm();
-    window.addEventListener('resize', debounce(fitPcoForm, 150));
+    var cardResize = new ResizeObserver(function() { fitPcoForm(); });
+    cardResize.observe(card);
   });
 
   // The PCO form renders its own title and description, so hide the
@@ -438,6 +473,42 @@ function initVisitMap() {
   L.marker([33.4219082, -111.8100475]).addTo(map)
     .bindPopup('<strong>Journey of Grace</strong><br>955 E University Dr., Mesa, AZ 85203')
     .openPopup();
+}
+
+/**
+ * Connection Card popup (Connect page).
+ *
+ * The Connect page's "Connection Card" button opens the church's Connection
+ * Card form in a Church Center popup, just like the Giving link opens as a
+ * modal. The form URL lives in js/config.js (planningCenter.connectionCardUrl)
+ * so staff can change it without touching code; this function converts it to a
+ * modal-friendly Church Center Online URL and points every `[data-connection-card]`
+ * anchor at it. The static href in the page is a no-JS fallback.
+ */
+function initConnectionCard() {
+  var links = document.querySelectorAll('a[data-connection-card]');
+  if (!links.length) {
+    return;
+  }
+  var cfg = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
+  var url = (cfg && cfg.connectionCardUrl ? cfg.connectionCardUrl.trim() : '');
+  if (!url) {
+    console.error('[jog] planningCenter.connectionCardUrl is not set in js/config.js, so the Connection Card button cannot open as a modal.');
+    return;
+  }
+  // Convert e.g. https://journeyofgrace.churchcenter.com/... to
+  // https://journeyofgrace.churchcenteronline.com/...?open-in-church-center-modal=true
+  var modalUrl = url
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/\.churchcenter\.com(?=\/|$)/, '.churchcenteronline.com');
+  modalUrl = 'https://' + modalUrl;
+  modalUrl += (modalUrl.indexOf('?') === -1 ? '?' : '&') + 'open-in-church-center-modal=true';
+  links.forEach(function(link) {
+    link.href = modalUrl;
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener');
+  });
 }
 
 /**

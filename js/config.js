@@ -64,9 +64,20 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
   "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
-  "prximo-paso.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
   "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061"
 };
+
+/*
+ * Connection Card form (opened as a popup modal on the Connect page, the same
+ * way Giving opens as a modal).
+ *
+ * URL of the church's Connection Card Planning Center form
+ * (https://journeyofgrace.churchcenter.com/people/forms/<form_id>). If the form
+ * is recreated, update this ID — no code changes needed.
+ */
+window.JOG_CONFIG.planningCenter.connectionCardUrl =
+  window.JOG_CONFIG.planningCenter.connectionCardUrl ||
+  "https://journeyofgrace.churchcenter.com/people/forms/1242125";
 
 
 

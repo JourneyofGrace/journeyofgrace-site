@@ -4,32 +4,76 @@
 // For each file in content/<page>.md whose matching <page>.html exists in the
 // repo root, this renders the markdown and injects it between the markers
 // `<!-- JOG-CONTENT-START -->` and `<!-- JOG-CONTENT-END -->` in that page.
-// Header/footer are handled separately by scripts/layout.mjs.
+// If the matching <page>.html does not exist, the page is created on the fly
+// from scripts/templates/page.html (so a new markdown file automatically
+// produces a new page).  Header/footer are handled separately by
+// scripts/layout.mjs via the `<!-- JOG-HEADER -->` / `<!-- JOG-FOOTER -->`
+// markers in the template.
 //
-// Markdown schema (everything else is ordinary CommonMark-ish text):
+// Standard markdown schema (everything else is ordinary CommonMark-ish text):
 //   - A leading blockquote is the featured Scripture verse:
 //       > verse text
 //       > {cite} **Reference (VER)** https://www.blueletterbible.org/...
 //     It renders as `<blockquote class="jog-verse">` with the open-book icon.
 //   - `##` = `<section class="jog-section">` with `.jog-section-heading`.
+//     Prefix with `::full` to add the `.jog-section-full` modifier.
 //   - `###` inside a section opens a `.jog-service-card`; a section made only
 //     of `###` groups wraps them in `.jog-service-grid` (2-column cards).
-//   - `-` lists become `.jog-list`; paragraphs become `.jog-lead`.
+//   - `-` lists become `.jog-list`; `![alt](src)` image lines become a
+//     `.jog-photo-grid` (consecutive images are grouped); paragraphs become
+//     `.jog-lead`.
+//   - `::cta <href> <label>` emits a centered `.jog-actions` / `.jog-cta`
+//     button (e.g. `::cta connect Get Connected`).
+//   - `::ministry <heading>` followed by a `- [name](href)` list emits a
+//     ministry section of `.jog-ministry-tile` links (Connect page).
+//
+// Editorial schema (first line: `<!-- mode: editorial -->`, used by About Us):
+//   - `::kicker <text>` places a small uppercase eyebrow before the next
+//     `##` / `#` heading.
+//   - `#`/`##` headings open an editorial block; `---` inserts an ornamental
+//     horizontal-rule block.
+//   - `::lead <text>` = drop-cap lead paragraph; `::quote <text>` +
+//     `::attrib <name>` = pull quote; `::beliefs` + `-` items = ruled creed.
+//   - `::staff` blocks carry front-matter fields then bio paragraphs:
+//       ::staff
+//       img: assets/img/vendor/<file>.jpg
+//       role: Lead Pastor
+//       name: Kurtis Strunk
+//       email: kurtis@journeyofgrace.church
+//       quote: “…”
+//       attrib: — Kurtis
+//
+//       Bio paragraph one.
+//       Bio paragraph two.
+//       ::staff
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, 'content');
+const TEMPLATE_PATH = path.join(ROOT, 'scripts', 'templates', 'page.html');
+
+const DEFAULT_BANNER =
+  'assets/img/vendor/1575586881910-22IJ3FLVGLBY4LN5P0A4-DSCF0854.jpg';
 
 const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[c]));
 
 function inlineMd(s) {
+  const link = (m, label, href) => {
+    const external = /^https?:/i.test(href);
+    const mailto = /^mailto:/i.test(href);
+    return external
+      ? `<a href="${href}" target="_blank" rel="noopener">${label}</a>`
+      : mailto
+        ? `<a href="${href}" target="_blank" rel="noopener">${label}</a>`
+        : `<a href="${href}">${label}</a>`;
+  };
   return s
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|[^*])\*([^*\n]+)\*(?![*])/g, '$1<em>$2</em>')
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, link);
 }
 
 const VERSE_ICON =
@@ -38,10 +82,16 @@ const VERSE_ICON =
   '        <path d="M12 5.5v14.5"/>\n' +
   '      </svg>\n';
 
-function render(md) {
+const ARROW_ICON =
+  '<svg class="jog-ministry-tile-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+
+// ---------------------------------------------------------------------------
+// Standard (jog-) renderer
+// ---------------------------------------------------------------------------
+function renderStandard(md) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out = [];
-  const state = { section: false, grid: false, card: false };
+  const state = { section: false, grid: false, card: false, fullNext: false };
   const closeCard = () => {
     if (state.card) { out.push('        </div>'); state.card = false; }
   };
@@ -75,7 +125,6 @@ function render(md) {
         citeUrl = urlMatch ? urlMatch[1] : null;
         citeText = citeLine.replace(urlMatch ? urlMatch[1] : '', '').trim();
       }
-      // The featured verse is only expected as the first block of the file.
       const cite = citeText && citeUrl
         ? `<cite class="jog-verse-ref"><a href="${citeUrl}" target="_blank" rel="noopener">${inlineMd(escapeHtml(citeText))}</a></cite>`
         : '';
@@ -89,7 +138,9 @@ function render(md) {
 
     if (/^##\s/.test(line)) {
       closeSection();
-      out.push('      <section class="jog-section">');
+      const full = state.fullNext ? ' jog-section-full' : '';
+      state.fullNext = false;
+      out.push(`      <section class="jog-section${full}">`);
       out.push(`        <h2 class="jog-section-heading">${inlineMd(escapeHtml(line.replace(/^##\s/, '')))}</h2>`);
       state.section = true;
       i++;
@@ -98,7 +149,6 @@ function render(md) {
 
     if (/^###\s/.test(line)) {
       if (!state.section) {
-        // An h3 outside a section is not expected; treat as its own section card.
         out.push('      <section class="jog-section">');
         state.section = true;
       }
@@ -124,6 +174,78 @@ function render(md) {
       continue;
     }
 
+    if (/^!(?:\[([^\]]*)\]\(([^)\s]+)\))/.test(line)) {
+      // Consecutive image lines -> photo grid (inside the open section).
+      const imgs = [];
+      while (i < lines.length && /^!\[[^\]]*\]\([^)\s]+\)/.test(lines[i])) {
+        const m = lines[i].match(/^!\[([^\]]*)\]\(([^)\s]+)\)/);
+        imgs.push({
+          alt: m[1] || '',
+          src: m[2],
+        });
+        i++;
+      }
+      if (!state.section) {
+        out.push(`      <section class="jog-section${state.fullNext ? ' jog-section-full' : ''}">`);
+        state.fullNext = false;
+        state.section = true;
+      }
+      out.push('        <div class="jog-photo-grid">');
+      for (const img of imgs) {
+        out.push(`          <img src="${img.src}" alt="${escapeHtml(img.alt)}" loading="lazy" />`);
+      }
+      out.push('        </div>');
+      continue;
+    }
+
+    if (/^::full\s*$/.test(line)) {
+      state.fullNext = true;
+      i++;
+      continue;
+    }
+
+    if (/^::cta\s/.test(line)) {
+      const rest = line.replace(/^::cta\s+/, '');
+      // Optional `[attr]` / `[attr="value"]` tokens become attributes on the <a>.
+      const attrs = [];
+      const clean = rest.replace(/\[([^\]]+)\]/g, (_, g) => {
+        attrs.push(g.split('"').join('&quot;'));
+        return '';
+      });
+      const sp = clean.indexOf(' ');
+      const href = sp === -1 ? clean : clean.slice(0, sp);
+      const label = sp === -1 ? clean : clean.slice(sp + 1).trim();
+      closeSection();
+      out.push('      <div class="jog-actions">');
+      out.push(`        <a class="jog-cta" href="${href}"${attrs.length ? ' ' + attrs.join(' ') : ''}>${inlineMd(escapeHtml(label))}</a>`);
+      out.push('      </div>');
+      i++;
+      continue;
+    }
+
+    if (/^::ministry\s/.test(line)) {
+      closeSection();
+      const heading = line.replace(/^::ministry\s+/, '');
+      out.push('      <section class="jog-ministry">');
+      out.push(`        <h2 class="jog-ministry-heading">${inlineMd(escapeHtml(heading))}</h2>`);
+      out.push('        <div class="jog-ministry-grid">');
+      i++;
+      while (i < lines.length && /^-\s/.test(lines[i])) {
+        const item = lines[i].replace(/^-\s/, '');
+        const m = item.match(/^\[([^\]]+)\]\(([^)\s]+)\)/);
+        if (m) {
+          out.push(`          <a class="jog-ministry-tile" href="${m[2]}">`);
+          out.push(`            <span class="jog-ministry-tile-name">${inlineMd(escapeHtml(m[1]))}</span>`);
+          out.push(`            ${ARROW_ICON}`);
+          out.push('          </a>');
+        }
+        i++;
+      }
+      out.push('        </div>');
+      out.push('      </section>');
+      continue;
+    }
+
     if (line.trim() === '') {
       i++;
       continue;
@@ -137,17 +259,306 @@ function render(md) {
   return out.join('\n');
 }
 
+// ---------------------------------------------------------------------------
+// Editorial renderer (about-us)
+// ---------------------------------------------------------------------------
+function renderEditorial(md) {
+  const lines = md.replace(/\r\n/g, '\n').split('\n');
+  const out = [];
+
+  const htmlBlockClose = () => {
+    out.push('          </div>');
+    out.push('        </div>');
+    out.push('      </div>');
+  };
+  const hrBlock = () => {
+    out.push(
+      '      <div class="jog-block website-component-block jog-block-website-component jog-block-horizontalrule horizontalrule-block">\n' +
+        '        <div class="jog-block-content">\n' +
+        '          <div>\n' +
+        '            <hr />\n' +
+        '          </div>\n' +
+        '        </div>\n' +
+        '      </div>'
+    );
+  };
+  const spacerBlock = () => {
+    out.push(
+      '      <div class="jog-block website-component-block jog-block-website-component jog-block-spacer spacer-block sized vsize-1">\n' +
+        '        <div class="jog-block-content">&nbsp;</div>\n' +
+        '      </div>'
+    );
+  };
+  const staffImageBlock = (src) => {
+    out.push(
+      '      <div class="jog-block image-block jog-block-image about-staff-card">\n' +
+        '        <div class="jog-block-content">\n' +
+        '          <div class="image-block-outer-wrapper layout-caption-below design-layout-inline combination-animation-none individual-animation-none individual-text-animation-none" data-test="image-block-inline-outer-wrapper">\n' +
+        '            <figure class="jog-block-image-figure intrinsic">\n' +
+        '              <div class="image-block-wrapper" data-animation-role="image">\n' +
+        `                <div class="jog-image-shape-container-element has-aspect-ratio">\n` +
+        `                  <img alt="" src="${src}" width="1000" height="1000" loading="lazy" decoding="async" style="display:block;object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%" />\n` +
+        '                </div>\n' +
+        '              </div>\n' +
+        '            </figure>\n' +
+        '          </div>\n' +
+        '        </div>\n' +
+        '      </div>'
+    );
+  };
+  const staffBioBlock = (st) => {
+    out.push('      <div class="jog-block html-block jog-block-html about-staff-bio">');
+    out.push('        <div class="jog-block-content">');
+    out.push('          <div class="jog-html-content">');
+    out.push(`            <p class="about-role">${inlineMd(escapeHtml(st.role))}</p>`);
+    const nameHtml = st.email
+      ? `<a href="mailto:${st.email}">${inlineMd(escapeHtml(st.name))}</a>`
+      : inlineMd(escapeHtml(st.name));
+    out.push(`            <h2 class="about-staff-name">${nameHtml}</h2>`);
+    if (st.quote) {
+      const attr = st.attrib
+        ? `<span class="about-quote-attrib">${inlineMd(escapeHtml(st.attrib))}</span>`
+        : '';
+      out.push(`            <p class="about-quote">${inlineMd(escapeHtml(st.quote))} ${attr}</p>`);
+    }
+    for (const b of st.bios) out.push(`            <p>${inlineMd(escapeHtml(b))}</p>`);
+    out.push('          </div>');
+    out.push('        </div>');
+    out.push('      </div>');
+  };
+
+  let sectionOpen = false;
+  const closeSection = () => {
+    if (sectionOpen) {
+      htmlBlockClose();
+      sectionOpen = false;
+    }
+  };
+
+  spacerBlock();
+
+  let pendingKicker = null;
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i].trim();
+
+    if (line === '') { i++; continue; }
+
+    if (line === '::staff') {
+      closeSection();
+      i++;
+      const st = { img: '', role: '', name: '', email: '', quote: '', attrib: '', bios: [] };
+      const fieldRe = /^([a-z-]+):\s*(.*)$/;
+      while (i < lines.length && lines[i].trim() !== '') {
+        const t = lines[i].trim();
+        const m = t.match(fieldRe);
+        if (m) st[m[1]] = m[2].trim();
+        else st.bios.push(t);
+        i++;
+      }
+      while (i < lines.length && lines[i].trim() === '') i++;
+      while (i < lines.length && lines[i].trim() !== '::staff') {
+        const t = lines[i].trim();
+        if (t !== '') st.bios.push(t);
+        i++;
+      }
+      if (i < lines.length && lines[i].trim() === '::staff') i++;
+      spacerBlock();
+      staffImageBlock(st.img);
+      staffBioBlock(st);
+      continue;
+    }
+
+    if (line.startsWith('::kicker ')) {
+      pendingKicker = line.slice('::kicker '.length).trim();
+      i++;
+      continue;
+    }
+
+    if (/^#+\s/.test(line)) {
+      const hashes = line.match(/^(#+)/)[1].length;
+      const text = line.replace(/^#+\s/, '');
+      closeSection();
+      out.push('      <div class="jog-block html-block jog-block-html">');
+      out.push('        <div class="jog-block-content">');
+      out.push('          <div class="jog-html-content">');
+      if (pendingKicker) {
+        out.push(`            <p class="about-kicker">${inlineMd(escapeHtml(pendingKicker))}</p>`);
+        pendingKicker = null;
+      }
+      const tag = hashes === 1 ? 'h1' : 'h2';
+      out.push(`            <${tag}>${inlineMd(escapeHtml(text))}</${tag}>`);
+      sectionOpen = true;
+      i++;
+      continue;
+    }
+
+    if (/^-{3,}$/.test(line)) {
+      closeSection();
+      hrBlock();
+      i++;
+      continue;
+    }
+
+    if (line.startsWith('::quote ')) {
+      if (!sectionOpen) {
+        out.push('      <div class="jog-block html-block jog-block-html">');
+        out.push('        <div class="jog-block-content">');
+        out.push('          <div class="jog-html-content">');
+        sectionOpen = true;
+      }
+      const text = line.slice('::quote '.length).trim();
+      let attr = '';
+      const j = i + 1;
+      if (j < lines.length && lines[j].trim().startsWith('::attrib ')) {
+        attr = lines[j].trim().slice('::attrib '.length).trim();
+        i = j;
+      }
+      const attrHtml = attr
+        ? `<span class="about-quote-attrib">${inlineMd(escapeHtml(attr))}</span>`
+        : '';
+      out.push(`            <p class="about-quote">${inlineMd(escapeHtml(text))} ${attrHtml}</p>`);
+      i++;
+      continue;
+    }
+    if (line.startsWith('::attrib ')) { i++; continue; }
+
+    if (line.startsWith('::lead ')) {
+      if (!sectionOpen) {
+        out.push('      <div class="jog-block html-block jog-block-html">');
+        out.push('        <div class="jog-block-content">');
+        out.push('          <div class="jog-html-content">');
+        sectionOpen = true;
+      }
+      out.push(`            <p class="about-lead">${inlineMd(escapeHtml(line.slice('::lead '.length).trim()))}</p>`);
+      i++;
+      continue;
+    }
+
+    if (line === '::beliefs') {
+      if (!sectionOpen) {
+        out.push('      <div class="jog-block html-block jog-block-html">');
+        out.push('        <div class="jog-block-content">');
+        out.push('          <div class="jog-html-content">');
+        sectionOpen = true;
+      }
+      i++;
+      const items = [];
+      while (i < lines.length && /^-\s/.test(lines[i])) {
+        items.push(lines[i].replace(/^-\s/, '').trim());
+        i++;
+      }
+      const lis = items.map((it) => `              <li><p>${inlineMd(escapeHtml(it))}</p></li>`).join('\n');
+      out.push('            <ul class="about-beliefs">');
+      out.push(lis);
+      out.push('            </ul>');
+      continue;
+    }
+
+    if (/^-\s/.test(line)) {
+      if (!sectionOpen) {
+        out.push('      <div class="jog-block html-block jog-block-html">');
+        out.push('        <div class="jog-block-content">');
+        out.push('          <div class="jog-html-content">');
+        sectionOpen = true;
+      }
+      const items = [];
+      while (i < lines.length && /^-\s/.test(lines[i])) {
+        items.push(lines[i].replace(/^-\s/, '').trim());
+        i++;
+      }
+      const lis = items.map((it) => `              <li>${inlineMd(escapeHtml(it))}</li>`).join('\n');
+      out.push('            <ul class="jog-list">');
+      out.push(lis);
+      out.push('            </ul>');
+      continue;
+    }
+
+    if (!sectionOpen) {
+      out.push('      <div class="jog-block html-block jog-block-html">');
+      out.push('        <div class="jog-block-content">');
+      out.push('          <div class="jog-html-content">');
+      sectionOpen = true;
+    }
+    out.push(`            <p>${inlineMd(escapeHtml(line))}</p>`);
+    i++;
+  }
+  closeSection();
+
+  return out.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// Front matter + auto page creation
+// ---------------------------------------------------------------------------
+function parseFront(mdRaw) {
+  const lines = mdRaw.replace(/\r\n/g, '\n').split('\n');
+  let mode = 'standard';
+  const meta = {};
+  let idx = 0;
+  while (idx < lines.length && /^\s*<!--/.test(lines[idx])) {
+    const m = lines[idx].match(/<!--\s*([a-zA-Z]+)\s*:\s*([\s\S]*?)-->\s*/);
+    if (m) {
+      if (m[1] === 'mode' && m[2].trim() === 'editorial') mode = 'editorial';
+      else meta[m[1]] = m[2].trim();
+    }
+    idx++;
+  }
+  return { md: lines.slice(idx).join('\n'), mode, meta };
+}
+
+function humanizePage(name) {
+  const base = String(name)
+    .split('.')[0]
+    .replace(/[-_]+/g, ' ')
+    .replace(/^./, (c) => c.toUpperCase())
+    .replace(/\s[a-z0-9]/g, (c) => c.toUpperCase());
+  return base.replace('Mens ', 'Men\u2019s ').replace('Womens ', 'Women\u2019s ');
+}
+
+function createPageFromTemplate(pageName, meta) {
+  const page = `${pageName}.html`;
+  if (!fs.existsSync(TEMPLATE_PATH)) {
+    console.error(`  ERROR could not create ${page}: template missing (${TEMPLATE_PATH})`);
+    return false;
+  }
+  let tpl = fs.readFileSync(TEMPLATE_PATH, 'utf8');
+  const label = meta.label || humanizePage(pageName);
+  const title = meta.title || label;
+  const desc = meta.desc || 'Journey of Grace';
+  const banner = meta.banner || DEFAULT_BANNER;
+  tpl = tpl
+    .replaceAll('{{PAGE_ID}}', pageName)
+    .replaceAll('{{TITLE}}', title)
+    .replaceAll('{{OG_DESC}}', desc)
+    .replaceAll('{{BANNER_IMG}}', banner)
+    .replaceAll('{{PAGE_LABEL}}', label);
+  fs.writeFileSync(path.join(ROOT, page), tpl);
+  return true;
+}
+
+function render(md) {
+  const { md: clean, mode } = parseFront(md);
+  return mode === 'editorial' ? renderEditorial(clean) : renderStandard(clean);
+}
+
+// ---------------------------------------------------------------------------
 const pages = fs.existsSync(CONTENT_DIR)
   ? fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md'))
   : [];
 
 let any = false;
+let created = 0;
 for (const f of pages) {
   const page = f.replace(/\.md$/, '.html');
   const htmlPath = path.join(ROOT, page);
   if (!fs.existsSync(htmlPath)) {
-    console.error(`  WARN content/${f}: no ${page} in repo root`);
-    continue;
+    const pageName = f.replace(/\.md$/, '');
+    const raw = fs.readFileSync(path.join(CONTENT_DIR, f), 'utf8');
+    const { meta } = parseFront(raw);
+    if (!createPageFromTemplate(pageName, meta)) continue;
+    created++;
+    console.log(`  NEW  ${page} (created from md)`);
   }
   const md = fs.readFileSync(path.join(CONTENT_DIR, f), 'utf8');
   const html = fs.readFileSync(htmlPath, 'utf8');
@@ -169,7 +580,8 @@ for (const f of pages) {
   console.log(`  ${label} ${page}`);
 }
 
-if (!any) {
+if (!any && created === 0) {
   console.log('content: no markdown sources, nothing to do');
   process.exit(0);
 }
+console.log(created > 0 ? `\ncontent: ${created} page(s) auto-created` : '');

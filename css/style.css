@@ -42,23 +42,6 @@ body {
   color: var(--color-ink);
 }
 
-/* === Typography === */
-h1, h2, h3, h4, h5, h6,
-.page-title,
-.eventlist-title,
-.eventlist-title-link,
-.collection-desc,
-.jog-html-content h1,
-.jog-html-content h2,
-.jog-html-content h3,
-.jog-html-content h4 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.25;
-  color: var(--color-slate);
-}
-
 .jog-html-content h1 { font-size: 2.2rem; }
 .jog-html-content h2 { font-size: 1.8rem; }
 .jog-html-content h3 { font-size: 1.4rem; }
@@ -223,16 +206,6 @@ a:hover {
   stroke: var(--color-amber) !important;
 }
 
-.site-header .header-social-icons-with-nav .SocialLinks-link-icon,
-.site-header .header-social-icons-right .SocialLinks-link-icon {
-  fill: #f4f1ea !important;
-}
-
-.site-header .header-social-icons-with-nav .SocialLinks-link:hover .SocialLinks-link-icon,
-.site-header .header-social-icons-right .SocialLinks-link:hover .SocialLinks-link-icon {
-  fill: var(--color-amber) !important;
-}
-
 /* Logo: subtle lift off the dark bar */
 .site-branding h1.image img {
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
@@ -375,27 +348,6 @@ a:hover {
   display: none;
 }
 
-/* Social icons: original 17px base (tweak-social-icons-style-regular scales x2 -> 34px rendered) */
-.header-social-icons-right .SocialLinks-link,
-.header-social-icons-with-nav .SocialLinks-link,
-.header-social-icons--overlay .SocialLinks-link {
-  width: 17px;
-  height: 17px;
-  min-width: 17px;
-  min-height: 17px;
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-social-icons-right .SocialLinks-link svg,
-.header-social-icons-with-nav .SocialLinks-link svg,
-.header-social-icons--overlay .SocialLinks-link svg {
-  width: 100%;
-  height: 100%;
-}
-
 .nav-social-wrapper {
   gap: 1.5rem;
 }
@@ -407,45 +359,6 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-/* === Overlay (mobile) nav === */
-.overlay-nav-wrapper {
-  background: var(--color-slate);
-}
-
-.main-navigation--overlay .nav-item a {
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #f4f1ea;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.main-navigation--overlay .nav-item a:hover {
-  color: var(--color-amber-pale);
-}
-
-.main-navigation--overlay .nav-item.header-cta {
-  margin-top: 12px;
-}
-
-.main-navigation--overlay .nav-item.header-cta a {
-  display: inline-flex;
-  background: var(--color-amber);
-  color: var(--color-ink);
-  border-radius: var(--radius-pill);
-  padding: 14px 32px;
-  font-weight: 700;
-}
-
-.main-navigation--overlay .nav-item.header-cta a:hover {
-  background: var(--color-amber-deep);
-  color: #ffffff;
 }
 
 /* === Hero (homepage full-screen video) === */
@@ -488,33 +401,33 @@ a:hover {
 }
 
 /* === Page banner / title card (inner pages) === */
-.title-card-overlay {
+.jog-banner-overlay {
   background: linear-gradient(180deg, rgba(45, 58, 69, 0.35) 0%, rgba(45, 58, 69, 0.62) 100%);
 }
 
-.title-card .page-title {
+.jog-banner-title .jog-page-title {
   color: #ffffff;
   font-size: clamp(2rem, 5vw, 3.2rem);
   font-family: var(--font-serif) !important;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
 
-.title-card .page-desc {
+.jog-banner-title .jog-page-desc {
   color: #ffffff;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
 }
 
 /* === Content spacing (whitespace rhythm) === */
-.main-content-inner-wrapper {
+.jog-main-inner {
   padding: clamp(2.5rem, 5vw, 5rem) clamp(1.25rem, 6vw, 6rem) clamp(4rem, 7vw, 7rem);
 }
 
-.main-content-inner-wrapper .jog-block {
+.jog-main-inner .jog-block {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
 }
 
-.main-content-inner-wrapper .row.jog-row {
+.jog-main-inner .row.jog-row {
   margin-bottom: 1rem;
 }
 
@@ -838,22 +751,22 @@ p.eventlist-empty {
 }
 
 /* Custom pages content */
-.main-content {
+.jog-main {
   padding: 0;
 }
 
-.main-content-inner-wrapper {
+.jog-main-inner {
   max-width: 960px;
   margin: 0 auto;
   padding: 3rem 1.5rem 4rem;
 }
 
-.page-title {
+.jog-page-title {
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 0.75rem;
 }
 
-.page-description {
+.jog-page-description {
   font-size: 1.125rem;
   color: var(--color-ink-muted);
   margin-bottom: 2rem;
@@ -1029,73 +942,6 @@ textarea:focus-visible,
   }
 }
 
-@media (max-width: 768px) {
-  .site-header {
-    padding: 0.5rem 4vw !important;
-  }
-
-  .site-branding h1.image img {
-    max-height: 38px;
-  }
-
-  .site-header .header-social-icons-right,
-  .site-header .header-social-icons-with-nav {
-    display: none !important;
-  }
-
-  .header-cta-mobile {
-    display: inline-flex;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    right: calc(3vw + 52px);
-    transform: translateY(-50%);
-    background: var(--color-amber);
-    color: var(--color-ink);
-    border-radius: var(--radius-pill);
-    min-height: 48px;
-    padding: 0 16px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-decoration: none;
-    box-shadow: 0 4px 14px rgba(45, 58, 69, 0.25);
-    z-index: 5;
-  }
-
-  .header-cta-mobile:hover {
-    background: var(--color-amber-deep);
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  .header-inner {
-    padding: 0.6rem 1rem;
-  }
-
-  .nav-list {
-    gap: 0.75rem;
-  }
-
-  .nav-list a {
-    font-size: 0.78rem;
-  }
-
-  .eventlist-event {
-    padding: 1.25rem;
-  }
-
-  .main-content-inner-wrapper {
-    padding: 2rem 1.25rem 3rem;
-  }
-
-  .collection-desc p {
-    font-size: 1.4rem;
-  }
-}
-
 @media (max-width: 480px) {
   .nav-list a {
     font-size: 0.72rem;
@@ -1215,36 +1061,22 @@ textarea:focus-visible,
   }
 }
 
+/* The PCO form box is sized to match its card at runtime (the card's content
+   area minus a tiny inset), so the iframe just fills its wrapper. Flexible
+   embed mode keeps the form layout responsive to that width. */
 .pco-form-frame .pco-form-embed {
   display: block;
-  width: 480px;
-  height: 960px;
+  width: 100%;
+  height: 100%;
   border: none;
   border-radius: 8px;
   background: transparent;
   overflow: hidden;
-  transform-origin: top left;
 }
 
-/* The PCO form page renders its own narrow (480px) container; on desktop we
-   give it room and center it, on mobile a JS scale-to-fit keeps the fixed
-   480px-wide form inside the narrower card without horizontal clipping. */
 .pco-form-scale-wrap {
   position: relative;
   overflow: hidden;
-  width: 100%;
-}
-
-@media (min-width: 700px) {
-  .pco-form-frame .pco-form-embed {
-    width: 520px;
-    height: 920px;
-    margin: 0 auto;
-    transform: none;
-  }
-  .pco-form-scale-wrap {
-    height: auto;
-  }
 }
 
 /* Desktop: always-visible inline nav (site uses icon-nav style which collapses it) */
@@ -1489,13 +1321,13 @@ textarea:focus-visible,
    The index-gallery-wrapper is position:fixed and creates a full-viewport background that
    pushes the main content down when the page has a custom hero section instead.
    Scoped to the visit-1 page via its unique body collection ID. */
-#collection-5fe2ceca4aff1019af48766b .index-gallery-wrapper {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .index-gallery-wrapper {
   display: none !important;
 }
 
 /* When we have a custom hero banner, reset the main-content spacing.
    The mainContent div is normally short (just the overlay area) so reset it. */
-#collection-5fe2ceca4aff1019af48766b #mainContent {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] #mainContent {
   min-height: 0 !important;
   height: 0 !important;
   padding: 0 !important;
@@ -1503,46 +1335,46 @@ textarea:focus-visible,
 }
 
 /* Reset the content-outer-wrapper min-height:100vh set by has-index-nav in site.css */
-#collection-5fe2ceca4aff1019af48766b .content-outer-wrapper {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-frame {
   min-height: 0 !important;
 }
 
 /* Reset the main-content-inner-wrapper top offset and remove padding
    so the hero banner starts immediately after the header */
-#collection-5fe2ceca4aff1019af48766b .main-content-inner-wrapper {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-main-inner {
   margin-top: 0 !important;
   top: 0 !important;
   padding: 0 !important;
 }
 
 /* Remove the jog-layout padding that creates an indent around the hero banner */
-#collection-5fe2ceca4aff1019af48766b .jog-layout {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-layout {
   padding: 0 !important;
 }
 
 /* The col/span-12 that wraps the hero also removes padding */
-#collection-5fe2ceca4aff1019af48766b .jog-col-12,
-#collection-5fe2ceca4aff1019af48766b .span-12,
-#collection-5fe2ceca4aff1019af48766b .jog-row {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-col-12,
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .span-12,
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-row {
   padding: 0 !important;
   margin: 0 !important;
 }
 
 /* Make the main content blocks (after the banner) use standard page padding */
-#collection-5fe2ceca4aff1019af48766b .jog-block-html {
+body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-block-html {
   padding-left: 6vw;
   padding-right: 6vw;
 }
 
 /* Clean page banner image sizing & title card alignment */
-.page-banner-wrapper {
+.jog-page-banner {
   position: relative !important;
   display: block !important;
   height: 420px !important;
   overflow: hidden !important;
 }
 
-.page-banner-wrapper .page-banner-image-wrapper {
+.jog-page-banner .jog-banner-img {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -1550,7 +1382,7 @@ textarea:focus-visible,
   height: 100% !important;
 }
 
-.page-banner-wrapper .page-banner-image-wrapper img,
+.jog-page-banner .jog-banner-img img,
 .page-banner-image {
   width: 100% !important;
   height: 100% !important;
@@ -1559,7 +1391,7 @@ textarea:focus-visible,
   display: block !important;
 }
 
-.page-banner-wrapper .title-card-wrapper {
+.jog-page-banner .jog-banner-title-wrap {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -1572,13 +1404,13 @@ textarea:focus-visible,
   pointer-events: none !important;
 }
 
-.title-card-wrapper .title-card {
+.jog-banner-title-wrap .jog-banner-title {
   text-align: center !important;
   max-width: 90% !important;
   margin: 0 auto !important;
 }
 
-.title-card-wrapper .page-title {
+.jog-banner-title-wrap .jog-page-title {
   font-family: 'Cantata One', Georgia, serif !important;
   font-size: clamp(1.8rem, 4.5vw, 3.8rem) !important;
   font-weight: 700 !important;
@@ -1593,7 +1425,7 @@ textarea:focus-visible,
 }
 
 @media (max-width: 768px) {
-  .page-banner-wrapper {
+  .jog-page-banner {
     height: 260px !important;
   }
 }
@@ -1628,27 +1460,27 @@ textarea:focus-visible,
    no footer on the homepage). Flex towers keep the hero edge-to-edge and flush
    with the bottom of the viewport at any size, without hardcoding the header
    height. */
-#collection-5c3ba438352f53368c055aa2 {
+body[data-collection-id="5c3ba438352f53368c055aa2"] {
   min-height: 100vh;
   min-height: 100svh;
 }
-#collection-5c3ba438352f53368c055aa2 .mercury-transition-wrapper {
+body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-shell {
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
-#collection-5c3ba438352f53368c055aa2 .content-outer-wrapper {
+body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-frame {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
 }
-#collection-5c3ba438352f53368c055aa2 #mainContent {
+body[data-collection-id="5c3ba438352f53368c055aa2"] #mainContent {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
 }
-#collection-5c3ba438352f53368c055aa2 .jog-hero {
+body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-hero {
   flex: 1 1 auto;
   height: auto;
   min-height: 0;
@@ -1667,14 +1499,6 @@ textarea:focus-visible,
   display: flex !important;
   align-items: center !important;
   gap: 1.8rem !important;
-}
-.header-social-icons-with-nav,
-.header-social-icons-right,
-.header-social-icons--overlay,
-.nav-social-wrapper .SocialLinks,
-.SocialLinks-link,
-.jog-template-social-icons {
-  display: none !important;
 }
 .jog-global-nav a {
   text-transform: uppercase !important;
@@ -1844,6 +1668,18 @@ footer.jog-footer nav a {
 
 footer.jog-footer nav a:hover {
   color: #c97a2b !important;
+}
+
+footer.jog-footer .footer-links nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+  text-align: center;
+}
+
+footer.jog-footer .footer-links h4 {
+  text-align: center;
 }
 
 footer.jog-footer .footer-social {
@@ -2163,11 +1999,11 @@ footer.jog-footer .footer-bottom {
    The page used to full-bleed its first image block (and gallery blocks on
    the kids & youth pages) via the Squarespace Fullwidth jQuery plugin, which
    has been removed. Reproduce that effect in pure CSS so pages look the same. */
-#collection-5d55ccd9c3c43a0001f0e133 .jog-block.image-block, /* connect */
-#collection-5c3ba27bc2241bdece806eda .jog-block.image-block, /* spanish */
-#collection-5cb2b2e79b747a58e8a70c21 .jog-block.image-block, /* mens-ministry */
-#collection-5cb2626cfa0d60178b1c3c60 .jog-block.gallery-block, /* kids-min */
-#collection-5cb2af22e79c70e52f2292b5 .jog-block.gallery-block /* youth-group */ {
+body[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-block.image-block, /* connect */
+body[data-collection-id="5c3ba27bc2241bdece806eda"] .jog-block.image-block, /* spanish */
+body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block, /* mens-ministry */
+body[data-collection-id="5cb2626cfa0d60178b1c3c60"] .jog-block.gallery-block, /* kids-min */
+body[data-collection-id="5cb2af22e79c70e52f2292b5"] .jog-block.gallery-block /* youth-group */ {
   width: 100vw;
   max-width: none;
   position: relative;
@@ -2177,9 +2013,9 @@ footer.jog-footer .footer-bottom {
   padding-right: 0;
 }
 
-#collection-5d55ccd9c3c43a0001f0e133 .jog-block.image-block .intrinsic,
-#collection-5c3ba27bc2241bdece806eda .jog-block.image-block .intrinsic,
-#collection-5cb2b2e79b747a58e8a70c21 .jog-block.image-block .intrinsic {
+body[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-block.image-block .intrinsic,
+body[data-collection-id="5c3ba27bc2241bdece806eda"] .jog-block.image-block .intrinsic,
+body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block .intrinsic {
   max-width: 100% !important;
 }
 

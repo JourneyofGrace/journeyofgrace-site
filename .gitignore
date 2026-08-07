@@ -22,3 +22,10 @@ scratch/
 /shoot-*.mjs
 /snap-*.mjs
 /verify-*.mjs
+
+# One-off inspection/zoom/cap debug scripts (kept local)
+/audit-*.mjs
+/insp*.mjs
+/cap*.mjs
+/pr.mjs
+/zooms.mjs

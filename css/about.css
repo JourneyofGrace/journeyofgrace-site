@@ -1,0 +1,282 @@
+/* ==========================================================================
+   ABOUT US — EDITORIAL "PUBLISHED WORK" TYPOGRAPHY
+   Scoped entirely to the About page (body.jog-about-page).
+   Warm paper ground, serif reading face, centered display headings with
+   kickers, drop cap, pull quote, ruled belief list, and magazine-masthead
+   staff layout.
+   ========================================================================== */
+
+body.jog-about-page {
+  background-color: #fbf8f1 !important;
+}
+
+body.jog-about-page .jog-frame,
+body.jog-about-page #mainContent,
+body.jog-about-page .jog-main-inner {
+  background: #fbf8f1 !important;
+}
+
+/* --- Strip the generic card look; let the text flow on paper --- */
+body.jog-about-page #mainContent .jog-block-html {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0.5rem 0 !important;
+}
+
+body.jog-about-page .jog-main-inner {
+  max-width: min(1160px, 94vw) !important;
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+/* --- Widen the reading column; shrink the empty side gutters --- */
+body.jog-about-page .jog-row > .jog-col-2 {
+  width: 5% !important;
+}
+
+body.jog-about-page .jog-row > .jog-col-8 {
+  width: 90% !important;
+}
+
+/* --- Reading face (serif) for narrative copy --- */
+body.jog-about-page #mainContent .jog-block-html p:not(.about-kicker):not(.about-role):not(.about-quote),
+body.jog-about-page #mainContent .jog-block-html li {
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-size: clamp(1.1rem, 1.05rem + 0.55vw, 1.45rem) !important;
+  line-height: clamp(1.75, 1.55 + 0.28vw, 2) !important;
+  color: #3a362f !important;
+  text-align: justify !important;
+  hyphens: auto !important;
+  -webkit-hyphens: auto !important;
+  letter-spacing: 0.002em !important;
+}
+
+/* --- Kickers (eyebrow labels) --- */
+body.jog-about-page .about-kicker {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(0.7rem, 0.65rem + 0.2vw, 0.9rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.24em !important;
+  text-transform: uppercase !important;
+  color: #a16207 !important;
+  text-align: center !important;
+  margin: 0 0 0.7rem !important;
+}
+
+/* --- Centered display headings, with an amber thread rule beneath --- */
+body.jog-about-page .jog-html-content .about-kicker + h2,
+body.jog-about-page .jog-html-content h2:not(.about-staff-name) {
+  text-align: center !important;
+  font-size: clamp(1.9rem, 3vw, 2.6rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 0 0.4rem !important;
+}
+
+body.jog-about-page .jog-html-content .about-kicker + h1,
+body.jog-about-page .about-staff-heading {
+  text-align: center !important;
+  font-size: clamp(2.1rem, 4vw, 3.1rem) !important;
+  line-height: 1.15 !important;
+  margin: 0 auto 0.6rem !important;
+}
+
+/* Centered amber thread rule under centered headings (editorial) */
+body.jog-about-page #mainContent .jog-html-content h2::after,
+body.jog-about-page #mainContent .jog-html-content h1::after {
+  content: '' !important;
+  display: block !important;
+  width: 3.2rem !important;
+  height: 3px !important;
+  margin: 0.7rem auto 1.6rem !important;
+  background: linear-gradient(90deg, transparent, #b4843a 25%, #b4843a 75%, transparent) !important;
+  border-radius: 3px !important;
+}
+
+/* --- Drop cap on the lead paragraph --- */
+body.jog-about-page .about-lead::first-letter {
+  font-family: 'Cantata One', Georgia, 'Times New Roman', serif !important;
+  font-size: 3.5em !important;
+  float: left !important;
+  line-height: 0.82 !important;
+  padding-right: 0.12em !important;
+  margin-top: 0.06em !important;
+  color: #b4843a !important;
+}
+
+/* --- Pull quote --- */
+body.jog-about-page .about-quote {
+  font-family: 'Cantata One', Georgia, 'Times New Roman', serif !important;
+  font-size: clamp(1.2rem, 1.1rem + 0.4vw, 1.6rem) !important;
+  line-height: 1.6 !important;
+  color: #2a2723 !important;
+  text-align: left !important;
+  border-left: 3px solid #b4843a !important;
+  padding: 0.6rem 0 0.6rem 1.5rem !important;
+  margin: 2rem 0 !important;
+}
+
+body.jog-about-page .about-quote-attrib {
+  display: block;
+  font-family: var(--font-sans) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #7a6b4f !important;
+  margin-top: 0.7rem !important;
+}
+
+/* --- Belief list: ruled creed --- */
+body.jog-about-page .about-beliefs {
+  list-style: none !important;
+  margin: 2.25rem 0 1.25rem !important;
+  padding: 0 !important;
+  border-top: 1px solid #e3d9c2 !important;
+  border-bottom: 1px solid #e3d9c2 !important;
+}
+
+body.jog-about-page .about-beliefs li {
+  border-bottom: 1px solid #efe7d3 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0.9rem 0 !important;
+}
+
+body.jog-about-page .about-beliefs li:last-child {
+  border-bottom: none !important;
+}
+
+body.jog-about-page .about-beliefs li p {
+  margin: 0 !important;
+}
+
+body.jog-about-page .about-beliefs li::before {
+  content: '\25C6' !important; /* ◆ */
+  color: #b4843a !important;
+  font-size: 0.7rem !important;
+  line-height: 1 !important;
+}
+
+/* --- Ornamental divider replacing the bare <hr> --- */
+body.jog-about-page .horizontalrule-block .jog-block-content {
+  position: relative !important;
+  text-align: center !important;
+  padding: 0.4rem 0 !important;
+}
+
+body.jog-about-page .horizontalrule-block hr {
+  border: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, #d8cba8 30%, #d8cba8 70%, transparent) !important;
+  margin: 0 !important;
+}
+
+body.jog-about-page .horizontalrule-block .jog-block-content::after {
+  content: '\2766' !important; /* ❦ fleuron */
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: #fbf8f1 !important;
+  color: #b4843a !important;
+  padding: 0 0.7rem !important;
+  font-size: 1.05rem !important;
+}
+
+/* --- Staff: magazine-masthead layout --- */
+body.jog-about-page .about-staff-card {
+  float: left !important;
+  width: 300px !important;
+  padding-left: 0 !important;
+  padding-bottom: 2rem !important;
+}
+
+body.jog-about-page .about-staff-card .jog-block-content {
+  text-align: center !important;
+}
+
+body.jog-about-page .about-staff-card figure,
+body.jog-about-page .about-staff-card .jog-block-image-figure {
+  max-width: 276px !important;
+  margin: 0 !important;
+}
+
+body.jog-about-page .about-staff-card .jog-image-shape-container-element {
+  border-radius: 50% !important;
+  padding-bottom: 100% !important;
+  box-shadow: 0 0 0 7px #f1e9d8, 0 12px 26px rgba(90, 70, 35, 0.18) !important;
+  overflow: hidden !important;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(circle, white, black);
+}
+
+body.jog-about-page .about-staff-bio {
+  margin-left: 330px !important;
+  padding-top: 0.3rem !important;
+}
+
+body.jog-about-page .about-role {
+  font-family: var(--font-sans) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: #a16207 !important;
+  text-align: left !important;
+  margin: 0 0 0.35rem !important;
+}
+
+body.jog-about-page .about-staff-bio h2,
+body.jog-about-page .about-staff-bio h2.about-staff-name {
+  font-size: 1.75rem !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+  margin: 0 0 1rem !important;
+}
+
+/* Clear the float before each new staff entry / section */
+body.jog-about-page .jog-block-spacer,
+body.jog-about-page .horizontalrule-block,
+body.jog-about-page .about-staff-heading {
+  clear: both !important;
+}
+
+/* --- Responsive: stack the masthead on small screens --- */
+@media (max-width: 900px) {
+  body.jog-about-page .about-staff-card {
+    float: none !important;
+    width: 100% !important;
+    padding-bottom: 1rem !important;
+  }
+
+  body.jog-about-page .about-staff-card .jog-block-image-figure {
+    max-width: 240px !important;
+    margin: 0 auto !important;
+  }
+
+  body.jog-about-page .about-staff-bio {
+    margin-left: 0 !important;
+    padding-top: 0.3rem !important;
+    text-align: center !important;
+  }
+
+  body.jog-about-page .about-staff-bio h2,
+  body.jog-about-page .about-staff-bio h2.about-staff-name,
+  body.jog-about-page .about-staff-bio .about-role,
+  body.jog-about-page .about-staff-bio .about-quote,
+  body.jog-about-page .about-staff-bio p {
+    text-align: center !important;
+  }
+
+  body.jog-about-page .about-staff-bio h2.about-staff-name {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  body.jog-about-page #mainContent .jog-block-html p:not(.about-kicker):not(.about-role):not(.about-quote),
+  body.jog-about-page #mainContent .jog-block-html li {
+    text-align: left !important;
+  }
+}

@@ -15,7 +15,7 @@ body {
   -webkit-font-smoothing: antialiased !important;
 }
 
-#canvas, .content-outer-wrapper, #mainContent, .main-content-inner-wrapper {
+.jog-frame, #mainContent, .jog-main-inner {
   background-color: #f8fafc !important;
 }
 
@@ -42,7 +42,7 @@ body {
 #mainContent .jog-block-html h1, 
 #mainContent .jog-block-html h2, 
 #mainContent .jog-block-html h3, 
-.title-card-title, .hero-title, .page-title {
+.hero-title, .jog-page-title {
   font-family: 'Cantata One', Georgia, serif !important;
   letter-spacing: 0.02em !important;
   color: #0f172a !important;
@@ -57,12 +57,12 @@ body {
 }
 
 /* Beautiful Hero Header Overlay */
-.title-card-title, .hero-title, .page-title, .title-card h1 {
+.hero-title, .jog-page-title, .jog-banner-title h1 {
   color: #ffffff !important;
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.95) !important;
 }
 
-.title-card-wrapper .overlay, .hero-banner::before {
+.jog-banner-title-wrap .jog-banner-overlay, .hero-banner::before {
   background: linear-gradient(180deg, rgba(31, 36, 45, 0.45) 0%, rgba(15, 18, 24, 0.78) 100%) !important;
 }
 

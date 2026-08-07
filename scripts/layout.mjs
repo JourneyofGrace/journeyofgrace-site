@@ -16,7 +16,7 @@ function replaceHeader(html) {
   const mainAt = lines.findIndex(
     (l, i) =>
       i > start &&
-      /id="mainContent"|<main class="main-content"|<main class="main-wrapper"|<!-- Hero Banner -->|<section class="hero-banner"/.test(l)
+      /id="mainContent"|<main class="main-content"|<main class="jog-main"|<main class="main-wrapper"|<!-- Hero Banner -->|<section class="hero-banner"/.test(l)
   );
   if (mainAt === -1) return null;
   return lines.slice(0, start).join('\n') + '\n' + header + lines.slice(mainAt).join('\n');
@@ -26,7 +26,7 @@ function replaceFooter(html) {
   if (FOOTER_MARK.test(html)) return html.replace(FOOTER_MARK, footer);
   const lines = html.split('\n');
   const start = lines.findIndex((l) => l.trimStart().startsWith('<footer'));
-  if (start === -1) return html; // no footer (e.g. index)
+  if (start === -1) return html; // no footer block in file — index.html (full-bleed hero page) intentionally has NO footer, so leave it footer-less
   const end = lines.findIndex((l, i) => i > start && l.trimStart().startsWith('</footer>'));
   if (end === -1) return null;
   return lines.slice(0, start).join('\n') + '\n' + footer + lines.slice(end + 1).join('\n');

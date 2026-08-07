@@ -61,7 +61,6 @@ MOCK=1 PCO_CALENDAR_TAG=website PCO_GROUP_WHITELIST="ROC Youth Group, Men's Brea
 | `life-groups.html` | Life Groups |
 | `journey-classes.html` | Journey Classes |
 | `service-teams.html` | Service Teams |
-| `prximo-paso.html` | Próximo Paso |
 | `plan-your-visit.html` | Plan Your Visit |
 | `privacy.html` | Privacy Policy |
 | `sermon-archive.html` | Sermon Archive |

@@ -362,6 +362,11 @@ function renderEditorial(md) {
         : '';
       out.push(`            <p class="about-quote">${inlineMd(escapeHtml(st.quote))} ${attr}</p>`);
     }
+    out.push('            <div class="jog-block website-component-block jog-block-website-component jog-block-horizontalrule horizontalrule-block">');
+    out.push('              <div class="jog-block-content">');
+    out.push('                <div><hr /></div>');
+    out.push('              </div>');
+    out.push('            </div>');
     for (const b of st.bios) out.push(`            <p>${inlineMd(escapeHtml(b))}</p>`);
     out.push('          </div>');
     out.push('        </div>');

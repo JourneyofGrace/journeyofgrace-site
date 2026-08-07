@@ -81,8 +81,9 @@ body.jog-about-page .about-staff-heading {
   margin: 0 auto 0.6rem !important;
 }
 
-/* Centered amber thread rule under centered headings (editorial) */
-body.jog-about-page #mainContent .jog-html-content h2::after,
+/* Centered amber thread rule under centered headings (editorial).
+   Staff names use a real horizontalrule-block instead (see staffBioBlock). */
+body.jog-about-page #mainContent .jog-html-content h2:not(.about-staff-name)::after,
 body.jog-about-page #mainContent .jog-html-content h1::after {
   content: '' !important;
   display: block !important;

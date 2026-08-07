@@ -244,6 +244,15 @@ body.jog-about-page .about-staff-heading {
   clear: both !important;
 }
 
+/* The divider INSIDE a staff bio (between the name and the story) must not
+ * clear the floated staff photo, or it is pushed ~200px below the name,
+ * opening a large gap before the description. Keep the real
+ * horizontalrule-block structure (user request) but flow it normally. */
+body.jog-about-page .about-staff-bio .horizontalrule-block {
+  clear: none !important;
+  margin: 0.6rem 0 !important;
+}
+
 /* --- Responsive: stack the masthead on small screens --- */
 @media (max-width: 900px) {
   body.jog-about-page .about-staff-card {

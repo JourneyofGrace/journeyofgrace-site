@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initActiveNavHighlight();
   initBreadcrumb();
   initHomeVideo();
+  initImageLightbox();
 });
 
 /**
@@ -652,4 +653,75 @@ function debounce(fn, wait) {
       fn.apply(null, args);
     }, wait);
   };
+}
+
+/**
+ * Image lightbox.
+ *
+ * Clicking a `.jog-photo-grid` photo (the gallery pages) or an About Us
+ * staff photo opens the same image at full size in an overlay. The source
+ * files are large, so this shows the photo roughly 3-4x the thumbnail size.
+ * Closes via the × button, clicking the backdrop, or the Escape key.
+ */
+function initImageLightbox() {
+  var targets = document.querySelectorAll('.jog-photo-grid img, .about-staff-card img');
+  if (!targets.length) {
+    return;
+  }
+
+  var overlay = null;
+
+  function buildOverlay() {
+    overlay = document.createElement('div');
+    overlay.className = 'jog-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Enlarged image');
+    overlay.innerHTML =
+      '<img class="jog-lightbox-img" alt="" />' +
+      '<button type="button" class="jog-lightbox-close" aria-label="Close">&times;</button>';
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        hide();
+      }
+    });
+    overlay.querySelector('.jog-lightbox-close').addEventListener('click', hide);
+
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('jog-lightbox-open')) {
+        hide();
+      }
+    });
+  }
+
+  function show(img) {
+    if (!overlay) {
+      buildOverlay();
+    }
+    var view = overlay.querySelector('.jog-lightbox-img');
+    view.src = img.currentSrc || img.src;
+    view.alt = img.alt || '';
+    overlay.classList.add('jog-lightbox-open');
+    document.body.classList.add('jog-lightbox-locked');
+    overlay.querySelector('.jog-lightbox-close').focus();
+  }
+
+  function hide() {
+    if (!overlay) {
+      return;
+    }
+    overlay.classList.remove('jog-lightbox-open');
+    overlay.querySelector('.jog-lightbox-img').src = '';
+    document.body.classList.remove('jog-lightbox-locked');
+  }
+
+  targets.forEach(function(img) {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      show(img);
+    });
+  });
 }

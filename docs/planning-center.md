@@ -56,11 +56,9 @@ pageForms: {
   "nextstep.html":              "https://journeyofgrace.churchcenter.com/people/forms/1286060",
   "spanish.html":               "https://journeyofgrace.churchcenter.com/people/forms/1286061",
   "connection-card.html":       "https://journeyofgrace.churchcenter.com/people/forms/1242125",
-  "event-facility-request.html":"https://journeyofgrace.churchcenter.com/calendar/forms/23761",
 }
 pageFormCanvas: {
   "connection-card.html":       { w: 820, h: 3400 },  // long connection card -> no inner scroll
-  "event-facility-request.html":{ w: 820, h: 1700 },
 }
 ```
 
@@ -74,12 +72,18 @@ pageFormCanvas: {
 
 The Events page also points visitors to the **Event & Facility Request form**: there is a
 short "fill out an Event & Facility Request form" link near the top of the events page that
-links to `event-facility-request.html` (which embeds form `23761`).
+links to `event-facility-request.html`. Because Church Center serves
+`/calendar/forms/<id>` with `X-Frame-Options: SAMEORIGIN` (unlike
+`/people/forms/<id>`), that page does **not** embed the form: it explains the process and
+points to the live form via a prominent link that opens
+`https://journeyofgrace.churchcenter.com/calendar/forms/23761` in a new tab.
 
 > To change the form its title/description/fields edit the form in
 > **Planning Center > People > Forms** (or **Calendar > Forms** for the facility request
 > form). For a *new* page, add a `pageForms` entry and put a
 > `<form class="self-hosted-form">` block on that page — the embed replaces it.
+> Note: only `/people/forms/` embeds are frameable; any form under `/calendar/forms/`
+> must be linked out instead (its server sends `X-Frame-Options: SAMEORIGIN`).
 
 ---
 

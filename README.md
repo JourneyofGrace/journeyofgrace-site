@@ -88,7 +88,7 @@ opens it full-size in the built-in lightbox.
 | `sermon-archive.html` | Sermon Archive | Script-driven |
 | `nextstep.html` | Next Step (Planning Center form) | Hand-authored (PCO form embed) |
 | `connection-card.html` | Connection Card (Planning Center form) | Hand-authored (PCO form embed) |
-| `event-facility-request.html` | Event & Facility Request (Planning Center form) | Hand-authored (PCO form embed) |
+| `event-facility-request.html` | Event & Facility Request (links out to PCO form) | Hand-authored (form not frameable) |
 | `visit.html` / `plan-your-visit.html` | Visit / Location (Leaflet map, visitor form) | Hand-authored |
 | `privacy.html` | Privacy Policy | Hand-authored |
 | `404.html` | Not Found | Hand-authored |

@@ -65,8 +65,7 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
   "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
-  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125",
-  "event-facility-request.html": "https://journeyofgrace.churchcenter.com/calendar/forms/23761"
+  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125"
 };
 
 /*
@@ -80,8 +79,7 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
  */
 window.JOG_CONFIG.planningCenter.pageFormCanvas =
   window.JOG_CONFIG.planningCenter.pageFormCanvas || {
-    "connection-card.html": { w: 820, h: 3400 },
-    "event-facility-request.html": { w: 820, h: 1700 }
+    "connection-card.html": { w: 820, h: 3400 }
   };
 
 

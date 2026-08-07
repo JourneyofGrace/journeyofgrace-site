@@ -479,11 +479,18 @@ function initVisitMap() {
  * Connection Card popup (Connect page).
  *
  * The Connect page's "Connection Card" button opens the church's Connection
- * Card form in a Church Center popup, just like the Giving link opens as a
- * modal. The form URL lives in js/config.js (planningCenter.connectionCardUrl)
- * so staff can change it without touching code; this function converts it to a
- * modal-friendly Church Center Online URL and points every `[data-connection-card]`
- * anchor at it. The static href in the page is a no-JS fallback.
+ * Card form in a popup, just like the Giving link opens as a modal. The form
+ * URL lives in js/config.js (planningCenter.connectionCardUrl) so staff can
+ * change it without touching code.
+ *
+ * Instead of relying on Church Center's own popup (which renders the form at a
+ * fixed, narrow width on every screen), we intercept the click and open the
+ * form in our own responsive overlay (.jog-modal). The PCO form is embedded
+ * with layout=embed&flexible=true and scaled to the card width - the same
+ * technique initFormThanks uses - so the popup grows with the viewport and the
+ * fields stay large and readable. The static href stays the plain form URL as a
+ * no-JS fallback (it must NOT end in ?open-in-church-center-modal=true or the
+ * Church Center script would hijack the click).
  */
 function initConnectionCard() {
   var links = document.querySelectorAll('a[data-connection-card]');
@@ -493,21 +500,102 @@ function initConnectionCard() {
   var cfg = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
   var url = (cfg && cfg.connectionCardUrl ? cfg.connectionCardUrl.trim() : '');
   if (!url) {
-    console.error('[jog] planningCenter.connectionCardUrl is not set in js/config.js, so the Connection Card button cannot open as a modal.');
+    console.error('[jog] planningCenter.connectionCardUrl is not set in js/config.js, so the Connection Card button cannot open.');
     return;
   }
-  // Convert e.g. https://journeyofgrace.churchcenter.com/... to
-  // https://journeyofgrace.churchcenteronline.com/...?open-in-church-center-modal=true
-  var modalUrl = url
-    .trim()
-    .replace(/^https?:\/\//, '')
-    .replace(/\.churchcenter\.com(?=\/|$)/, '.churchcenteronline.com');
-  modalUrl = 'https://' + modalUrl;
-  modalUrl += (modalUrl.indexOf('?') === -1 ? '?' : '&') + 'open-in-church-center-modal=true';
+  var embedUrl = url + (url.indexOf('?') === -1 ? '?layout=embed&flexible=true' : '&layout=embed&flexible=true');
+
+  // PCO flexible embeds use a fixed-width field canvas (see initFormThanks).
+  var PCO_CANVAS_W = 480;
+  var PCO_CANVAS_H = 885;
+  var overlay = null;
+
+  var closeModal = function() {
+    if (!overlay || !overlay.classList.contains('jog-modal-open')) {
+      return;
+    }
+    overlay.classList.remove('jog-modal-open');
+    document.body.classList.remove('jog-modal-locked');
+    setTimeout(function() {
+      if (overlay && !overlay.classList.contains('jog-modal-open')) {
+        overlay.classList.add('jog-modal-hidden');
+        var frame = overlay.querySelector('iframe');
+        if (frame) {
+          frame.src = 'about:blank';
+        }
+      }
+    }, 200);
+  };
+
+  var openModal = function() {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'jog-modal jog-modal-hidden';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'Connection Card');
+      overlay.innerHTML =
+        '<div class="jog-modal-card">' +
+          '<div class="jog-modal-head">' +
+            '<span class="jog-modal-title">Connection Card</span>' +
+            '<button type="button" class="jog-modal-close" aria-label="Close">&times;</button>' +
+          '</div>' +
+          '<div class="jog-modal-body">' +
+            '<div class="jog-modal-scale-wrap"><iframe class="pco-form-embed" title="Connection Card" src="about:blank" loading="lazy"></iframe></div>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          closeModal();
+        }
+      });
+      overlay.querySelector('.jog-modal-close').addEventListener('click', closeModal);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay && overlay.classList.contains('jog-modal-open')) {
+          closeModal();
+        }
+      });
+
+      var bodyEl = overlay.querySelector('.jog-modal-body');
+      var wrap = overlay.querySelector('.jog-modal-scale-wrap');
+      var frame = overlay.querySelector('iframe');
+      var fit = function() {
+        var w = bodyEl.clientWidth - 12;
+        if (w <= 0) {
+          return;
+        }
+        var widthScale = w / PCO_CANVAS_W;
+        var heightScale = (PCO_CANVAS_H * widthScale - 100) / PCO_CANVAS_H;
+        var scale = widthScale > 1 ? Math.min(widthScale, heightScale) : widthScale;
+        wrap.style.width = Math.round(PCO_CANVAS_W * scale) + 'px';
+        wrap.style.height = Math.round(PCO_CANVAS_H * scale) + 'px';
+        wrap.style.margin = '0 auto';
+        frame.style.width = PCO_CANVAS_W + 'px';
+        frame.style.height = PCO_CANVAS_H + 'px';
+        frame.style.transform = 'scale(' + scale + ')';
+        frame.style.transformOrigin = 'top left';
+      };
+      fit();
+      new ResizeObserver(fit).observe(bodyEl);
+    }
+    var frame = overlay.querySelector('iframe');
+    if (frame.src !== embedUrl) {
+      frame.src = embedUrl;
+    }
+    overlay.classList.remove('jog-modal-hidden');
+    overlay.classList.add('jog-modal-open');
+    document.body.classList.add('jog-modal-locked');
+    overlay.querySelector('.jog-modal-close').focus();
+  };
+
   links.forEach(function(link) {
-    link.href = modalUrl;
     link.setAttribute('target', '_blank');
     link.setAttribute('rel', 'noopener');
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal();
+    });
   });
 }
 

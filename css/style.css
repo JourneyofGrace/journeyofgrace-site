@@ -1391,10 +1391,12 @@ body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-block-html {
   display: block !important;
 }
 
-/* Connect page banner: nudge the crop down so the folks in the photo are in
-   frame (their faces sit in the lower half of the source image). */
+/* Connect page banner: frame the in-focus woman (black-and-white dress,
+   face around native y~290-360) as the dominant subject. Window top ~231
+   keeps her whole head + hair in view with the front-row faces pushed down
+   and out of frame. */
 .jog-page-banner[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-banner-img img {
-  object-position: 50% 85% !important;
+  object-position: 50% 33% !important;
 }
 
 .jog-page-banner .jog-banner-title-wrap {
@@ -1451,7 +1453,7 @@ body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-block-html {
 .jog-global-header {
   background: #1e242d !important;
   border-bottom: 3px solid #c97a2b !important;
-  padding: 0.6rem 3vw !important;
+  padding: 0.4rem 3vw !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -1496,7 +1498,7 @@ body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-hero {
   align-items: center !important;
 }
 .jog-global-header .header-brand img {
-  height: 60px !important;
+  height: 76px !important;
   width: auto !important;
   display: block !important;
   object-fit: contain !important;

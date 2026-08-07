@@ -202,7 +202,7 @@ It needs the `PCO_CLIENT_ID` / `PCO_SECRET` secrets and the whitelist variables 
 - `assets/img/gallery/<page>/` — per-page photo galleries (Jekyll-safe filenames)
 - `assets/img/` — Images (including the logo and original site imagery)
 - `assets/videos/` — Self-hosted homepage intro video (`journey-of-grace-intro.mp4`)
-- `assets/vendor-sqsp/` — Self-hosted vendor assets (Leaflet, fonts, etc.)
+- `assets/vendor/` — Self-hosted vendor assets (Leaflet, fonts, etc.)
 - `css/` — Custom stylesheets (`style.css`, `about.css`, plus `site.css`/`custom.css`/`clean-visit.css`)
 - `js/` — Custom JavaScript (`main.js`) + site configuration (`config.js`)
 - `scripts/` — Build/migration tooling (`build-content.mjs`, `layout.mjs`, `fetch-sermons.mjs`, `fetch-events.mjs`)

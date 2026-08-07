@@ -185,8 +185,8 @@ function initFormThanks() {
     frame.title = 'Planning Center Form';
     frame.loading = 'lazy';
 
-    // The PCO form is sized to its own preferred width/height on every
-    // screen, so the iframe is never scaled.
+    // The form is drawn at its fixed canvas size, then scaled with a CSS
+    // transform to fill the card width (see fitPcoForm below).
     var wrap = document.createElement('div');
     wrap.className = 'pco-form-scale-wrap';
     wrap.appendChild(frame);
@@ -518,23 +518,6 @@ function initBreadcrumb() {
     '<a class="jog-breadcrumb-parent" href="connect"><span>' + parentLabel + '</span></a>' +
     (arrow ? arrow.outerHTML : '<span class="jog-breadcrumb-arrow" aria-hidden="true">&rsaquo;</span>') +
     '<span class="jog-breadcrumb-current" aria-current="page">' + currentLabel + '</span>';
-}
-
-/**
- * Debounce helper.
- *
- * Returns a function that delays invoking `fn` until `wait` ms have passed
- * since the last call (used for resize handlers).
- */
-function debounce(fn, wait) {
-  var timer;
-  return function() {
-    var args = arguments;
-    clearTimeout(timer);
-    timer = setTimeout(function() {
-      fn.apply(null, args);
-    }, wait);
-  };
 }
 
 /**

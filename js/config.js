@@ -35,15 +35,10 @@ window.JOG_CONFIG.planningCenter.calendarLink =
   "https://journeyofgrace.churchcenter.com/calendar";
 
 /*
- * Planning Center People / Form embed URL (e.g., https://journeyofgrace.churchcenter.com/people/forms/123456)
- * Planning Center is the church's only form provider; there is no email fallback.
+ * Generic embed fallback for Planning Center forms. Per-page form embeds are
+ * configured in `pageForms` below; `visitorFormUrl` is used when a page renders
+ * a form without a matching entry.
  */
-/*
- * Planning Center Online API integration parameters.
- * Configurable via GitHub Repository Secrets (PCO_CLIENT_ID, PCO_SECRET) or environment settings.
- */
-window.JOG_CONFIG.planningCenter.clientId = window.JOG_CONFIG.planningCenter.clientId || "";
-window.JOG_CONFIG.planningCenter.workerUrl = window.JOG_CONFIG.planningCenter.workerUrl || "";
 window.JOG_CONFIG.planningCenter.visitorFormUrl =
   window.JOG_CONFIG.planningCenter.visitorFormUrl || "";
 

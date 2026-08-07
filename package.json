@@ -2,11 +2,11 @@
   "name": "journeyofgrace-site",
   "version": "1.0.0",
   "description": "Independent static site for Journey of Grace (formerly a Squarespace clone), hosted on GitHub Pages.",
-  "main": "index.js",
   "scripts": {
     "build": "node scripts/build-content.mjs && node scripts/layout.mjs && node scripts/fetch-sermons.mjs",
     "content": "node scripts/build-content.mjs && node scripts/layout.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run content",
+    "test:regression": "node audit-all.mjs && node verify-about.mjs && node verify-mini.mjs && node verify-lightbox.mjs && node verify-mobile.mjs && node verify-nextstep.mjs"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,6 @@
     "url": "https://github.com/JourneyofGrace/journeyofgrace-site/issues"
   },
   "homepage": "https://github.com/JourneyofGrace/journeyofgrace-site#readme",
-  "dependencies": {
-    "sharp": "^0.33.5"
-  },
   "devDependencies": {
     "playwright": "^1.62.1"
   }

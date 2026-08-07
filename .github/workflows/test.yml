@@ -1,0 +1,44 @@
+name: Regression Tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build static site
+        run: npm run content
+
+      - name: Serve site for tests
+        run: |
+          python3 -m http.server 8126 >/dev/null 2>&1 &
+          sleep 2
+
+      - name: Run regression suites
+        run: >-
+          node audit-all.mjs &&
+          node verify-about.mjs &&
+          node verify-mini.mjs &&
+          node verify-lightbox.mjs &&
+          node verify-mobile.mjs &&
+          node verify-nextstep.mjs

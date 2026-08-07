@@ -29,3 +29,7 @@ scratch/
 /cap*.mjs
 /pr.mjs
 /zooms.mjs
+
+# Local secrets (Planning Center token for the api relay) - never commit
+api/.env
+.env.local

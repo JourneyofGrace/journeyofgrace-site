@@ -205,6 +205,27 @@ docker run --rm -p 8080:80 journeyofgrace-site
 Then open `http://localhost:8080/journeyofgrace-site/`. If `8080` is already in use on
 your host, change the `ports` mapping in `docker-compose.yml` (e.g. `8095:80`).
 
+### Form submission relay (optional sidecar)
+
+A small dependency-free Node relay (`api/relay.mjs`) can forward form submissions to the
+Planning Center People API so a future custom-styled form can submit real data. It is an
+*optional* sidecar in the same compose stack:
+
+```bash
+cp api/.env.example api/.env   # then fill in PCO_CLIENT_ID/PCO_SECRET (a Personal Access Token)
+docker compose up -d api       # relay on http://localhost:3001
+```
+
+- `GET  /api/health`                    → `{ok, mock, creds, forms}`
+- `POST /api/forms/:formId/submit`      → forwards the JSON body (a `data` payload) to
+  `POST https://api.planningcenteronline.com/people/v2/forms/:formId/form_submissions`
+  using HTTP Basic auth with the token pair.
+- `MOCK=1` in `api/.env` runs a local dry-run (logs the request, never calls PCO).
+- Only form ids listed in `PCO_FORM_ID` are accepted (open-proxy guard); the token is read
+  **only** by the container and never sent to the browser.
+
+See `docs/planning-center.md` for the request shape and the "why a relay" reasoning.
+
 ## Deployment
 
 The site deploys to GitHub Pages at

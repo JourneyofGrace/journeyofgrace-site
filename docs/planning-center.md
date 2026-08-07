@@ -146,6 +146,40 @@ and replaced by this config-driven embed.
 
 ---
 
+## Custom form submission via the relay (optional)
+
+If you want a fully custom-styled form that still records real submissions into the
+form, add the relay sidecar (`api/relay.mjs`, see the README "Form submission relay"
+section). The browser never talks to Planning Center directly — it POSTs JSON to our
+own relay, which forwards to the People API with a server-side credential.
+
+Endpoint it wraps:
+
+```http
+POST https://api.planningcenteronline.com/people/v2/forms/{form_id}/form_submissions
+Authorization: Basic <base64(client_id:secret)>   # a Personal Access Token pair
+Content-Type: application/json
+```
+
+Payload notes (`data` envelope, forwarded verbatim by the relay):
+
+- `data.attributes.form_values` — each answer keyed to the form's `form_field_id`
+  (enumerate via `GET /api/planningcenteronline.com/people/v2/forms/{id}/form_fields`;
+  for option/checkbox fields the value must be the **id** of the selected option).
+- Identify the submitter with either `data.attributes.person_id` (existing person) or
+  `data.attributes.person_attributes: { first_name, last_name, emails_attributes:
+  [{ location, address }] }` — the API auto-matches or auto-creates the person.
+
+Why a relay and not a direct browser call:
+
+- A Personal Access Token used client-side is disabled by Planning Center if found in
+  public JS; the token must live in an env var on the server (`api/.env`) only.
+- GH Actions cron jobs are batch runners with no always-on HTTP endpoint, so they
+  cannot receive live submissions. The relay (`docker compose up -d api`) is the
+  always-on piece; GH cron remains for batch refreshes.
+
+---
+
 ## Testing locally
 
 ```bash

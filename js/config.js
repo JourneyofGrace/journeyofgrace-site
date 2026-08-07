@@ -70,18 +70,6 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
 };
 
 /*
- * Connection Card form (opened as a popup modal on the Connect page, the same
- * way Giving opens as a modal).
- *
- * URL of the church's Connection Card Planning Center form
- * (https://journeyofgrace.churchcenter.com/people/forms/<form_id>). If the form
- * is recreated, update this ID — no code changes needed.
- */
-window.JOG_CONFIG.planningCenter.connectionCardUrl =
-  window.JOG_CONFIG.planningCenter.connectionCardUrl ||
-  "https://journeyofgrace.churchcenter.com/people/forms/1242125";
-
-/*
  * Optional per-page embed canvas overrides (width x height in px).
  *
  * By default the embedded Planning Center forms are drawn on a 480px-wide,

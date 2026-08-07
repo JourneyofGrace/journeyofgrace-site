@@ -62,7 +62,6 @@ pageFormCanvas: {
   "connection-card.html":       { w: 820, h: 3400 },  // long connection card -> no inner scroll
   "event-facility-request.html":{ w: 820, h: 1700 },
 }
-connectionCardUrl: "https://journeyofgrace.churchcenter.com/people/forms/1242125",
 ```
 
 * **`pageForms`** — maps each page to the form embedded on it. To change what form a
@@ -72,8 +71,6 @@ connectionCardUrl: "https://journeyofgrace.churchcenter.com/people/forms/1242125
   and scaled to the page width. If a form is very long (e.g. the Connection Card),
   raise its `h` here so the whole form fits without an inner scrollbar. Bump `w` to make
   wide forms readable.
-* **`connectionCardUrl`** — the Connection Card form; the Connect page links to
-  the Connection Card page, which embeds it.
 
 The Events page also points visitors to the **Event & Facility Request form**: there is a
 short "fill out an Event & Facility Request form" link near the top of the events page that

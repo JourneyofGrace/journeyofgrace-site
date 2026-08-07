@@ -1490,7 +1490,7 @@ body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-hero {
   align-items: center !important;
 }
 .jog-global-header .header-brand img {
-  height: 48px !important;
+  height: 60px !important;
   width: auto !important;
   display: block !important;
   object-fit: contain !important;
@@ -1504,7 +1504,7 @@ body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-hero {
   text-transform: uppercase !important;
   color: #f4f1ea !important;
   font-weight: 600 !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   letter-spacing: 0.05em !important;
   text-decoration: none !important;
   position: relative !important;
@@ -1534,7 +1534,7 @@ body[data-collection-id="5c3ba438352f53368c055aa2"] .jog-hero {
   padding: 0.55rem 1.4rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.05em !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   box-shadow: 0 3px 10px rgba(201, 122, 43, 0.3) !important;
 }
 .jog-global-nav a.jog-btn-cta:hover {

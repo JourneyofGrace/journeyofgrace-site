@@ -64,7 +64,8 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
   "visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
-  "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061"
+  "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
+  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125"
 };
 
 /*

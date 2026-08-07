@@ -1,7 +1,7 @@
 > “All the believers devoted themselves to the apostles’ teaching, and to fellowship, and to sharing in meals, including the Lord’s Supper, and to prayer.”
 > {cite} **Acts 2:42 (NLT)** https://www.blueletterbible.org/nlt/act/2/42/
 
-::cta https://journeyofgrace.churchcenter.com/people/forms/1242125 Fill Out Our Connection Card [data-connection-card]
+::cta connection-card Fill Out Our Connection Card
 
 ::ministry Family Ministries
 - [Kids Ministry](kids-min)

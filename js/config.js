@@ -65,7 +65,8 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
   "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
-  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125"
+  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125",
+  "event-facility-request.html": "https://journeyofgrace.churchcenter.com/calendar/forms/23761"
 };
 
 /*
@@ -79,6 +80,21 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
 window.JOG_CONFIG.planningCenter.connectionCardUrl =
   window.JOG_CONFIG.planningCenter.connectionCardUrl ||
   "https://journeyofgrace.churchcenter.com/people/forms/1242125";
+
+/*
+ * Optional per-page embed canvas overrides (width x height in px).
+ *
+ * By default the embedded Planning Center forms are drawn on a 480px-wide,
+ * ~885px-tall canvas and then scaled to fit. A couple of pages embed very
+ * long forms (e.g. the Connection Card) and staff asked for a bigger embed so
+ * nothing scrolls inside the iframe. Add a page here to draw that page's form
+ * on a wider/taller canvas instead.
+ */
+window.JOG_CONFIG.planningCenter.pageFormCanvas =
+  window.JOG_CONFIG.planningCenter.pageFormCanvas || {
+    "connection-card.html": { w: 820, h: 3400 },
+    "event-facility-request.html": { w: 820, h: 1700 }
+  };
 
 
 

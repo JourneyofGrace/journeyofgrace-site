@@ -1136,6 +1136,18 @@ textarea:focus-visible,
   margin: 0 0 1.25rem;
 }
 
+.church-calendar-request {
+  color: var(--color-ink);
+  margin: -0.25rem 0 1.25rem;
+  line-height: 1.5;
+}
+
+.church-calendar-request a {
+  color: #b4843a;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .church-calendar-embed {
   width: 100%;
   min-height: 620px;

@@ -205,6 +205,13 @@ function initFormThanks() {
     // 1284759 (visit / plan-your-visit) = 911px, others = 885px.
     var PCO_FORM_ID = (pcoFormUrl.match(/\/forms\/(\d+)/) || [])[1] || '';
     var PCO_CANVAS_H = PCO_FORM_ID === '1284759' ? 918 : 885; // content + a little air
+    // A few pages embed very long/wide forms and want the iframe drawn big
+    // enough that nothing scrolls inside it. Staff can override the embed
+    // canvas per page in js/config.js:
+    //   planningCenter.pageFormCanvas = { "connection-card.html": { w: 820, h: 3400 } }
+    var override = (pco && pco.pageFormCanvas && pco.pageFormCanvas[pageName]) || {};
+    if (override.w) PCO_CANVAS_W = override.w;
+    if (override.h) PCO_CANVAS_H = override.h;
     var fitPcoForm = function() {
       if (!card) {
         return;

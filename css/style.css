@@ -1391,6 +1391,12 @@ body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-block-html {
   display: block !important;
 }
 
+/* Connect page banner: nudge the crop down so the folks in the photo are in
+   frame (their faces sit in the lower half of the source image). */
+.jog-page-banner[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-banner-img img {
+  object-position: 50% 85% !important;
+}
+
 .jog-page-banner .jog-banner-title-wrap {
   position: absolute !important;
   top: 0 !important;

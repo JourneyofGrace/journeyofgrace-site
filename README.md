@@ -171,20 +171,39 @@ node verify-nextstep.mjs
 node verify-ccpage.mjs
 node verify-event.mjs
 node verify-lightbox.mjs
+node verify-formscroll.mjs
 node audit-all.mjs
+```
+
+The local-only suites configured for the CI regression pipeline can be run in one shot:
+
+```bash
+npm run test:regression
 ```
 
 ### Docker
 
-The site can be run in a container (nginx serves it and maps extensionless links like
-GitHub Pages):
+The site can be run in a container. The build is **multi-stage**: a `node:20-alpine`
+builder runs `npm run content` to render `content/*.md` into the static HTML, then tags
+the tiny `nginx:alpine` runtime (which also maps extensionless links like GitHub Pages).
+No package installation is needed to build (the build scripts use only Node built-ins).
+
+Compose (recommended):
+
+```bash
+docker compose up -d        # build + start on http://localhost:8080/journeyofgrace-site/
+docker compose down
+```
+
+Or with Docker directly:
 
 ```bash
 docker build -f docker/Dockerfile -t journeyofgrace-site .
 docker run --rm -p 8080:80 journeyofgrace-site
 ```
 
-Then open `http://localhost:8080/journeyofgrace-site/`.
+Then open `http://localhost:8080/journeyofgrace-site/`. If `8080` is already in use on
+your host, change the `ports` mapping in `docker-compose.yml` (e.g. `8095:80`).
 
 ## Deployment
 

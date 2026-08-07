@@ -10,3 +10,6 @@
 Currently Women of Grace (ladies Bible study) meets on Fridays. Contact [the office](mailto:office@journeyofgrace.church?subject=Women%27s%20Ministry) for details.
 
 ::cta connect Get Connected
+
+::full
+::gallery assets/img/gallery/womens-ministry

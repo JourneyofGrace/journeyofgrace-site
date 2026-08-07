@@ -14,9 +14,4 @@ There is also a weekly men’s Bible study on Fridays. Contact the *church offic
 ::cta connect Get Connected
 
 ::full
-![DSCF3222.jpg](assets/img/vendor/1578280013316-H59UJOQD4JOC996ENFI3-DSCF3222.jpg)
-![DSCF3224.jpg](assets/img/vendor/1578280016007-BOUA603VFS2XKTSO7JO2-DSCF3224.jpg)
-![DSCF3226.jpg](assets/img/vendor/1578280023492-G8PTLZJ8LJ0ATBC2KW3P-DSCF3226.jpg)
-![DSCF3230.jpg](assets/img/vendor/1578280023376-OXV61YRD8ZSXMR0RL3UY-DSCF3230.jpg)
-![DSCF3232.jpg](assets/img/vendor/1578280031541-JRO329PT9YK555PBGOQL-DSCF3232.jpg)
-![DSCF3236.jpg](assets/img/vendor/1578280031613-SWBBXOQKFSTK7KBDLYNJ-DSCF3236.jpg)
+::gallery assets/img/gallery/mens-ministry

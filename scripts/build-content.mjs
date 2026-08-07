@@ -22,6 +22,10 @@
 //   - `-` lists become `.jog-list`; `![alt](src)` image lines become a
 //     `.jog-photo-grid` (consecutive images are grouped); paragraphs become
 //     `.jog-lead`.
+//   - `::gallery <dir>` renders every image file found in `<dir>` (sorted by
+//     name) as a `.jog-photo-grid`, so dropping files into that folder updates
+//     the page. A missing/empty folder produces no gallery at all (handy for a
+//     page whose gallery is "disabled" until images are added).
 //   - `::cta <href> <label>` emits a centered `.jog-actions` / `.jog-cta`
 //     button (e.g. `::cta connect Get Connected`).
 //   - `::ministry <heading>` followed by a `- [name](href)` list emits a
@@ -102,6 +106,27 @@ function renderStandard(md) {
     closeCard();
     closeGrid();
     if (state.section) { out.push('      </section>'); state.section = false; }
+  };
+
+  // Emits a `.jog-photo-grid` for the given [{alt, src}] list. When the list is
+  // empty the grid is omitted entirely (a gallery is "disabled" until the page's
+  // image folder has files in it). Honors the pending `::full` modifier.
+  const emitPhotoGrid = (imgs, note) => {
+    const full = state.fullNext;
+    state.fullNext = false;
+    if (!imgs.length) {
+      if (note) console.log(`  note: ${note}`);
+      return;
+    }
+    if (!state.section) {
+      out.push(`      <section class="jog-section${full ? ' jog-section-full' : ''}">`);
+      state.section = true;
+    }
+    out.push('        <div class="jog-photo-grid">');
+    for (const img of imgs) {
+      out.push(`          <img src="${img.src}" alt="${escapeHtml(img.alt)}" loading="lazy" />`);
+    }
+    out.push('        </div>');
   };
 
   let i = 0;
@@ -185,16 +210,32 @@ function renderStandard(md) {
         });
         i++;
       }
-      if (!state.section) {
-        out.push(`      <section class="jog-section${state.fullNext ? ' jog-section-full' : ''}">`);
-        state.fullNext = false;
-        state.section = true;
+      emitPhotoGrid(imgs);
+      continue;
+    }
+
+    if (/^::gallery\s+/.test(line)) {
+      // `::gallery <dir>` renders every image file found in <dir> (sorted by
+      // name) as a `.jog-photo-grid`, so adding/removing files in that folder
+      // updates the page. Missing or empty folder -> gallery omitted entirely.
+      const dir = line.replace(/^::gallery\s+/, '').trim().replace(/\/+$/, '');
+      const target = path.resolve(ROOT, dir);
+      let files = [];
+      let missing = false;
+      try {
+        files = fs
+          .readdirSync(target)
+          .filter((f) => !f.startsWith('.'))
+          .filter((f) => /\.(jpe?g|png|webp|gif)$/i.test(f))
+          .sort();
+      } catch (err) {
+        missing = true;
       }
-      out.push('        <div class="jog-photo-grid">');
-      for (const img of imgs) {
-        out.push(`          <img src="${img.src}" alt="${escapeHtml(img.alt)}" loading="lazy" />`);
-      }
-      out.push('        </div>');
+      const imgs = files.map((f) => ({ alt: f.replace(/\.([^.]+)$/, ''), src: `${dir}/${f}` }));
+      emitPhotoGrid(imgs, missing
+        ? `gallery folder not found (${dir}), leaving gallery off`
+        : `gallery folder ${dir} is empty, leaving gallery off`);
+      i++;
       continue;
     }
 

@@ -1673,6 +1673,14 @@ footer.jog-footer nav a {
   transition: color 0.2s ease !important;
 }
 
+footer.jog-footer nav a svg {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+  margin-right: 0.45rem;
+  fill: currentColor;
+}
+
 footer.jog-footer nav a:hover {
   color: #c97a2b !important;
 }

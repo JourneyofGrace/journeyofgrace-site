@@ -808,19 +808,6 @@ p.eventlist-empty {
   text-align: center;
 }
 
-.footer-social {
-  display: flex;
-  justify-content: center;
-  gap: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.footer-social a {
-  color: var(--color-slate);
-  text-decoration: none;
-  font-weight: 600;
-}
-
 .footer-content {
   font-size: 0.85rem;
   color: var(--color-ink-muted);
@@ -1702,16 +1689,16 @@ footer.jog-footer .footer-links h4 {
   text-align: center;
 }
 
-footer.jog-footer .footer-social {
+footer.jog-footer .nav {
   text-align: center !important;
 }
 
-footer.jog-footer .footer-social h4 {
+footer.jog-footer .nav h4 {
   text-align: center !important;
   width: 100% !important;
 }
 
-footer.jog-footer .footer-social nav {
+footer.jog-footer .nav nav {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -1719,7 +1706,7 @@ footer.jog-footer .footer-social nav {
   text-align: center;
 }
 
-footer.jog-footer .footer-social a {
+footer.jog-footer .nav a {
   color: #ffffff !important;
   text-decoration: none !important;
   opacity: 1 !important;

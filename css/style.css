@@ -1689,29 +1689,6 @@ footer.jog-footer .footer-links h4 {
   text-align: center;
 }
 
-footer.jog-footer .nav {
-  text-align: center !important;
-}
-
-footer.jog-footer .nav h4 {
-  text-align: center !important;
-  width: 100% !important;
-}
-
-footer.jog-footer .nav nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  align-items: center;
-  text-align: center;
-}
-
-footer.jog-footer .nav a {
-  color: #ffffff !important;
-  text-decoration: none !important;
-  opacity: 1 !important;
-}
-
 footer.jog-footer .footer-bottom {
   max-width: 1100px;
   margin: 2.5rem auto 0;

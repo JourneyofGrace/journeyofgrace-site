@@ -70,11 +70,17 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
  * ~885px-tall canvas and then scaled to fit. A couple of pages embed very
  * long forms (e.g. the Connection Card) and staff asked for a bigger embed so
  * nothing scrolls inside the iframe. Add a page here to draw that page's form
- * on a wider/taller canvas instead.
+ * on a wider/taller canvas instead. The values are the iframe's internal
+ * canvas; it is CSS-transformed to fill the card while keeping full content
+ * height (see fitPcoForm in js/main.js).
  */
 window.JOG_CONFIG.planningCenter.pageFormCanvas =
   window.JOG_CONFIG.planningCenter.pageFormCanvas || {
-    "connection-card.html": { w: 820, h: 3400 }
+    // Connection Card: wider + slightly shorter embed so more of the form is
+    // visible at once. 960 is a comfortable reading width and the form's own
+    // content is ~3139px tall there, so 3170 keeps a little air with no inner
+    // scrollbar (no-embed pages scroll the page instead).
+    "connection-card.html": { w: 960, h: 3170 }
   };
 
 

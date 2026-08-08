@@ -672,11 +672,9 @@ function initGivingModal() {
 
   links.forEach(function(a) {
     a.addEventListener('click', function(e) {
-      // Let the official script win when it is active (https); otherwise stop
-      // the navigation and show our own modal.
-      if (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return;
-      }
+      // Always intercept and open our own modal so the Giving link pops up a
+      // dialog on every host (http or https) instead of also triggering the
+      // page navigation / the official Church Center modal script.
       e.preventDefault();
       show(a.getAttribute('href'));
     });

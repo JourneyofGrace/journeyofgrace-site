@@ -1703,9 +1703,6 @@ footer.jog-footer .footer-links h4 {
 }
 
 footer.jog-footer .footer-social {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
   text-align: center !important;
 }
 

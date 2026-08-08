@@ -1714,22 +1714,18 @@ footer.jog-footer .footer-social h4 {
   width: 100% !important;
 }
 
-footer.jog-footer .footer-social-links {
-  display: flex !important;
-  gap: 1.2rem !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
+footer.jog-footer .footer-social nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+  text-align: center;
 }
 
 footer.jog-footer .footer-social a {
   color: #ffffff !important;
   text-decoration: none !important;
   opacity: 1 !important;
-}
-
-footer.jog-footer .footer-social svg {
-  fill: #ffffff !important;
 }
 
 footer.jog-footer .footer-bottom {

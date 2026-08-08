@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initBreadcrumb();
   initHomeVideo();
   initImageLightbox();
+  initGivingModal();
 });
 
 /**
@@ -587,6 +588,97 @@ function initImageLightbox() {
     img.addEventListener('click', function(e) {
       e.stopPropagation();
       show(img);
+    });
+  });
+}
+
+/**
+ * Giving modal (popup).
+ *
+ * The Giving header/footer links point at
+ *   https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true
+ * The official `js.churchcenter.com/modal/v1` script intercepts those clicks and
+ * opens a modal — but it only does so on https (or localhost). On a plain-http
+ * deployment (e.g. a test server) the click falls through and opens the Giving
+ * page in a new tab instead.
+ *
+ * This lightweight handler guarantees the popup behavior on every host: any link
+ * whose href carries `open-in-church-center-modal=true` is intercepted and shown
+ * in a full-screen overlay with a scaled iframe (the same technique used for the
+ * embedded Planning Center forms).
+ */
+function initGivingModal() {
+  var links = document.querySelectorAll('a[href*="open-in-church-center-modal"]');
+  if (!links.length) {
+    return;
+  }
+
+  var overlay = null;
+
+  function buildOverlay() {
+    overlay = document.createElement('div');
+    overlay.className = 'jog-giving-modal';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Giving');
+    overlay.innerHTML =
+      '<div class="jog-giving-card">' +
+        '<div class="jog-giving-head">' +
+          '<span class="jog-giving-title">Give</span>' +
+          '<button type="button" class="jog-giving-close" aria-label="Close">&times;</button>' +
+        '</div>' +
+        '<div class="jog-giving-body">' +
+          '<iframe class="jog-giving-iframe" title="Give" src="about:blank" loading="lazy"></iframe>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        hide();
+      }
+    });
+    overlay.querySelector('.jog-giving-close').addEventListener('click', hide);
+
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('jog-giving-open')) {
+        hide();
+      }
+    });
+  }
+
+  function show(href) {
+    if (!overlay) {
+      buildOverlay();
+    }
+    // Embed the same URL the official modal would load in its iframe.
+    // Church Center redirects churchcenteronline.com -> churchcenter.com and
+    // permits framing when the modal param is present.
+    var embed = href.replace('churchcenteronline.com', 'churchcenter.com');
+    overlay.querySelector('.jog-giving-iframe').src = embed;
+    overlay.classList.add('jog-giving-open');
+    document.body.classList.add('jog-giving-locked');
+    overlay.querySelector('.jog-giving-close').focus();
+  }
+
+  function hide() {
+    if (!overlay) {
+      return;
+    }
+    overlay.classList.remove('jog-giving-open');
+    overlay.querySelector('.jog-giving-iframe').src = 'about:blank';
+    document.body.classList.remove('jog-giving-locked');
+  }
+
+  links.forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      // Let the official script win when it is active (https); otherwise stop
+      // the navigation and show our own modal.
+      if (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return;
+      }
+      e.preventDefault();
+      show(a.getAttribute('href'));
     });
   });
 }

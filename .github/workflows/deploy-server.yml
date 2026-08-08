@@ -1,0 +1,35 @@
+name: Deploy to OCI Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: oci-deploy
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.JOG_SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.JOG_SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy on server (pull + rebuild + up)
+        env:
+          HOST: ${{ secrets.JOG_SERVER_HOST }}
+          USER: ${{ secrets.JOG_SERVER_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$USER@$HOST" '
+            set -e
+            cd /opt/jog/journeyofgrace-site
+            git pull --ff-only origin main
+            docker compose up -d --build
+            docker compose ps
+          '

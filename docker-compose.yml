@@ -5,10 +5,14 @@ services:
       dockerfile: docker/Dockerfile
     container_name: journeyofgrace-site
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Serve real Let's Encrypt certs once issued on the host (see docs/TLS.md):
+      # - /etc/letsencrypt/live/journeyofgrace.church:/etc/nginx/tls:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost/journeyofgrace-site/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
       interval: 30s
       timeout: 5s
       retries: 3

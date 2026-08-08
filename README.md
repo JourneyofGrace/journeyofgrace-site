@@ -187,23 +187,27 @@ The site can be run in a container. The build is **multi-stage**: a `node:20-alp
 builder runs `npm run content` to render `content/*.md` into the static HTML, then tags
 the tiny `nginx:alpine` runtime (which also maps extensionless links like GitHub Pages).
 No package installation is needed to build (the build scripts use only Node built-ins).
+The site is served at the **root `/`** of the container.
 
 Compose (recommended):
 
 ```bash
-docker compose up -d        # build + start on http://localhost:8080/journeyofgrace-site/
+docker compose up -d   # build + start, listens on host port 80 (web) and 3001 (relay)
 docker compose down
 ```
+
+Then open `http://localhost/` in your browser. If port `80` is already in use on your host,
+change the `80:80` mapping in `docker-compose.yml` (e.g. `8095:80` and open
+`http://localhost:8095/`).
 
 Or with Docker directly:
 
 ```bash
 docker build -f docker/Dockerfile -t journeyofgrace-site .
-docker run --rm -p 8080:80 journeyofgrace-site
+docker run --rm -p 80:80 journeyofgrace-site
 ```
 
-Then open `http://localhost:8080/journeyofgrace-site/`. If `8080` is already in use on
-your host, change the `ports` mapping in `docker-compose.yml` (e.g. `8095:80`).
+The container also exposes `443` for TLS; see "Deployment" for the Let's Encrypt plan.
 
 ### Form submission relay (optional sidecar)
 
@@ -229,12 +233,27 @@ See `docs/planning-center.md` for the request shape and the "why a relay" reason
 ## Deployment
 
 The site deploys to GitHub Pages at
-<https://journeyofgrace.github.io/journeyofgrace-site/>.
+<https://journeyofgrace.github.io/journeyofgrace-site/>, and to a free-tier OCI
+Docker server (Oracle Linux → AlmaLinux, `nginx:alpine` + API relay containers).
 
-A CI workflow (`.github/workflows/deploy.yml`) runs on pushes to `main` (and on a
-schedule) to refresh `sermons.html` (latest YouTube sermons) and `events.html`
-(Planning Center events), committing the refreshed files back and triggering a redeploy.
-It needs the `PCO_CLIENT_ID` / `PCO_SECRET` secrets and the whitelist variables above.
+**Every update to `main` updates the site automatically.** Two CI workflows
+handle this:
+
+1. `.github/workflows/deploy.yml` — refreshes dynamic pages. On pushes to `main`
+   and on a schedule (Sun/Mon 16:15 UTC) it runs `fetch-sermons.mjs` (latest
+   YouTube sermons) and `fetch-events.mjs` (Planning Center events), committing
+   the refreshed `sermons.html` / `events.html` back to `main`. Needs the
+   `PCO_CLIENT_ID` / `PCO_SECRET` secrets and the whitelist variables above.
+2. `.github/workflows/deploy-server.yml` — deploys to the OCI Docker server. On
+   every push to `main` (including the refresh commit from workflow 1) it SSHes
+   in and runs `git pull --ff-only origin main && docker compose up -d --build`.
+
+So the chain is: **push (or scheduled refresh) → commit to `main` →
+auto-deploy to the server** — no manual step.
+
+The Docker server serves the site at the root `/` on ports 80/443 (see the
+Docker section and `docs/TLS.md` for enabling HTTPS with auto-renewing Let's
+Encrypt certs). The `api` relay sidecar runs alongside it on port 3001.
 
 ## Assets
 

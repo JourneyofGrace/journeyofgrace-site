@@ -28,6 +28,10 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key "$USER@$HOST" '
             set -e
+            # The repo may have been cloned as a different user (e.g. root on a
+            # fresh box) while this workflow connects as $USER; whitelist our
+            # working copy so git does not refuse it as "dubious ownership".
+            git config --global --add safe.directory /opt/jog/journeyofgrace-site
             cd /opt/jog/journeyofgrace-site
             git pull --ff-only origin main
             docker compose up -d --build

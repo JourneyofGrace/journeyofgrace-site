@@ -2,9 +2,9 @@
 
 PRIVACY NOTICE
 Updated August 8, 2026
-Thank you for choosing to be part of our community at Journey of Grace Church of the Nazarene ("JG", "the church", "we", "us", or "our"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy or our practices with regard to your personal information, please contact us at [office@](mailto:office@journeyofgrace.church)journeyofgrace.church.
+Thank you for choosing to be part of our community at Journey of Grace Church of the Nazarene ("JG", "the church", "we", "us", or "our"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy or our practices with regard to your personal information, please contact us at [office@journeyofgrace.church](mailto:office@journeyofgrace.church).
 When you visit our website and use our services, you trust us with your personal information. We take your privacy very seriously. In this privacy notice, we describe our privacy policy. We seek to explain to you in the clearest way possible what information we collect, how we use it, and what rights you have in relation to it. We hope you take some time to read through it carefully, as it is important. If there are any terms in this privacy policy that you do not agree with, please discontinue use of our Sites and events.
-This privacy policy applies to all information collected through our "Sites" (such as [www.](./)journeyofgrace.church, our Facebook page, and our YouTube channel) and our "Events" (any related services, ministries, or events). We do not currently offer a mobile application.
+This privacy policy applies to all information collected through our "Sites" (such as [www.journeyofgrace.church](./), our Facebook page, and our YouTube channel) and our "Events" (any related services, ministries, or events). We do not currently offer a mobile application.
 Please read this privacy policy carefully, as it will help you make informed decisions about sharing your personal information with us.
 
 ## **TABLE OF CONTENTS**
@@ -103,7 +103,7 @@ We have implemented appropriate technical and organizational security measures d
 # **9. DO WE COLLECT INFORMATION FROM MINORS?**
 
 **In Short:** *We do not knowingly collect data from or market to children under 13 years of age.*
-We do not knowingly solicit data from or market to children under 13 years of age, consistent with the Children's Online Privacy Protection Act (COPPA). Our children's and youth ministries collect information only from parents and guardians. If you are a parent or guardian and believe your child has provided us with information, please contact us at [office@](mailto:office@journeyofgrace.church)journeyofgrace.church, and we will promptly delete such data from our records.
+We do not knowingly solicit data from or market to children under 13 years of age, consistent with the Children's Online Privacy Protection Act (COPPA). Our children's and youth ministries collect information only from parents and guardians. If you are a parent or guardian and believe your child has provided us with information, please contact us at [office@journeyofgrace.church](mailto:office@journeyofgrace.church), and we will promptly delete such data from our records.
 
 # **10. WHAT ARE YOUR PRIVACY RIGHTS?**
 
@@ -141,7 +141,7 @@ By using a Journey of Grace Church of the Nazarene website, you assume all risks
 Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise, does not necessarily constitute or imply endorsement, recommendation, or favoring by Journey of Grace Church of the Nazarene. The views and opinions of authors expressed herein do not necessarily state or reflect those of Journey of Grace Church of the Nazarene, and shall not be used for advertising or product endorsement purposes.
 **Copyrights and Trademarks:**
 Copyright © 2026 Journey of Grace Church of the Nazarene, All rights reserved
-All material on this website is copyrighted by Journey of Grace Church of the Nazarene, except for some material that is copyrighted by others and used here by permission. Copyrighted material may not be copied, reproduced or otherwise used for commercial purposes without the written permission of the copyright holder. This site also contains some trademarks, which may not be appropriated by persons other than the trademark owner and may not be used contrary to trademark law. If you wish to request permission to use materials in a manner otherwise prohibited herein, please send an email to: [office@](mailto:office@journeyofgrace.church)journeyofgrace.church or contact us via telephone at 480-964-5062.
+All material on this website is copyrighted by Journey of Grace Church of the Nazarene, except for some material that is copyrighted by others and used here by permission. Copyrighted material may not be copied, reproduced or otherwise used for commercial purposes without the written permission of the copyright holder. This site also contains some trademarks, which may not be appropriated by persons other than the trademark owner and may not be used contrary to trademark law. If you wish to request permission to use materials in a manner otherwise prohibited herein, please send an email to: [office@journeyofgrace.church](mailto:office@journeyofgrace.church) or contact us via telephone at 480-964-5062.
 
 # **Managing Your Information**
 
@@ -163,8 +163,4 @@ We may update this privacy policy from time to time. The updated version will be
 
 # **13. HOW CAN YOU CONTACT US ABOUT THIS POLICY?**
 
-If you have questions or comments about this policy, you may email us at [office@](mailto:office@journeyofgrace.church)journeyofgrace.church, phone us at 480-964-5062, or send a message by postal service to:
-Journey of Grace Church of the Nazarene
-955 E University Dr.
-Mesa, AZ 85203
-United States
+If you have questions or comments about this policy, you may email us at [office@journeyofgrace.church](mailto:office@journeyofgrace.church), phone us at 480-964-5062, or send a message by postal service to: Journey of Grace Church of the Nazarene, 955 E University Dr., Mesa, AZ 85203, United States.

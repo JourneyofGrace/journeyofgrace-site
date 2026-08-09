@@ -120,14 +120,9 @@ async function fetchLatestSermons() {
   }
 
   if (!videos || videos.length === 0) {
-    console.log('Using default fallback video list');
-    videos = [
-      { id: 'D5fdts_gfxw', title: 'Journey of Grace Service Aug 02, 2026' },
-      { id: '-KIJF2xTR_s', title: 'Journey of Grace Service Part 2 July 26, 2026' },
-      { id: 'L5CXDKpsBJ0', title: 'Journey of Grace Service Part 1 July 26, 2026' },
-      { id: 'ZqMOCezDYMo', title: 'Journey of Grace Service July 5, 2026' },
-      { id: '5rWXLqiuWx8', title: 'Journey of Grace Service July 5, 2026' }
-    ];
+    console.error('No published videos scraped (grid or meta fetch failed); keeping existing sermons.html content');
+    process.exitCode = 1;
+    return;
   }
 
   const cardsHtml = videos.map(v => `    <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener" class="sermon-yt-card">

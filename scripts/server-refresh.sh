@@ -51,9 +51,16 @@ if [ "$CHANGED" = yes ]; then
   git -c user.name="github-actions[bot]" \
       -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
       commit -m "chore(ci): refresh sermons.html and events.html with latest content"
-  git push origin main
+  if git push origin main; then
+    echo "pushed; GitHub Actions deploy workflow will rebuild and deploy"
+  else
+    echo "WARN: push failed; rebuilding locally"
+    docker compose up -d --build
+    FETCH_STATUS=1
+  fi
+else
+  echo "no content changes (GitHub Actions deploy already handles pulled commits)"
 fi
 
-docker compose up -d --build
 echo "=== jog-refresh done ($CHANGED, fetch_status=$FETCH_STATUS) ==="
 exit "$FETCH_STATUS"

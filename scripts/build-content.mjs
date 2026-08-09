@@ -584,7 +584,8 @@ function renderEditorial(md) {
         const m = it.match(/^\*\*(.+?)\*\*\s*(.*)$/);
         if (m) {
           const title = escapeHtml(m[1].trim().replace(/\.$/, ''));
-          const body = m[2].trim() ? `\n                <p>${inlineMd(escapeHtml(m[2].trim()))}</p>` : '';
+          const bodyText = inlineMd(escapeHtml(m[2].trim())).replace(/^We\b/, '<span class="about-belief-we">We</span>');
+          const body = m[2].trim() ? `\n                <p>${bodyText}</p>` : '';
           return `              <li>\n                <h3 class="about-belief-title">${title}</h3>${body}\n              </li>`;
         }
         return `              <li><p>${inlineMd(escapeHtml(it))}</p></li>`;

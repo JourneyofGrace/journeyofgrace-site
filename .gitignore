@@ -36,3 +36,6 @@ api/.env
 
 # Server access / infrastructure notes - machine-specific, never commit
 AGENTS.md
+
+# Server-side cron credentials (PCO PAT for fetch-events) - never commit
+.env.pco

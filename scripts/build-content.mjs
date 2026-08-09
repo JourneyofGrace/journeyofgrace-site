@@ -30,6 +30,11 @@
 //     button (e.g. `::cta connect Get Connected`).
 //   - `::ministry <heading>` followed by a `- [name](href)` list emits a
 //     ministry section of `.jog-ministry-tile` links (Connect page).
+//   - `::verse-rotation` followed by two or more `>` Scripture blockquotes
+//     (blank-line separated, each with an optional `{cite}` line) renders ONE
+//     of them, rotating per build day so every new site generation features a
+//     different verse (used by the 404 "lost and found" page). Works in both
+//     the standard and editorial renderers.
 //
 // Editorial schema (first line: `<!-- mode: editorial -->`, used by About Us):
 //   - `::kicker <text>` places a small uppercase eyebrow before the next
@@ -90,6 +95,64 @@ const ARROW_ICON =
   '<svg class="jog-ministry-tile-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
 
 // ---------------------------------------------------------------------------
+// `::verse-rotation` (shared by both renderers)
+// ---------------------------------------------------------------------------
+// Lists Scripture blockquotes (blank-line separated) after the directive; each
+// build day rotates to the next verse, so every new site generation swaps in a
+// fresh featured verse. Used by the 404 page ("lost and found" theme).
+
+const rotationVerseHtml = (block) => {
+  const citeIdx = block.findIndex((l) => l.startsWith('{cite}'));
+  let text, citeText = null, citeUrl = null;
+  if (citeIdx === -1) {
+    text = block.join(' ');
+  } else {
+    text = block.slice(0, citeIdx).join(' ');
+    const citeLine = block[citeIdx].replace(/^\{cite\}\s*/, '');
+    const urlMatch = citeLine.match(/(https?:\/\/[^\s]+)\s*$/);
+    citeUrl = urlMatch ? urlMatch[1] : null;
+    citeText = citeLine.replace(urlMatch ? urlMatch[1] : '', '').trim();
+  }
+  const cite = citeText && citeUrl
+    ? `<cite class="jog-verse-ref"><a href="${citeUrl}" target="_blank" rel="noopener">${inlineMd(escapeHtml(citeText))}</a></cite>`
+    : '';
+  return [
+    '      <blockquote class="jog-verse">',
+    VERSE_ICON.trimEnd(),
+    `        <p class="jog-verse-text">${inlineMd(escapeHtml(text))}</p>`,
+    `        ${cite}`,
+    '      </blockquote>',
+  ].join('\n');
+};
+
+// Collects every consecutive `> ` block after the directive line (separated by
+// blank lines). Returns { html, count, nextIndex }.
+const rotationVerses = (lines, i) => {
+  i++;
+  const blocks = [];
+  let cur = [];
+  while (i < lines.length) {
+    const t = lines[i].trim();
+    if (t === '') {
+      if (cur.length) { blocks.push(cur); cur = []; }
+      i++;
+      continue;
+    }
+    if (/^>\s?/.test(t)) {
+      cur.push(t.replace(/^>\s?/, ''));
+      i++;
+      continue;
+    }
+    break;
+  }
+  if (cur.length) blocks.push(cur);
+  const picked = blocks.length
+    ? blocks[Math.floor(Date.now() / 86400000) % blocks.length]
+    : null;
+  return { html: picked ? rotationVerseHtml(picked) : '', count: blocks.length, nextIndex: i };
+};
+
+// ---------------------------------------------------------------------------
 // Standard (jog-) renderer
 // ---------------------------------------------------------------------------
 function renderStandard(md) {
@@ -132,6 +195,16 @@ function renderStandard(md) {
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
+
+    if (line.trim() === '::verse-rotation') {
+      const rot = rotationVerses(lines, i);
+      i = rot.nextIndex;
+      if (rot.html) {
+        out.push(rot.html);
+        console.log(`  note: verse rotation - 1 of ${rot.count} verses`);
+      }
+      continue;
+    }
 
     if (/^>\s?/.test(line)) {
       const quote = [];
@@ -389,6 +462,17 @@ function renderEditorial(md) {
     const line = lines[i].trim();
 
     if (line === '') { i++; continue; }
+
+    if (line === '::verse-rotation') {
+      closeSection();
+      const rot = rotationVerses(lines, i);
+      i = rot.nextIndex;
+      if (rot.html) {
+        out.push(rot.html);
+        console.log(`  note: verse rotation - 1 of ${rot.count} verses`);
+      }
+      continue;
+    }
 
     if (line === '::staff') {
       closeSection();

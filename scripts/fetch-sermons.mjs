@@ -188,7 +188,7 @@ ${cardsHtml}
 
   const upcomingMarker = '<!-- Upcoming Service Section -->';
   const marker = '<!-- Recent YouTube Sermons Section -->';
-  const boundary = '<div class="sqs-block website-component-block sqs-block-website-component sqs-block-horizontalrule';
+  const boundary = 'jog-block-horizontalrule';
   let start = content.indexOf(upcomingMarker);
   const recentStart = content.indexOf(marker);
   if (start < 0 || (recentStart >= 0 && recentStart < start)) start = recentStart;
@@ -200,6 +200,7 @@ ${cardsHtml}
     console.log('Successfully updated sermons.html with latest 5 videos (deduplicated, newest first)!');
   } else {
     console.error('Could not find Upcoming/Recent section marker or horizontal-rule boundary in sermons.html');
+    process.exitCode = 1;
   }
 }
 

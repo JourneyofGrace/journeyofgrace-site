@@ -580,7 +580,15 @@ function renderEditorial(md) {
         items.push(lines[i].replace(/^-\s/, '').trim());
         i++;
       }
-      const lis = items.map((it) => `              <li><p>${inlineMd(escapeHtml(it))}</p></li>`).join('\n');
+      const lis = items.map((it) => {
+        const m = it.match(/^\*\*(.+?)\*\*\s*(.*)$/);
+        if (m) {
+          const title = escapeHtml(m[1].trim().replace(/\.$/, ''));
+          const body = m[2].trim() ? `\n                <p>${inlineMd(escapeHtml(m[2].trim()))}</p>` : '';
+          return `              <li>\n                <h3 class="about-belief-title">${title}</h3>${body}\n              </li>`;
+        }
+        return `              <li><p>${inlineMd(escapeHtml(it))}</p></li>`;
+      }).join('\n');
       out.push('            <ul class="about-beliefs">');
       out.push(lis);
       out.push('            </ul>');

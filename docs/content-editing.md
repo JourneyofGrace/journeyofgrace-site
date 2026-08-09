@@ -58,7 +58,7 @@ connection-card, event-facility-request, nextstep, privacy, sermon-archive.
 | `---` | Ornamental horizontal-rule block |
 | `::lead <text>` | Drop-cap lead paragraph |
 | `::quote <text>` + `::attrib <name>` | Pull quote with attribution |
-| `::beliefs` + `- item` lines | Ruled creed list (`ul.about-beliefs`) |
+| `::beliefs` + `- **Title.** text` lines | Newspaper creed entries (`ul.about-beliefs`; each item becomes `h3.about-belief-title` + paragraph) |
 | `::address` + lines until a blank line | Postal address paragraph, lines joined with `<br>` |
 | `- item` | `.jog-list` |
 | plain line | `<p>` |

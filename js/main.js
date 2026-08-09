@@ -267,6 +267,14 @@ function initMobileNav() {
       document.body.classList.toggle('nav-open');
     });
   }
+  var jogDrawer = document.getElementById('mobileNavDrawer');
+  if (jogDrawer) {
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        jogDrawer.classList.remove('open');
+      }
+    });
+  }
 }
 
 /**

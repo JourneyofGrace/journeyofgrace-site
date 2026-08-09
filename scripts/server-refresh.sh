@@ -20,12 +20,25 @@ else
   echo "WARN: no .env.pco - events refresh will have no PCO credentials"
 fi
 
+FETCH_STATUS=0
 docker run --rm \
   -v "$REPO":/repo -w /repo \
   -v jog-npm-cache:/root/.npm \
-  -e PCO_CLIENT_ID -e PCO_SECRET -e PCO_GROUP_WHITELIST -e PCO_CALENDAR_TAG \
   mcr.microsoft.com/playwright:v1.62.1-jammy \
-  bash -c 'npm ci --no-audit --no-fund --silent && node scripts/fetch-sermons.mjs && node scripts/fetch-events.mjs'
+  bash -c 'npm ci --no-audit --no-fund --silent && node scripts/fetch-sermons.mjs' \
+  || FETCH_STATUS=1
+
+if [ -f .env.pco ]; then
+  docker run --rm \
+    -v "$REPO":/repo -w /repo \
+    -v jog-npm-cache:/root/.npm \
+    -e PCO_CLIENT_ID -e PCO_SECRET -e PCO_GROUP_WHITELIST -e PCO_CALENDAR_TAG \
+    mcr.microsoft.com/playwright:v1.62.1-jammy \
+    bash -c 'npm ci --no-audit --no-fund --silent && node scripts/fetch-events.mjs' \
+    || { echo "WARN: events fetch failed"; FETCH_STATUS=1; }
+else
+  echo "WARN: no .env.pco - skipping events fetch"
+fi
 
 if git diff --quiet -- sermons.html events.html; then
   CHANGED=no
@@ -42,4 +55,5 @@ if [ "$CHANGED" = yes ]; then
 fi
 
 docker compose up -d --build
-echo "=== jog-refresh done ($CHANGED) ==="
+echo "=== jog-refresh done ($CHANGED, fetch_status=$FETCH_STATUS) ==="
+exit "$FETCH_STATUS"

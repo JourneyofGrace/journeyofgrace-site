@@ -33,3 +33,6 @@ scratch/
 # Local secrets (Planning Center token for the api relay) - never commit
 api/.env
 .env.local
+
+# Server access / infrastructure notes - machine-specific, never commit
+AGENTS.md

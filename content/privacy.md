@@ -163,4 +163,9 @@ We may update this privacy policy from time to time. The updated version will be
 
 # **13. HOW CAN YOU CONTACT US ABOUT THIS POLICY?**
 
-If you have questions or comments about this policy, you may email us at [office@journeyofgrace.church](mailto:office@journeyofgrace.church), phone us at 480-964-5062, or send a message by postal service to: Journey of Grace Church of the Nazarene, 955 E University Dr., Mesa, AZ 85203, United States.
+If you have questions or comments about this policy, you may email us at [office@journeyofgrace.church](mailto:office@journeyofgrace.church), phone us at 480-964-5062, or send a message by postal service to:
+::address
+Journey of Grace Church of the Nazarene
+955 E University Dr.
+Mesa, AZ 85203
+United States

@@ -43,6 +43,8 @@
 //     horizontal-rule block.
 //   - `::lead <text>` = drop-cap lead paragraph; `::quote <text>` +
 //     `::attrib <name>` = pull quote; `::beliefs` + `-` items = ruled creed.
+//   - `::address` + following lines until a blank line = postal address
+//     paragraph (lines joined with `<br>`).
 //   - `::staff` blocks carry front-matter fields then bio paragraphs:
 //       ::staff
 //       img: assets/img/vendor/<file>.jpg
@@ -582,6 +584,23 @@ function renderEditorial(md) {
       out.push('            <ul class="about-beliefs">');
       out.push(lis);
       out.push('            </ul>');
+      continue;
+    }
+
+    if (line === '::address') {
+      if (!sectionOpen) {
+        out.push('      <div class="jog-block html-block jog-block-html">');
+        out.push('        <div class="jog-block-content">');
+        out.push('          <div class="jog-html-content">');
+        sectionOpen = true;
+      }
+      i++;
+      const addressLines = [];
+      while (i < lines.length && lines[i].trim() !== '') {
+        addressLines.push(lines[i].trim());
+        i++;
+      }
+      out.push(`            <p class="about-address">${addressLines.map((l) => escapeHtml(l)).join('<br>')}</p>`);
       continue;
     }
 

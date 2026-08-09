@@ -230,14 +230,14 @@ body.jog-about-page .about-beliefs li p {
   text-wrap: pretty !important;
 }
 
-/* Illuminated initial on the opening belief, manuscript style */
-body.jog-about-page .about-beliefs li:first-child p::first-letter {
+/* Illuminated initials on every belief, manuscript style */
+body.jog-about-page .about-beliefs li p::first-letter {
   font-family: 'Cantata One', Georgia, 'Times New Roman', serif !important;
-  font-size: 3.4em !important;
+  font-size: 1.7em !important;
   float: left !important;
-  line-height: 0.82 !important;
-  padding-right: 0.1em !important;
-  margin-top: 0.07em !important;
+  line-height: 0.95 !important;
+  padding-right: 0.12em !important;
+  margin-top: 0.05em !important;
   color: #b4843a !important;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 14px rgba(180, 132, 58, 0.25) !important;
 }

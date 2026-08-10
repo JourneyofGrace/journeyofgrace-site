@@ -10,6 +10,26 @@ const CHANNEL = 'UCFd2ErAm4sACMG6C-XoxIlA';
 const GRID_URL = `https://www.youtube.com/channel/${CHANNEL}/streams`;
 const WATCH_URL = (id) => `https://www.youtube.com/watch?v=${id}`;
 
+const UPCOMING_RE = /scheduled for|premieres|premiering|upcoming|live (now|in)|\bwaiting\b/i;
+const RELATIVE_RE = /(\d+)\s*(minute|hour|day|week|month|year)s?\s+ago/i;
+const AGE_MINUTES = { minute: 1, hour: 60, day: 1440, week: 10080, month: 43200, year: 525600 };
+
+function relativeAgeMinutes(text) {
+  const m = text.match(RELATIVE_RE);
+  if (!m) return Infinity;
+  return parseInt(m[1], 10) * (AGE_MINUTES[m[2].toLowerCase()] || Infinity);
+}
+
+function formatScheduled(text) {
+  const m = text.match(/Scheduled for\s+(\d{1,2})\/(\d{1,2})\/(\d{2})/i);
+  if (m) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const mon = months[parseInt(m[1], 10) - 1];
+    if (mon) return `Scheduled for ${mon} ${parseInt(m[2], 10)}, 20${m[3]}`;
+  }
+  return text.replace(/^Scheduled for\s+/i, 'Scheduled for ');
+}
+
 async function dismissConsent(page) {
   const selectors = [
     'button[aria-label="Accept all"]',
@@ -25,19 +45,30 @@ async function dismissConsent(page) {
   await page.waitForTimeout(500);
 }
 
-async function scrapeGridIds(page) {
-  const collectIds = () => page.evaluate(() => {
-    const ids = [];
+async function scrapeGridItems(page) {
+  const collectItems = () => page.evaluate(() => {
+    const items = [];
     const seen = new Set();
-    for (const a of document.querySelectorAll('a[href*="/watch?v="]')) {
-      const m = (a.getAttribute('href') || '').match(/v=([\w-]{6,})/);
-      if (!m) continue;
-      if (seen.has(m[1])) continue;
+    for (const container of document.querySelectorAll('yt-lockup-view-model, ytd-rich-grid-media')) {
+      const meta = container.querySelector('yt-lockup-metadata-view-model') || container;
+      const titleA = meta.querySelector('a[href*="/watch?v="]');
+      if (!titleA) continue;
+      const m = (titleA.getAttribute('href') || '').match(/v=([\w-]{6,})/);
+      if (!m || seen.has(m[1])) continue;
       seen.add(m[1]);
-      ids.push(m[1]);
-      if (ids.length >= 8) break;
+      const lines = [];
+      for (const el of meta.querySelectorAll('span, a')) {
+        const t = (el.innerText || '').trim();
+        if (t && el.querySelectorAll('span, a').length === 0 && t !== '\u2022') lines.push(t);
+      }
+      items.push({
+        id: m[1],
+        title: (titleA.innerText || '').trim() || (titleA.getAttribute('title') || '').trim(),
+        lines: [...new Set(lines)]
+      });
+      if (items.length >= 10) break;
     }
-    return ids;
+    return items;
   });
   const scrapePass = async () => {
     await page.goto(GRID_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
@@ -47,11 +78,11 @@ async function scrapeGridIds(page) {
       await page.waitForTimeout(900);
     }
     await page.waitForTimeout(1500);
-    return collectIds();
+    return collectItems();
   };
   const first = await scrapePass();
   if (first.length < 3) {
-    console.log('Grid scrape returned few ids (' + first.length + '); retrying once...');
+    console.log('Grid scrape returned few items (' + first.length + '); retrying once...');
     await page.goto('about:blank');
     await page.waitForTimeout(500);
     const second = await scrapePass();
@@ -89,30 +120,48 @@ async function fetchLatestSermons() {
     const page = await browser.newPage();
     await page.setViewportSize({ width: 1200, height: 900 });
 
-    const ids = await scrapeGridIds(page);
-    console.log('Grid video ids (newest first):', ids);
+    const items = await scrapeGridItems(page);
+    console.log('Grid items (newest first):', items.map(i => i.id));
 
-    const metas = [];
-    for (const id of ids) {
-      const meta = await fetchVideoMeta(page, id);
-      if (meta) metas.push({ id, ...meta });
-    }
-
-    const upcomingTest = /scheduled for|premieres|live (now|in)|\bwaiting\b/i;
-    const upEntries = metas.filter(m => m.info && upcomingTest.test(m.info));
-    if (upEntries.length) {
-      const u = upEntries[0];
-      const sched = (u.info.match(/Scheduled for\s+([A-Z][a-z]{2}\s+\d{1,2},?\s*\d{4})/i) || [])[1];
-      upcoming = { id: u.id, title: u.title, when: sched ? 'Scheduled for ' + sched : 'Scheduled' };
+    const upcomingItem = items.find(it => UPCOMING_RE.test(it.lines.join(' ')));
+    if (upcomingItem) {
+      upcoming = {
+        id: upcomingItem.id,
+        title: upcomingItem.title,
+        when: formatScheduled(upcomingItem.lines.join(' '))
+      };
       console.log('Upcoming livestream detected:', upcoming);
     }
-    const published = metas
-      .filter(m => m.date && !upcomingTest.test(m.info || ''))
-      .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+    const published = items
+      .filter(it => !UPCOMING_RE.test(it.lines.join(' ')) && /views|ago/i.test(it.lines.join(' ')))
+      .sort((a, b) => relativeAgeMinutes(a.lines.join(' ')) - relativeAgeMinutes(b.lines.join(' ')))
       .slice(0, 5)
       .map(({ id, title }) => ({ id, title }));
-    videos = published;
-    console.log('Latest 5 videos (by publish date, newest first):', videos);
+    console.log('Latest 5 videos (by publish date, newest first):', published);
+
+    if (published.length === 0) {
+      console.log('Grid yielded no published videos; falling back to per-video meta fetch...');
+      const metas = [];
+      for (const it of items) {
+        const meta = await fetchVideoMeta(page, it.id);
+        if (meta) metas.push({ id: it.id, ...meta });
+      }
+      const upEntries = metas.filter(m => m.info && UPCOMING_RE.test(m.info));
+      if (upEntries.length) {
+        const u = upEntries[0];
+        const sched = (u.info.match(/Scheduled for\s+([A-Z][a-z]{2}\s+\d{1,2},?\s*\d{4})/i) || [])[1];
+        upcoming = { id: u.id, title: u.title, when: sched ? 'Scheduled for ' + sched : 'Scheduled' };
+        console.log('Upcoming livestream detected:', upcoming);
+      }
+      videos = metas
+        .filter(m => m.date && !UPCOMING_RE.test(m.info || ''))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+        .slice(0, 5)
+        .map(({ id, title }) => ({ id, title }));
+      console.log('Fallback latest 5 videos:', videos);
+    } else {
+      videos = published;
+    }
   } catch (err) {
     console.error('Error scraping YouTube:', err);
   } finally {

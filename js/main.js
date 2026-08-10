@@ -768,7 +768,9 @@ function openGivingPopup(url) {
 
   // Planning Center serves its forms at a fixed 480px canvas inside an
   // iframe; scale it down to fit the popup card (same approach as the
-  // embedded visit forms).
+  // embedded visit forms). The frame is scaled to fit the card's width AND
+  // the card's available height so the whole form is visible without
+  // scrolling.
   var CANVAS_W = 480;
   var CANVAS_H = 1000;
   var fit = function() {
@@ -776,7 +778,10 @@ function openGivingPopup(url) {
     if (w <= 0) {
       return;
     }
-    var scale = w / CANVAS_W;
+    // The card is capped at 94vh, so use the same bound for the scaled
+    // frame height; the frame then fits the card exactly, never scrolls.
+    var availH = window.innerHeight * 0.94;
+    var scale = Math.min(w / CANVAS_W, availH / CANVAS_H);
     wrap.style.width = Math.round(CANVAS_W * scale) + 'px';
     wrap.style.height = Math.round(CANVAS_H * scale) + 'px';
     frame.style.width = CANVAS_W + 'px';

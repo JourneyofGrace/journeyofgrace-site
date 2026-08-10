@@ -49,6 +49,8 @@ const PCO_SUBMIT = (formId) =>
   `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/form_submissions?include=person`;
 const PCO_PERSON_ADDRESSES = (personId) =>
   `https://api.planningcenteronline.com/people/v2/people/${encodeURIComponent(personId)}/addresses`;
+const PCO_PERSON_PHONES = (personId) =>
+  `https://api.planningcenteronline.com/people/v2/people/${encodeURIComponent(personId)}/phone_numbers`;
 const PCO_FIELDS = (formId) =>
   `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/fields?per_page=100`;
 const PCO_FIELD_OPTIONS = (formId, fieldId) =>
@@ -104,6 +106,7 @@ async function buildSubmissionPayload(formId, values, auth) {
   const person = {};
   const included = [];
   let address = null;
+  let phone = null;
 
   // The paper card's address lines (Street/City/State/Zip) cannot be written
   // through a FormSubmissionValue (PCO 500s on address-type values), so they
@@ -150,7 +153,9 @@ async function buildSubmissionPayload(formId, values, auth) {
     const field = byKey.get(norm);
     if (!field) {
       // Phone has no implicit person slot on form submissions, so map it to a
-      // phone_number custom field when the form has one (the visit forms do).
+      // phone_number custom field when the form has one (the visit forms do);
+      // otherwise collect it here and write it to the person's phone list
+      // after the submission (see the submit handler).
       if (/phone/.test(norm)) {
         const phoneField = fields.find((f) => f.fieldType === 'phone_number');
         if (phoneField) {
@@ -163,6 +168,8 @@ async function buildSubmissionPayload(formId, values, auth) {
           }
           continue;
         }
+        phone = nonEmpty[0];
+        continue;
       }
       console.warn(`[relay] no field on form ${formId} matching "${label}"`);
       continue;
@@ -194,7 +201,7 @@ async function buildSubmissionPayload(formId, values, auth) {
 
   const data = { type: 'FormSubmission', attributes: {} };
   if (person.first_name || person.last_name) data.attributes.person_attributes = person;
-  return { data, included, address };
+  return { data, included, address, phone };
 }
 
 function missingCreds() {
@@ -326,50 +333,83 @@ const server = http.createServer(async (req, res) => {
       }
 
       // The address field cannot be written as a FormSubmissionValue (PCO
-      // 500s), so once the submission exists, write the collected address
-      // lines to the matched/created person's Address list.
+      // 500s), and phone numbers on forms without a phone_number field have
+      // no value slot either, so once the submission exists, write both to
+      // the matched/created person's profile lists.
       let addressStatus = null;
-      if (pco.ok && outbound.address) {
+      let phoneStatus = null;
+      if (pco.ok && (outbound.address || outbound.phone)) {
         const personId = Array.isArray(pcoBody.included)
           ? (pcoBody.included.find((i) => i.type === 'Person') || {}).id
           : null;
         if (personId) {
-          try {
-            const addrRes = await fetch(PCO_PERSON_ADDRESSES(personId), {
-              method: 'POST',
-              headers: {
-                'Authorization': auth,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-              body: JSON.stringify({
-                data: {
-                  type: 'Address',
-                  attributes: {
-                    location: 'Home',
-                    street_line_1: outbound.address.street_line_1,
-                    city: outbound.address.city,
-                    state: outbound.address.state,
-                    zip: outbound.address.zip,
-                    country_code: 'US',
-                  },
+          if (outbound.address) {
+            try {
+              const addrRes = await fetch(PCO_PERSON_ADDRESSES(personId), {
+                method: 'POST',
+                headers: {
+                  'Authorization': auth,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
                 },
-              }),
-            });
-            const addrText = await addrRes.text();
-            let addrBody = null;
-            try { addrBody = JSON.parse(addrText); } catch { addrBody = addrText.slice(0, 500); }
-            addressStatus = addrRes.status;
-            console.log(`[relay] address write for person ${personId} -> ${addrRes.status}`);
-            if (!addrRes.ok) {
-              console.error('[relay] address write failed', addrBody && addrBody.errors);
+                body: JSON.stringify({
+                  data: {
+                    type: 'Address',
+                    attributes: {
+                      location: 'Home',
+                      street_line_1: outbound.address.street_line_1,
+                      city: outbound.address.city,
+                      state: outbound.address.state,
+                      zip: outbound.address.zip,
+                      country_code: 'US',
+                    },
+                  },
+                }),
+              });
+              const addrText = await addrRes.text();
+              let addrBody = null;
+              try { addrBody = JSON.parse(addrText); } catch { addrBody = addrText.slice(0, 500); }
+              addressStatus = addrRes.status;
+              console.log(`[relay] address write for person ${personId} -> ${addrRes.status}`);
+              if (!addrRes.ok) {
+                console.error('[relay] address write failed', addrBody && addrBody.errors);
+              }
+            } catch (err) {
+              addressStatus = 'error';
+              console.error('[relay] address write request failed', err && err.message);
             }
-          } catch (err) {
-            addressStatus = 'error';
-            console.error('[relay] address write request failed', err && err.message);
+          }
+          if (outbound.phone) {
+            try {
+              const phoneRes = await fetch(PCO_PERSON_PHONES(personId), {
+                method: 'POST',
+                headers: {
+                  'Authorization': auth,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                  data: {
+                    type: 'PhoneNumber',
+                    attributes: { number: outbound.phone, location: 'Mobile' },
+                  },
+                }),
+              });
+              const phoneText = await phoneRes.text();
+              let phoneBody = null;
+              try { phoneBody = JSON.parse(phoneText); } catch { phoneBody = phoneText.slice(0, 500); }
+              phoneStatus = phoneRes.status;
+              console.log(`[relay] phone write for person ${personId} -> ${phoneRes.status}`);
+              if (!phoneRes.ok) {
+                console.error('[relay] phone write failed', phoneBody && phoneBody.errors);
+              }
+            } catch (err) {
+              phoneStatus = 'error';
+              console.error('[relay] phone write request failed', err && err.message);
+            }
           }
         } else {
-          console.warn('[relay] no Person in submission response; skipping address write');
+          console.warn('[relay] no Person in submission response; skipping profile writes');
         }
       }
 
@@ -377,6 +417,7 @@ const server = http.createServer(async (req, res) => {
         ok: pco.ok,
         pcoStatus: pco.status,
         addressStatus,
+        phoneStatus,
         pcoBody,
       });
     } catch (err) {

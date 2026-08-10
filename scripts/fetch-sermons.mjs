@@ -232,7 +232,7 @@ ${cardsHtml}
 
   const upcomingMarker = '<!-- Upcoming Service Section -->';
   const marker = '<!-- Recent YouTube Sermons Section -->';
-  const boundary = 'jog-block-horizontalrule';
+  const boundary = '<div class="jog-block website-component-block jog-block-website-component jog-block-horizontalrule horizontalrule-block"';
   let start = content.indexOf(upcomingMarker);
   const recentStart = content.indexOf(marker);
   if (start < 0 || (recentStart >= 0 && recentStart < start)) start = recentStart;

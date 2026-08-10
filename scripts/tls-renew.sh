@@ -76,12 +76,12 @@ fi
 # Renewal run (also skips cleanly if cert still valid).
 if have_cert || [[ "${MISSING_CERT}" == "1" ]]; then
   if command -v "${CERTBOT_CMD}" >/dev/null 2>&1; then
-    "${CERTBOT_CMD}" renew --webroot -w "${ACME_ROOT}" --quiet || true
+    "${CERTBOT_CMD}" renew --cert-name "${HOSTNAME}" --webroot -w "${ACME_ROOT}" --quiet || true
   else
     docker run --rm \
       -v "${ACME_ROOT}:/webroot" \
       -v /etc/letsencrypt:/etc/letsencrypt \
-      certbot/certbot renew --webroot -w /webroot --quiet || true
+      certbot/certbot renew --cert-name "${HOSTNAME}" --webroot -w /webroot --quiet || true
   fi
 fi
 

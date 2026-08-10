@@ -40,3 +40,6 @@ AGENTS.md
 
 # Server-side cron credentials (PCO PAT for fetch-events) - never commit
 .env.pco
+
+# Let's Encrypt HTTP-01 challenge tokens (host-written, transient)
+webroot/

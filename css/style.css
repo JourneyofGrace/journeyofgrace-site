@@ -2393,15 +2393,37 @@ body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block .intr
 /* Connection Card - paper card style form (mimics the printed card) */
 .jog-cc-card {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
+  position: relative;
+  padding-bottom: 4.5rem;
 }
 .jog-cc-side {
   background: linear-gradient(180deg, #fdfaf2 0%, #f8f2e3 100%);
   border: 1px solid #c9b98f;
   border-radius: 6px;
-  padding: 1.25rem 1.4rem;
+  padding: 1.25rem 1.6rem 1.4rem;
   box-shadow: 0 1px 3px rgba(122, 91, 37, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+}
+.jog-cc-side-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.jog-cc-front {
+  aspect-ratio: 731 / 542;
+}
+.jog-cc-back {
+  aspect-ratio: 731 / 520;
+}
+.jog-cc-logo {
+  width: 3.4rem;
+  height: auto;
+  flex: 0 0 auto;
 }
 .jog-cc-side-title {
   font-family: var(--font-serif, Georgia, serif);
@@ -2500,6 +2522,16 @@ textarea.jog-cc-input {
   font-style: italic;
   color: #7c6f55;
   margin: 1rem 0 0;
+}
+.jog-cc-submit {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  margin: 0;
+}
+.jog-cc-submit input[type=submit] {
+  min-height: 44px;
+  padding: 12px 30px;
 }
 @media (max-width: 480px) {
   .jog-cc-row {

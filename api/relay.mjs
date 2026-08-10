@@ -46,7 +46,9 @@ const formAllowlist = (process.env.PCO_FORM_ID || '')
   .filter(Boolean);
 
 const PCO_SUBMIT = (formId) =>
-  `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/form_submissions`;
+  `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/form_submissions?include=person`;
+const PCO_PERSON_ADDRESSES = (personId) =>
+  `https://api.planningcenteronline.com/people/v2/people/${encodeURIComponent(personId)}/addresses`;
 const PCO_FIELDS = (formId) =>
   `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/fields?per_page=100`;
 const PCO_FIELD_OPTIONS = (formId, fieldId) =>
@@ -101,22 +103,26 @@ async function buildSubmissionPayload(formId, values, auth) {
 
   const person = {};
   const included = [];
+  let address = null;
 
-  // Aggregate Street/City/State/Zip (the paper card's address lines) into the
-  // form's Address field when it exists, so the parts aren't dropped.
+  // The paper card's address lines (Street/City/State/Zip) cannot be written
+  // through a FormSubmissionValue (PCO 500s on address-type values), so they
+  // are collected here and written to the person's Address list afterwards
+  // (see the submit handler).
   const addressField = fields.find((f) => f.fieldType === 'address');
   if (addressField) {
-    const addr = [];
+    const parts = {};
     for (const key of ['Street', 'City', 'State', 'Zip']) {
       const part = String(values[key] || '').trim();
-      if (part) addr.push(part);
+      if (part) parts[key] = part;
     }
-    if (addr.length) {
-      included.push({
-        type: 'FormSubmissionValue',
-        attributes: { value: addr.join(', ') },
-        relationships: { form_field: { data: { type: 'FormField', id: addressField.id } } },
-      });
+    if (Object.keys(parts).length) {
+      address = {
+        street_line_1: parts.Street || '',
+        city: parts.City || '',
+        state: parts.State || '',
+        zip: parts.Zip || '',
+      };
       for (const key of ['Street', 'City', 'State', 'Zip']) delete values[key];
     }
   }
@@ -188,7 +194,7 @@ async function buildSubmissionPayload(formId, values, auth) {
 
   const data = { type: 'FormSubmission', attributes: {} };
   if (person.first_name || person.last_name) data.attributes.person_attributes = person;
-  return { data, included };
+  return { data, included, address };
 }
 
 function missingCreds() {
@@ -315,7 +321,61 @@ const server = http.createServer(async (req, res) => {
       let pcoBody = null;
       try { pcoBody = JSON.parse(text); } catch { pcoBody = text.slice(0, 500); }
       console.log(`[relay] PCO respond placeholder -> ${pco.status}`);
-      return send(res, pco.ok ? 200 : 502, { ok: pco.ok, pcoStatus: pco.status, pcoBody });
+
+      // The address field cannot be written as a FormSubmissionValue (PCO
+      // 500s), so once the submission exists, write the collected address
+      // lines to the matched/created person's Address list.
+      let addressStatus = null;
+      if (pco.ok && outbound.address) {
+        const personId = Array.isArray(pcoBody.included)
+          ? (pcoBody.included.find((i) => i.type === 'Person') || {}).id
+          : null;
+        if (personId) {
+          try {
+            const addrRes = await fetch(PCO_PERSON_ADDRESSES(personId), {
+              method: 'POST',
+              headers: {
+                'Authorization': auth,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+              body: JSON.stringify({
+                data: {
+                  type: 'Address',
+                  attributes: {
+                    location: 'Home',
+                    street_line_1: outbound.address.street_line_1,
+                    city: outbound.address.city,
+                    state: outbound.address.state,
+                    zip: outbound.address.zip,
+                    country_code: 'US',
+                  },
+                },
+              }),
+            });
+            const addrText = await addrRes.text();
+            let addrBody = null;
+            try { addrBody = JSON.parse(addrText); } catch { addrBody = addrText.slice(0, 500); }
+            addressStatus = addrRes.status;
+            console.log(`[relay] address write for person ${personId} -> ${addrRes.status}`);
+            if (!addrRes.ok) {
+              console.error('[relay] address write failed', addrBody && addrBody.errors);
+            }
+          } catch (err) {
+            addressStatus = 'error';
+            console.error('[relay] address write request failed', err && err.message);
+          }
+        } else {
+          console.warn('[relay] no Person in submission response; skipping address write');
+        }
+      }
+
+      return send(res, pco.ok ? 200 : 502, {
+        ok: pco.ok,
+        pcoStatus: pco.status,
+        addressStatus,
+        pcoBody,
+      });
     } catch (err) {
       console.error('[relay] PCO request failed', err && err.message);
       return send(res, 502, { ok: false, error: 'upstream request failed', detail: err && err.message });

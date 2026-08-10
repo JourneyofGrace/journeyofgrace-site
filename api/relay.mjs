@@ -321,6 +321,9 @@ const server = http.createServer(async (req, res) => {
       let pcoBody = null;
       try { pcoBody = JSON.parse(text); } catch { pcoBody = text.slice(0, 500); }
       console.log(`[relay] PCO respond placeholder -> ${pco.status}`);
+      if (!pco.ok) {
+        console.log(`[relay] PCO error body: ${JSON.stringify(pcoBody).slice(0, 600)}`);
+      }
 
       // The address field cannot be written as a FormSubmissionValue (PCO
       // 500s), so once the submission exists, write the collected address

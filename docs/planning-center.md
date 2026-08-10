@@ -153,22 +153,46 @@ form, add the relay sidecar (`api/relay.mjs`, see the README "Form submission re
 section). The browser never talks to Planning Center directly — it POSTs JSON to our
 own relay, which forwards to the People API with a server-side credential.
 
-Endpoint it wraps:
+The relay is reachable from the browser through nginx at the same origin:
+`POST /api/forms/{form_id}/submit` (nginx proxies `/api/` to the `api` compose
+service; no CORS needed). The relay container must have the form id in its
+`PCO_FORM_ID` allowlist (`api/.env`).
 
-```http
-POST https://api.planningcenteronline.com/people/v2/forms/{form_id}/form_submissions
-Authorization: Basic <base64(client_id:secret)>   # a Personal Access Token pair
-Content-Type: application/json
-```
+Two payload styles are accepted:
 
-Payload notes (`data` envelope, forwarded verbatim by the relay):
+1. **Themed static forms (relay mode).** A page whose form is listed in
+   `planningCenter.relayForms` (js/config.js) keeps its own styled form instead
+   of the PCO iframe. On submit, js/main.js posts label-keyed values:
 
-- `data.attributes.form_values` — each answer keyed to the form's `form_field_id`
-  (enumerate via `GET /api/planningcenteronline.com/people/v2/forms/{id}/form_fields`;
-  for option/checkbox fields the value must be the **id** of the selected option).
-- Identify the submitter with either `data.attributes.person_id` (existing person) or
-  `data.attributes.person_attributes: { first_name, last_name, emails_attributes:
-  [{ location, address }] }` — the API auto-matches or auto-creates the person.
+   ```json
+   {
+     "data": {
+       "values": {
+         "Name": "Jane Doe",
+         "Email Address": "jane@example.com",
+         "Message": "Hello!"
+       }
+     }
+   }
+   ```
+
+   The relay resolves each label to the form's `form_field_id` (via
+   `GET /people/v2/forms/{id}/fields`, matching case/punctuation-insensitively),
+   splits "Name" into `person_attributes.first_name`/`last_name`, maps the email
+   field to `person_attributes.emails_attributes`, resolves option-type fields
+   (checkboxes/dropdown) from option label to option **id**, and builds one
+   `FormSubmissionValue` per field in the JSON:API `included` array. The input
+   `name` attributes on the static form should therefore match the PCO form
+   field labels ("Name", "Email Address", ...).
+
+2. **Prebuilt JSON:API payload** (forwarded verbatim):
+
+   - `data.attributes.form_values` — each answer keyed to the form's `form_field_id`
+     (enumerate via `GET /api/planningcenteronline.com/people/v2/forms/{id}/form_fields`;
+     for option/checkbox fields the value must be the **id** of the selected option).
+   - Identify the submitter with either `data.attributes.person_id` (existing person) or
+     `data.attributes.person_attributes: { first_name, last_name, emails_attributes:
+     [{ location, address }] }` — the API auto-matches or auto-creates the person.
 
 Why a relay and not a direct browser call:
 
@@ -177,6 +201,15 @@ Why a relay and not a direct browser call:
 - GH Actions cron jobs are batch runners with no always-on HTTP endpoint, so they
   cannot receive live submissions. The relay (`docker compose up -d api`) is the
   always-on piece; GH cron remains for batch refreshes.
+
+Enabling relay mode for a page:
+
+1. Add the page to `planningCenter.relayForms` in js/config.js (e.g.
+   `"nextstep.html": "1286060"`).
+2. Make sure the form id is in the relay's `PCO_FORM_ID` allowlist (api/.env).
+3. Set the PCO_CLIENT_ID / PCO_SECRET credentials in api/.env (same pair as
+   the GitHub secrets).
+4. Test locally with `MOCK=1` first (dry-run logs the payload, never touches PCO).
 
 ---
 

@@ -64,6 +64,27 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
 };
 
 /*
+ * Optional per-page relay-mode forms (themed static forms).
+ *
+ * Pages listed here keep their own styled static form (matching the site's
+ * colors and layout) instead of swapping in a Planning Center iframe. On
+ * submit the values are posted to the server-side relay (/api/forms/:id/
+ * submit), which forwards them to the Planning Center People API. Values are
+ * matched to PCO form fields by label, so the input `name` attributes should
+ * match the PCO form field labels ("Name", "Email Address", ...).
+ *
+ * Values are form IDs (same IDs as the embed URLs above). The relay must
+ * have the form ID in its PCO_FORM_ID allowlist (api/.env) and valid
+ * PCO_CLIENT_ID / PCO_SECRET credentials.
+ *
+ * Leave this map empty ({}) to keep the default iframe embed behavior.
+ */
+window.JOG_CONFIG.planningCenter.relayForms = window.JOG_CONFIG.planningCenter.relayForms || {
+  "connection-card.html": "1242125",
+  // "nextstep.html": "1286060",
+};
+
+/*
  * Optional per-page embed canvas overrides (width x height in px).
  *
  * By default the embedded Planning Center forms are drawn on a 480px-wide,

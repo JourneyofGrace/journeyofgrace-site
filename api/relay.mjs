@@ -12,6 +12,15 @@
  * The token NEVER leaves this process: client pages only ever talk to
  * /api/forms/:id/submit on the same origin (or a configured CORS origin).
  *
+ * Two payload styles are accepted at POST /api/forms/:id/submit:
+ *   1. Native relay mode (used by the site's themed static forms):
+ *      { data: { values: { "Name": "Jane", "Email Address": "j@x.com", ... } } }
+ *      Labels are matched to the form's fields server-side (GET /fields),
+ *      "Name" feeds person_attributes.first_name/last_name, the email field
+ *      feeds person emails, and option-type values are resolved to option ids.
+ *   2. Prebuilt JSON:API payload: forwarded verbatim to PCO (backward compat,
+ *      see docs/planning-center.md).
+ *
  * Environment (see api/.env.example; set in a gitignored api/.env one API here):
  *   PCO_CLIENT_ID / PCO_SECRET   - Planning Center Personal Access Token pair
  *                                  (client_id + secret, HTTP Basic auth).
@@ -38,6 +47,149 @@ const formAllowlist = (process.env.PCO_FORM_ID || '')
 
 const PCO_SUBMIT = (formId) =>
   `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/form_submissions`;
+const PCO_FIELDS = (formId) =>
+  `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/fields?per_page=100`;
+const PCO_FIELD_OPTIONS = (formId, fieldId) =>
+  `https://api.planningcenteronline.com/people/v2/forms/${encodeURIComponent(formId)}/fields/${encodeURIComponent(fieldId)}/options?per_page=100`;
+
+// Field types whose submitted value must be an OPTION ID, not the label text.
+const OPTION_FIELD_TYPES = new Set([
+  'checkboxes', 'dropdown', 'workflow_checkboxes', 'workflow_dropdown',
+]);
+
+// Lowercase + strip punctuation so site field names ("City or Neighborhood")
+// can be matched to PCO form field labels ("City or neighborhood").
+function normalizeKey(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+async function pcoGet(url, auth) {
+  const res = await fetch(url, {
+    headers: { 'Authorization': auth, 'Accept': 'application/json' },
+  });
+  const text = await res.text();
+  let body = null;
+  try { body = JSON.parse(text); } catch { /* non-JSON body */ }
+  if (!res.ok) {
+    const err = new Error(`PCO GET ${url} -> ${res.status}: ${(text || '').slice(0, 300)}`);
+    err.pcoStatus = res.status;
+    throw err;
+  }
+  return body;
+}
+
+/**
+ * Build a PCO FormSubmission payload from label-keyed values sent by the
+ * static site (e.g. { data: { values: { "Name": "Jane", "Email Address": "..." } } }).
+ *
+ * "Name"/"Nombre" and the email field are IMPLICIT person fields on PCO forms
+ * (there is no custom field for them) and always feed person_attributes.
+ * Every other label is resolved to its FormField id (GET /forms/{id}/fields);
+ * option-type fields are resolved label -> option id, and checkbox groups
+ * (array values) emit one FormSubmissionValue per selected option.
+ */
+async function buildSubmissionPayload(formId, values, auth) {
+  const fieldsRes = await pcoGet(PCO_FIELDS(formId), auth);
+  const fields = (fieldsRes.data || []).map((f) => ({
+    id: f.id,
+    label: (f.attributes && f.attributes.label) || '',
+    fieldType: (f.attributes && f.attributes.field_type) || 'string',
+  }));
+
+  const byKey = new Map();
+  for (const f of fields) byKey.set(normalizeKey(f.label), f);
+
+  const person = {};
+  const included = [];
+
+  // Aggregate Street/City/State/Zip (the paper card's address lines) into the
+  // form's Address field when it exists, so the parts aren't dropped.
+  const addressField = fields.find((f) => f.fieldType === 'address');
+  if (addressField) {
+    const addr = [];
+    for (const key of ['Street', 'City', 'State', 'Zip']) {
+      const part = String(values[key] || '').trim();
+      if (part) addr.push(part);
+    }
+    if (addr.length) {
+      included.push({
+        type: 'FormSubmissionValue',
+        attributes: { value: addr.join(', ') },
+        relationships: { form_field: { data: { type: 'FormField', id: addressField.id } } },
+      });
+      for (const key of ['Street', 'City', 'State', 'Zip']) delete values[key];
+    }
+  }
+
+  for (const [label, rawValue] of Object.entries(values)) {
+    const norm = normalizeKey(label);
+    const picked = Array.isArray(rawValue) ? rawValue : [rawValue];
+    const nonEmpty = picked
+      .map((v) => String(v == null ? '' : v).trim())
+      .filter(Boolean);
+    if (!nonEmpty.length) continue; // PCO silently drops blank values anyway
+
+    // Implicit person fields: never custom fields on the form.
+    if (norm === 'name' || norm === 'nombre') {
+      const parts = nonEmpty[0].split(/\s+/);
+      person.first_name = parts.shift();
+      if (parts.length) person.last_name = parts.join(' ');
+      continue;
+    }
+    if (/email|correo/.test(norm)) {
+      person.emails_attributes = [{ location: 'Work', address: nonEmpty[0] }];
+      continue;
+    }
+
+    const field = byKey.get(norm);
+    if (!field) {
+      // Phone has no implicit person slot on form submissions, so map it to a
+      // phone_number custom field when the form has one (the visit forms do).
+      if (/phone/.test(norm)) {
+        const phoneField = fields.find((f) => f.fieldType === 'phone_number');
+        if (phoneField) {
+          for (const v of nonEmpty) {
+            included.push({
+              type: 'FormSubmissionValue',
+              attributes: { value: v },
+              relationships: { form_field: { data: { type: 'FormField', id: phoneField.id } } },
+            });
+          }
+          continue;
+        }
+      }
+      console.warn(`[relay] no field on form ${formId} matching "${label}"`);
+      continue;
+    }
+
+    const pushValue = (value) => {
+      included.push({
+        type: 'FormSubmissionValue',
+        attributes: { value },
+        relationships: { form_field: { data: { type: 'FormField', id: field.id } } },
+      });
+    };
+
+    if (OPTION_FIELD_TYPES.has(field.fieldType)) {
+      // One FormSubmissionValue per selected option, resolved to option ids.
+      const optsRes = await pcoGet(PCO_FIELD_OPTIONS(formId, field.id), auth);
+      const opts = (optsRes && optsRes.data) || [];
+      for (const v of nonEmpty) {
+        const hit = opts.find((o) =>
+          normalizeKey(o.attributes && o.attributes.label) === normalizeKey(v));
+        pushValue(hit ? hit.id : v);
+      }
+    } else if (field.fieldType === 'boolean') {
+      pushValue(nonEmpty[0] === 'true' ? 'true' : 'false');
+    } else {
+      for (const v of nonEmpty) pushValue(v);
+    }
+  }
+
+  const data = { type: 'FormSubmission', attributes: {} };
+  if (person.first_name || person.last_name) data.attributes.person_attributes = person;
+  return { data, included };
+}
 
 function missingCreds() {
   const missing = [];
@@ -127,14 +279,29 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // Native relay mode: the site sends { data: { values: { label: value } } }
+    // and the relay builds the PCO payload server-side (label -> field id,
+    // Name -> person_attributes, option labels -> option ids).
+    const labelKeyed =
+      payload.data && typeof payload.data === 'object' &&
+      typeof payload.data.values === 'object' && payload.data.values !== null &&
+      !payload.data.attributes;
+
     if (MOCK) {
       console.log('[relay][mock] would POST', PCO_SUBMIT(formId));
       console.log('[relay][mock] payload', JSON.stringify(payload));
+      if (labelKeyed) {
+        console.log('[relay][mock] label-keyed values', JSON.stringify(payload.data.values));
+      }
       return send(res, 200, { ok: true, mock: true, formId });
     }
 
     const auth = 'Basic ' + Buffer.from(`${clientId}:${secret}`).toString('base64');
     try {
+      const outbound = labelKeyed
+        ? await buildSubmissionPayload(formId, payload.data.values, auth)
+        : payload;
+
       const pco = await fetch(PCO_SUBMIT(formId), {
         method: 'POST',
         headers: {
@@ -142,7 +309,7 @@ const server = http.createServer(async (req, res) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(outbound),
       });
       const text = await pco.text();
       let pcoBody = null;

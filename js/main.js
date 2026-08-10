@@ -133,20 +133,39 @@ function initPlanningCenter() {
 /**
  * Visitor/contact form handling.
  *
- * Planning Center (PCO) is the church's only form provider. If a PCO form URL
- * is configured for the current page its embed replaces every static form on
- * the page. There is no email-forwarding fallback: a page that renders a form
- * without a configured PCO URL logs an explicit error telling staff to add one
- * (js/config.js -> planningCenter.pageForms).
+ * Two modes, chosen per page in js/config.js (planningCenter.pageForms /
+ * planningCenter.relayForms):
+ *
+ * 1. Embed mode (default): a Planning Center form URL replaces every static
+ *    form with a PCO iframe. There is no email-forwarding fallback: a page
+ *    that renders a form without a configured PCO URL logs an explicit error
+ *    telling staff to add one (js/config.js -> planningCenter.pageForms).
+ *
+ * 2. Relay mode (themed static forms): the page's own styled form stays in
+ *    place and submits to the server-side relay at /api/forms/:id/submit,
+ *    which posts to the Planning Center People API. This keeps the form's
+ *    look and feel identical to the rest of the site. Opt in per page via
+ *    planningCenter.relayForms = { "<page>.html": "<form id>" }.
  */
 function initFormThanks() {
   var pageName = (window.location.pathname.split('/').filter(Boolean).pop() || '').toLowerCase() || 'index.html';
   if (!/\.html$/.test(pageName)) pageName += '.html';
   var pco = window.JOG_CONFIG && window.JOG_CONFIG.planningCenter;
   var pageForms = (pco && pco.pageForms) || {};
+  var relayForms = (pco && pco.relayForms) || {};
+  var relayFormId = (relayForms[pageName] || '').toString().trim();
   var pcoFormUrl = (pageForms[pageName] || (pco && pco.visitorFormUrl) || '').trim();
 
   var forms = document.querySelectorAll('form.self-hosted-form');
+
+  // Relay mode: keep the static (themed) form, submit it through the relay.
+  if (relayFormId) {
+    forms.forEach(function(form) { initRelayForm(form, relayFormId); });
+
+    // The relay mode form keeps its own heading, so do not hide it (the
+    // "complete the form" hiding below is only for PCO iframe embeds).
+    return;
+  }
 
   if (!pcoFormUrl) {
     if (forms.length) {
@@ -251,6 +270,110 @@ function initFormThanks() {
       block.style.display = 'none';
     }
   });
+}
+
+/**
+ * Relay-mode form: keep the static (site-themed) form and submit its values
+ * to the server-side relay at /api/forms/:id/submit. The relay forwards to
+ * the Planning Center People API, so the visitor never leaves the page and
+ * the form keeps the site's own look and feel.
+ *
+ * Values are sent label-keyed ({ data: { values: { "Name": "...", ... } } })
+ * using each input's `name` attribute; the relay resolves labels to PCO form
+ * fields server-side. On success the form's own hidden .form-thanks block is
+ * shown; on failure a short error line appears above the submit button.
+ */
+function initRelayForm(form, formId) {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (form.dataset.relayBusy === '1') {
+      return;
+    }
+    form.dataset.relayBusy = '1';
+    clearRelayError(form);
+
+    var values = {};
+    form.querySelectorAll('input[name], textarea[name], select[name]').forEach(function(el) {
+      if (el.type === 'hidden') {
+        return;
+      }
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        if (!el.checked) {
+          return;
+        }
+        // Checkbox groups with the same name become arrays; the relay emits
+        // one FormSubmissionValue per selected option.
+        if (!values[el.name]) {
+          values[el.name] = [];
+        }
+        values[el.name].push(el.value);
+      } else {
+        values[el.name] = el.value;
+      }
+    });
+
+    var submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
+    var btnText = submitBtn ? submitBtn.value : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.value = 'Sending...';
+    }
+
+    fetch('/api/forms/' + encodeURIComponent(formId) + '/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: { values: values } }),
+    }).then(function(res) {
+      return res.json().then(function(body) {
+        return { ok: res.ok, body: body };
+      });
+    }).then(function(result) {
+      if (result.ok) {
+        var thanks = form.parentElement.querySelector('.form-thanks');
+        if (!thanks) {
+          thanks = document.querySelector('.form-thanks');
+        }
+        if (thanks) {
+          thanks.hidden = false;
+        }
+        form.style.display = 'none';
+      } else {
+        showRelayError(form, (result.body && result.body.error) || 'Something went wrong. Please try again.');
+      }
+    }).catch(function() {
+      showRelayError(form, 'Could not reach the server. Please try again.');
+    }).then(function() {
+      form.dataset.relayBusy = '0';
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.value = btnText;
+      }
+    });
+  });
+}
+
+function relayErrorBox(form) {
+  var box = form.querySelector('.relay-form-error');
+  if (!box) {
+    box = document.createElement('p');
+    box.className = 'relay-form-error';
+    var wrapper = form.querySelector('.form-button-wrapper') || form;
+    wrapper.parentNode.insertBefore(box, wrapper);
+  }
+  return box;
+}
+
+function showRelayError(form, message) {
+  var box = relayErrorBox(form);
+  box.textContent = message;
+  box.hidden = false;
+}
+
+function clearRelayError(form) {
+  var box = form.querySelector('.relay-form-error');
+  if (box) {
+    box.hidden = true;
+  }
 }
 
 /**

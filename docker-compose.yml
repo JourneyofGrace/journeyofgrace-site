@@ -13,7 +13,9 @@ services:
     #     - /etc/letsencrypt/live/journeyofgrace.church:/etc/nginx/tls:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      # nginx listens IPv4-only, and localhost resolves to ::1 inside the
+      # container, so the probe must use the literal IPv4 loopback.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
       interval: 30s
       timeout: 5s
       retries: 3

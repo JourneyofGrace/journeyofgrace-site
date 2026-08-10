@@ -343,38 +343,167 @@
 <input type="hidden" name="_subject" value="Connection Card Form | Journey of Grace">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_captcha" value="false">
-<div class="field-list clear">
-<fieldset class="form-item field name required">
-<legend class="title"><label for="name">Name <span class="required-mark">*</span></label></legend>
-<div class="caption">
-<input class="field-element" id="name" name="Name" type="text" placeholder=" " required>
+
+<div class="jog-cc-card">
+  <div class="jog-cc-side jog-cc-front">
+    <h3 class="jog-cc-side-title">Connection Card</h3>
+    <p class="jog-cc-side-tag">Front</p>
+
+    <div class="jog-cc-row jog-cc-row-name">
+      <div class="jog-cc-field jog-cc-prefix-field">
+        <label class="jog-cc-label" for="cc-prefix">Mr / Mrs / Miss / Ms</label>
+        <select class="jog-cc-input" id="cc-prefix" name="Name Prefix">
+          <option value="">&mdash;</option>
+          <option>Mr</option>
+          <option>Mrs</option>
+          <option>Miss</option>
+          <option>Ms</option>
+        </select>
+      </div>
+      <div class="jog-cc-field jog-cc-name-field">
+        <label class="jog-cc-label" for="cc-name">Name <span class="required-mark">*</span></label>
+        <input class="field-element jog-cc-input" id="cc-name" name="Name" type="text" placeholder=" " required>
+      </div>
+    </div>
+
+    <div class="jog-cc-field">
+      <label class="jog-cc-label" for="cc-street">Street</label>
+      <input class="field-element jog-cc-input" id="cc-street" name="Street" type="text" placeholder=" ">
+    </div>
+
+    <div class="jog-cc-row">
+      <div class="jog-cc-field">
+        <label class="jog-cc-label" for="cc-city">City</label>
+        <input class="field-element jog-cc-input" id="cc-city" name="City" type="text" placeholder=" ">
+      </div>
+      <div class="jog-cc-field jog-cc-short">
+        <label class="jog-cc-label" for="cc-state">State</label>
+        <input class="field-element jog-cc-input" id="cc-state" name="State" type="text" placeholder=" " maxlength="2">
+      </div>
+    </div>
+
+    <div class="jog-cc-row">
+      <div class="jog-cc-field">
+        <label class="jog-cc-label" for="cc-phone">Phone</label>
+        <input class="field-element jog-cc-input" id="cc-phone" name="Phone" type="tel" placeholder=" ">
+      </div>
+      <div class="jog-cc-field jog-cc-short">
+        <label class="jog-cc-label" for="cc-zip">Zip</label>
+        <input class="field-element jog-cc-input" id="cc-zip" name="Zip" type="text" placeholder=" " maxlength="5">
+      </div>
+    </div>
+
+    <div class="jog-cc-field">
+      <label class="jog-cc-label" for="cc-email">E-mail Address <span class="required-mark">*</span></label>
+      <input class="field-element jog-cc-input" id="cc-email" name="Email Address" type="email" placeholder=" " required>
+    </div>
+
+    <div class="jog-cc-field">
+      <span class="jog-cc-label">I am a:</span>
+      <div class="jog-cc-options">
+        <label class="jog-cc-option"><input type="checkbox" name="I am A:" value="First time visitor"> First Time Visitor</label>
+        <label class="jog-cc-option"><input type="checkbox" name="I am A:" value="Guest"> Guest</label>
+        <label class="jog-cc-option"><input type="checkbox" name="I am A:" value="Occasional Attender"> Occasional Attender</label>
+        <label class="jog-cc-option"><input type="checkbox" name="I am A:" value="Regular Attender"> Regular Attender</label>
+      </div>
+    </div>
+
+    <div class="jog-cc-field">
+      <span class="jog-cc-label">Please Circle: School Grade of My Children</span>
+      <div class="jog-cc-options jog-cc-grade">
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="Pre-K"> Pre-K</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="K"> K</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="1"> 1</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="2"> 2</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="3"> 3</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="4"> 4</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="5"> 5</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="6"> 6</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="7"> 7</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="8"> 8</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="9"> 9</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="10"> 10</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="11"> 11</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="12"> 12</label>
+        <label class="jog-cc-option"><input type="checkbox" name="School Grade of Children:" value="College"> College</label>
+      </div>
+    </div>
+
+    <div class="jog-cc-field">
+      <span class="jog-cc-label">Please Circle: My Age Group</span>
+      <div class="jog-cc-options">
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="Child/Teen"> Child/Teen</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="20s"> 20&rsquo;s</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="30s"> 30&rsquo;s</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="40s"> 40&rsquo;s</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="50s"> 50&rsquo;s</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="60s"> 60&rsquo;s</label>
+        <label class="jog-cc-option"><input type="checkbox" name="My Age Group:" value="70+"> 70+</label>
+      </div>
+    </div>
+
+    <p class="jog-cc-note">Please place in the drop box at the sound booth.</p>
+  </div>
+
+  <div class="jog-cc-side jog-cc-back">
+    <h3 class="jog-cc-side-title">Connection Card</h3>
+    <p class="jog-cc-side-tag">Back</p>
+
+    <div class="jog-cc-field">
+      <label class="jog-cc-label" for="cc-prayer">Prayer Request/Answer to Prayer:</label>
+      <textarea class="field-element jog-cc-input" id="cc-prayer" name="Prayer Request/Answer to Prayer:" rows="3" placeholder=" "></textarea>
+    </div>
+
+    <div class="jog-cc-field">
+      <label class="jog-cc-option jog-cc-block-option">
+        <input type="checkbox" name="Keep this confidental for Pastoral staff ONLY!" value="true">
+        Confidential for Pastoral staff only
+      </label>
+    </div>
+
+    <div class="jog-cc-field">
+      <span class="jog-cc-label">Please contact me regarding:</span>
+      <div class="jog-cc-options">
+        <label class="jog-cc-option"><input type="checkbox" name="Please contact me!" value="Regarding Bible Studies"> Regarding Bible Studies</label>
+      </div>
+      <label class="jog-cc-label" for="cc-other">Other</label>
+      <input class="field-element jog-cc-input" id="cc-other" name="More related annoucement information" type="text" placeholder=" ">
+    </div>
+
+    <div class="jog-cc-field">
+      <span class="jog-cc-label">Use these letters to respond to announcements:</span>
+      <div class="jog-cc-options jog-cc-letters">
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="A"> A</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="B"> B</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="C"> C</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="D"> D</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="E"> E</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="F"> F</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="G"> G</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="H"> H</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="I"> I</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="J"> J</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="K"> K</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="L"> L</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="M"> M</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="N"> N</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="O"> O</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="P"> P</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="Q"> Q</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="R"> R</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="S"> S</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="T"> T</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="U"> U</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="V"> V</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="W"> W</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="X"> X</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="Y"> Y</label>
+        <label class="jog-cc-option"><input type="checkbox" name="Use these letters to respond to announcements." value="Z"> Z</label>
+      </div>
+    </div>
+  </div>
 </div>
-</fieldset>
-<fieldset class="form-item field email required">
-<legend class="title"><label for="email-address">Email Address <span class="required-mark">*</span></label></legend>
-<div class="caption">
-<input class="field-element" id="email-address" name="Email Address" type="email" placeholder=" " required>
-</div>
-</fieldset>
-<fieldset class="form-item field text">
-<legend class="title"><label for="phone">Phone Number</label></legend>
-<div class="caption">
-<input class="field-element" id="phone" name="Phone Number" type="text" placeholder=" ">
-</div>
-</fieldset>
-<fieldset class="form-item field text">
-<legend class="title"><label for="city">City or Neighborhood</label></legend>
-<div class="caption">
-<input class="field-element" id="city" name="City or Neighborhood" type="text" placeholder=" ">
-</div>
-</fieldset>
-<fieldset class="form-item field textarea required">
-<legend class="title"><label for="message">What would you like us to know? <span class="required-mark">*</span></label></legend>
-<div class="caption">
-<textarea class="field-element" id="message" name="What would you like us to know?" rows="6" placeholder=" " required></textarea>
-</div>
-</fieldset>
-</div>
+
 <div class="form-button-wrapper form-button-wrapper--align-left">
 <input type="submit" value="Submit">
 </div>

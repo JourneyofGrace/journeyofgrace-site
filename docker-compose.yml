@@ -12,9 +12,9 @@ services:
     # and nginx serves /.well-known/acme-challenge/ from here.
     volumes:
       - ./webroot/.well-known:/usr/share/nginx/html/.well-known:ro
-    # To serve real Let's Encrypt certs once issued on the host (see docs/TLS.md),
-    # add a volume like:
-    #   - /etc/letsencrypt/live/test.journeyofgrace.church:/etc/nginx/tls:ro
+      # Real Let's Encrypt certs issued on the host (see docs/TLS.md) replace
+      # the baked-in self-signed placeholder at /etc/nginx/tls.
+      - /etc/letsencrypt/live/test.journeyofgrace.church:/etc/nginx/tls:ro
     restart: unless-stopped
     healthcheck:
       # nginx listens IPv4-only, and localhost resolves to ::1 inside the

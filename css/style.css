@@ -2727,6 +2727,15 @@ body.jog-lightbox-locked {
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.jog-giving-popup-body::-webkit-scrollbar {
+  display: none;
+}
+html.jog-giving-open,
+body.jog-giving-open {
+  overflow: hidden;
 }
 .jog-giving-popup-body .jog-giving-frame-wrap {
   transform-origin: top left;

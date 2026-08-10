@@ -789,7 +789,7 @@ function openGivingPopup(url) {
   }
 
   var closePopup = function() {
-    overlay.remove();
+    closeGivingPopupOverlay();
   };
   close.addEventListener('click', closePopup);
   overlay.addEventListener('click', function(e) {
@@ -797,6 +797,8 @@ function openGivingPopup(url) {
       closePopup();
     }
   });
+  document.body.classList.add('jog-giving-open');
+  document.documentElement.classList.add('jog-giving-open');
   // Keep focus inside the popup so Escape (and the keyboard) interact with
   // our document rather than the giving iframe. The giving page autofocuses
   // a field inside the iframe once it renders (and again after its
@@ -821,6 +823,15 @@ function openGivingPopup(url) {
   }, 1000);
 }
 
+function closeGivingPopupOverlay() {
+  var o = document.querySelector('.jog-giving-popup');
+  if (o) {
+    o.remove();
+  }
+  document.body.classList.remove('jog-giving-open');
+  document.documentElement.classList.remove('jog-giving-open');
+}
+
 function initGivingPopup() {
   document.addEventListener('click', function(e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href*="open-in-church-center-modal"]') : null;
@@ -833,10 +844,7 @@ function initGivingPopup() {
   }, true);
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-      var o = document.querySelector('.jog-giving-popup');
-      if (o) {
-        o.remove();
-      }
+      closeGivingPopupOverlay();
     }
   });
 }

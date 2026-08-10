@@ -733,14 +733,123 @@ function initImageLightbox() {
 /**
  * Giving links (header/footer) point at
  *   https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true
- * The official `js.churchcenter.com/modal/v1` script intercepts those clicks and
- * opens Planning Center's own modal on https hosts; on mobile devices the
- * official script opens the responsive giving page in a new tab instead (the
- * behavior recommended by Planning Center). The script is loaded on demand so
- * no third-party tag is added to the page markup.
+ * On desktop the official `js.churchcenter.com/modal/v1` script intercepts
+ * those clicks and opens Planning Center's own modal. On touch devices the
+ * official script opens the giving page in a NEW TAB instead (Planning
+ * Center's recommended mobile behavior), which the church does not want, so
+ * touch devices get a custom in-page popup with a scaled giving iframe
+ * instead. The official script is loaded on demand so no third-party tag is
+ * added to the page markup.
  */
+function openGivingPopup(url) {
+  if (document.querySelector('.jog-giving-popup')) {
+    return;
+  }
+  var overlay = document.createElement('div');
+  overlay.className = 'jog-giving-popup';
+  var card = document.createElement('div');
+  card.className = 'jog-giving-popup-card';
+  card.setAttribute('tabindex', '-1');
+  var close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'jog-giving-popup-close';
+  close.setAttribute('aria-label', 'Close giving form');
+  close.innerHTML = '&times;';
+  var body = document.createElement('div');
+  body.className = 'jog-giving-popup-body';
+  var wrap = document.createElement('div');
+  wrap.className = 'jog-giving-frame-wrap';
+  var frame = document.createElement('iframe');
+  frame.src = url;
+  frame.setAttribute('loading', 'lazy');
+  wrap.appendChild(frame);
+  body.appendChild(wrap);
+  card.appendChild(close);
+  card.appendChild(body);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  // Planning Center serves its forms at a fixed 480px canvas inside an
+  // iframe; scale it down to fit the popup card (same approach as the
+  // embedded visit forms).
+  var CANVAS_W = 480;
+  var CANVAS_H = 1000;
+  var fit = function() {
+    var w = card.clientWidth;
+    if (w <= 0) {
+      return;
+    }
+    var scale = w / CANVAS_W;
+    wrap.style.width = Math.round(CANVAS_W * scale) + 'px';
+    wrap.style.height = Math.round(CANVAS_H * scale) + 'px';
+    frame.style.width = CANVAS_W + 'px';
+    frame.style.height = CANVAS_H + 'px';
+    frame.style.transform = 'scale(' + scale + ')';
+  };
+  fit();
+  if (window.ResizeObserver) {
+    new ResizeObserver(fit).observe(card);
+  }
+
+  var closePopup = function() {
+    overlay.remove();
+  };
+  close.addEventListener('click', closePopup);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      closePopup();
+    }
+  });
+  // Keep focus inside the popup so Escape (and the keyboard) interact with
+  // our document rather than the giving iframe. The giving page autofocuses
+  // a field inside the iframe once it renders (and again after its
+  // churchcenteronline.com -> churchcenter.com redirect), stealing focus and
+  // with it the Escape key. Re-grab focus while the form is still loading,
+  // then stop once it has settled so we never interrupt a visitor typing.
+  card.focus({ preventScroll: true });
+  var refocusTicks = 0;
+  var refocusTimer = window.setInterval(function() {
+    if (!overlay.isConnected) {
+      window.clearInterval(refocusTimer);
+      return;
+    }
+    var ae = document.activeElement;
+    var stolen = ae && ae.tagName === 'IFRAME' && overlay.contains(ae);
+    if (stolen && refocusTicks < 8) {
+      refocusTicks++;
+      card.focus({ preventScroll: true });
+    } else if (stolen) {
+      window.clearInterval(refocusTimer);
+    }
+  }, 1000);
+}
+
+function initGivingPopup() {
+  document.addEventListener('click', function(e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="open-in-church-center-modal"]') : null;
+    if (!a) {
+      return;
+    }
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    openGivingPopup(a.href);
+  }, true);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var o = document.querySelector('.jog-giving-popup');
+      if (o) {
+        o.remove();
+      }
+    }
+  });
+}
+
 function loadChurchCenterModal() {
   if (window.ChurchCenterModal || document.querySelector('script[src="https://js.churchcenter.com/modal/v1"]')) {
+    return;
+  }
+  if (navigator.maxTouchPoints > 0 || 'ontouchstart' in window) {
+    initGivingPopup();
     return;
   }
   var s = document.createElement('script');

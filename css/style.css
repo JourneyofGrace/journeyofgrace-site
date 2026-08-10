@@ -2681,3 +2681,58 @@ textarea.jog-cc-input {
 body.jog-lightbox-locked {
   overflow: hidden;
 }
+
+/* Giving popup - mobile-friendly popup window for the giving form.
+   Desktop uses Planning Center's own modal via js.churchcenter.com/modal/v1;
+   on touch devices the official script would open a separate tab, so a
+   custom popup keeps visitors on the page. */
+.jog-giving-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(24, 18, 8, 0.6);
+}
+.jog-giving-popup-card {
+  position: relative;
+  width: min(100vw - 12px, 520px);
+  max-height: 94vh;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+.jog-giving-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  line-height: 1;
+  color: #444;
+  cursor: pointer;
+}
+.jog-giving-popup-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.jog-giving-popup-body .jog-giving-frame-wrap {
+  transform-origin: top left;
+}
+.jog-giving-popup-body iframe {
+  border: 0;
+  display: block;
+  transform-origin: top left;
+}

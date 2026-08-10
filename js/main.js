@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initBreadcrumb();
   initHomeVideo();
   initImageLightbox();
-  loadChurchCenterModal();
+  initGivingLinks();
 });
 
 /**
@@ -733,13 +733,10 @@ function initImageLightbox() {
 /**
  * Giving links (header/footer) point at
  *   https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true
- * On desktop the official `js.churchcenter.com/modal/v1` script intercepts
- * those clicks and opens Planning Center's own modal. On touch devices the
- * official script opens the giving page in a NEW TAB instead (Planning
- * Center's recommended mobile behavior), which the church does not want, so
- * touch devices get a custom in-page popup with a scaled giving iframe
- * instead. The official script is loaded on demand so no third-party tag is
- * added to the page markup.
+ * Every device gets the same in-page popup: a centered card with the giving
+ * form scaled to fit, so the visitor never leaves the page (Planning Center's
+ * official modal script opens a separate tab on mobile and on http hosts,
+ * which the church does not want). No third-party script is loaded.
  */
 function openGivingPopup(url) {
   if (document.querySelector('.jog-giving-popup')) {
@@ -844,16 +841,6 @@ function initGivingPopup() {
   });
 }
 
-function loadChurchCenterModal() {
-  if (window.ChurchCenterModal || document.querySelector('script[src="https://js.churchcenter.com/modal/v1"]')) {
-    return;
-  }
-  if (navigator.maxTouchPoints > 0 || 'ontouchstart' in window) {
-    initGivingPopup();
-    return;
-  }
-  var s = document.createElement('script');
-  s.src = 'https://js.churchcenter.com/modal/v1';
-  s.async = true;
-  document.head.appendChild(s);
+function initGivingLinks() {
+  initGivingPopup();
 }

@@ -550,6 +550,21 @@ p.eventlist-empty {
   }
 }
 
+/* On mobile the jog-layout row's negative gutters (site.css) push grid
+   content flush against the screen edge; pull it back to the page padding
+   and let the content column use the full text width. */
+@media (max-width: 639px) {
+  .jog-layout > .jog-row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .jog-main-inner .jog-layout > .jog-row > [class*="jog-col"] {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100% !important;
+  }
+}
+
 .eventlist-title {
   font-family: var(--font-serif);
   margin-bottom: 0.75rem;
@@ -932,6 +947,26 @@ textarea:focus-visible,
 @media (max-width: 480px) {
   .nav-list a {
     font-size: 0.72rem;
+  }
+
+  /* Full-width CTA pills shouldn't balloon into giant lozenges on phones */
+  .jog-actions .jog-cta {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Sermons header pills: stack so they keep a natural pill shape */
+  .sermons-yt-section .sermons-yt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .sermons-yt-header a {
+    white-space: nowrap;
   }
 }
 

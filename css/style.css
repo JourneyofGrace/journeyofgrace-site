@@ -2393,7 +2393,7 @@ body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block .intr
 /* Connection Card - paper card style form (mimics the printed card) */
 .jog-cc-card {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
   position: relative;
   padding-bottom: 4.5rem;
@@ -2405,6 +2405,7 @@ body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block .intr
   padding: 1.25rem 1.6rem 1.4rem;
   box-shadow: 0 1px 3px rgba(122, 91, 37, 0.15);
   width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 .jog-cc-side-header {
@@ -2534,6 +2535,16 @@ textarea.jog-cc-input {
   padding: 12px 30px;
 }
 @media (max-width: 480px) {
+  .jog-cc-side {
+    padding: 1.1rem 1.15rem 1.25rem;
+  }
+  .jog-cc-front,
+  .jog-cc-back {
+    aspect-ratio: auto;
+  }
+  .jog-cc-logo {
+    width: 2.75rem;
+  }
   .jog-cc-row {
     flex-direction: column;
     gap: 0;
@@ -2543,6 +2554,38 @@ textarea.jog-cc-input {
   }
   .jog-cc-row-name .jog-cc-prefix-field {
     flex: 1 1 0;
+  }
+  .jog-cc-input {
+    font-size: 16px;
+  }
+  .jog-cc-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.2rem 0.8rem;
+  }
+  .jog-cc-option {
+    min-height: 44px;
+  }
+  .jog-cc-letters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.15rem 0.4rem;
+  }
+  .jog-cc-submit {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 10px 12px;
+    background: rgba(253, 250, 242, 0.96);
+    border-top: 1px solid #c9b98f;
+    box-shadow: 0 -2px 8px rgba(122, 91, 37, 0.18);
+    z-index: 50;
+  }
+  .jog-cc-submit input[type=submit] {
+    width: 100%;
+    min-height: 48px;
+    font-size: 1rem;
   }
 }
 

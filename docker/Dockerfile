@@ -21,14 +21,15 @@ ARG DOMAIN=journeyofgrace.church
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /src /usr/share/nginx/html/
 
-# Generate a self-signed placeholder TLS cert so the :443 server block starts
-# anywhere (replace it by mounting real Let's Encrypt certs over /etc/nginx/tls;
-# see docs/TLS.md).
+# Generate a self-signed placeholder TLS cert at the same path nginx reads
+# (/etc/letsencrypt/live/...) so the :443 server block starts anywhere.
+# Mount real Let's Encrypt certs over /etc/letsencrypt to replace it (see
+# docs/TLS.md).
 RUN apk add --no-cache openssl \
-    && mkdir -p /etc/nginx/tls \
+    && mkdir -p /etc/letsencrypt/live/test.journeyofgrace.church \
     && openssl req -x509 -nodes -newkey rsa:2048 -days 825 \
-        -keyout /etc/nginx/tls/privkey.pem \
-        -out /etc/nginx/tls/fullchain.pem \
+        -keyout /etc/letsencrypt/live/test.journeyofgrace.church/privkey.pem \
+        -out /etc/letsencrypt/live/test.journeyofgrace.church/fullchain.pem \
         -subj "/CN=${DOMAIN}" \
         -addext "subjectAltName=DNS:${DOMAIN},DNS:www.${DOMAIN}" 2>/dev/null \
     && apk del openssl

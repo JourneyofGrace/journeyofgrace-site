@@ -968,6 +968,11 @@ textarea:focus-visible,
   .sermons-yt-header a {
     white-space: nowrap;
   }
+
+  /* Sermons grid: min track of 280px bleeds past narrow containers */
+  .sermons-yt-section .sermons-yt-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ==== Planning Center form embeds ==== */
@@ -1429,7 +1434,8 @@ body[data-collection-id="5fe2ceca4aff1019af48766b"] .jog-block-html {
    face around native y~290-360) as the dominant subject. Window top ~231
    keeps her whole head + hair in view with the front-row faces pushed down
    and out of frame. */
-.jog-page-banner[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-banner-img img {
+.jog-page-banner[data-collection-id="5d55ccd9c3c43a0001f0e133"] .jog-banner-img img,
+.jog-page-banner[data-collection-id="5c70d1d3f9619ae6c8345e63"] .jog-banner-img img {
   object-position: 50% 33% !important;
 }
 

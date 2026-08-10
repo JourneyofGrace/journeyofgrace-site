@@ -807,6 +807,13 @@ function initGivingModal() {
       // dialog on every host (http or https) instead of also triggering the
       // page navigation / the official Church Center modal script.
       e.preventDefault();
+      // Church Center's modal layout is fixed at ~480px wide and overflows
+      // smaller iframes; on narrow screens open the responsive giving page in
+      // a new tab instead (the official Church Center mobile behavior).
+      if (window.innerWidth < 480) {
+        window.open(a.getAttribute('href'), '_blank', 'noopener');
+        return;
+      }
       show(a.getAttribute('href'));
     });
   });

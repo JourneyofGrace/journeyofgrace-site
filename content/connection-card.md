@@ -18,7 +18,3 @@ The form asks for a few basics so we can reach you and learn how to serve you be
 - Your neighborhood or city, if you are comfortable sharing it, so we can help you find community nearby
 - Any letters from the announcements you’d like to circle, along with the events or programs that interest you
 - A note or prayer request telling us how we can help you take your next step
-
-## After You Submit
-
-Once you send your card, it lands directly in our office. A member of our team will reach out within a few days to welcome you, answer any questions, and help you get connected.

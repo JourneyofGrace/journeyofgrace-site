@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initBreadcrumb();
   initHomeVideo();
   initImageLightbox();
-  initGivingModal();
+  loadChurchCenterModal();
 });
 
 /**
@@ -335,6 +335,13 @@ function initRelayForm(form, formId) {
         }
         if (thanks) {
           thanks.hidden = false;
+          var followup = thanks.querySelector('.form-thanks-followup');
+          if (followup) {
+            var iAmA = values['I am A:'] || [];
+            var contactMe = values['Please contact me!'] || [];
+            var reachOut = iAmA.indexOf('First time visitor') !== -1 || contactMe.length > 0;
+            followup.hidden = !reachOut;
+          }
         }
         form.style.display = 'none';
       } else {
@@ -724,97 +731,20 @@ function initImageLightbox() {
 }
 
 /**
- * Giving modal (popup).
- *
- * The Giving header/footer links point at
+ * Giving links (header/footer) point at
  *   https://journeyofgrace.churchcenteronline.com/giving?open-in-church-center-modal=true
  * The official `js.churchcenter.com/modal/v1` script intercepts those clicks and
- * opens a modal — but it only does so on https (or localhost). On a plain-http
- * deployment (e.g. a test server) the click falls through and opens the Giving
- * page in a new tab instead.
- *
- * This lightweight handler guarantees the popup behavior on every host: any link
- * whose href carries `open-in-church-center-modal=true` is intercepted and shown
- * in a full-screen overlay with a scaled iframe (the same technique used for the
- * embedded Planning Center forms).
+ * opens Planning Center's own modal on https hosts; on mobile devices the
+ * official script opens the responsive giving page in a new tab instead (the
+ * behavior recommended by Planning Center). The script is loaded on demand so
+ * no third-party tag is added to the page markup.
  */
-function initGivingModal() {
-  var links = document.querySelectorAll('a[href*="open-in-church-center-modal"]');
-  if (!links.length) {
+function loadChurchCenterModal() {
+  if (window.ChurchCenterModal || document.querySelector('script[src="https://js.churchcenter.com/modal/v1"]')) {
     return;
   }
-
-  var overlay = null;
-
-  function buildOverlay() {
-    overlay = document.createElement('div');
-    overlay.className = 'jog-giving-modal';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-label', 'Giving');
-    overlay.innerHTML =
-      '<div class="jog-giving-card">' +
-        '<div class="jog-giving-head">' +
-          '<span class="jog-giving-title">Give</span>' +
-          '<button type="button" class="jog-giving-close" aria-label="Close">&times;</button>' +
-        '</div>' +
-        '<div class="jog-giving-body">' +
-          '<iframe class="jog-giving-iframe" title="Give" src="about:blank" loading="lazy"></iframe>' +
-        '</div>' +
-      '</div>';
-    document.body.appendChild(overlay);
-
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) {
-        hide();
-      }
-    });
-    overlay.querySelector('.jog-giving-close').addEventListener('click', hide);
-
-    window.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && overlay.classList.contains('jog-giving-open')) {
-        hide();
-      }
-    });
-  }
-
-  function show(href) {
-    if (!overlay) {
-      buildOverlay();
-    }
-    // Embed the same URL the official modal would load in its iframe.
-    // Church Center redirects churchcenteronline.com -> churchcenter.com and
-    // permits framing when the modal param is present.
-    var embed = href.replace('churchcenteronline.com', 'churchcenter.com');
-    overlay.querySelector('.jog-giving-iframe').src = embed;
-    overlay.classList.add('jog-giving-open');
-    document.body.classList.add('jog-giving-locked');
-    overlay.querySelector('.jog-giving-close').focus();
-  }
-
-  function hide() {
-    if (!overlay) {
-      return;
-    }
-    overlay.classList.remove('jog-giving-open');
-    overlay.querySelector('.jog-giving-iframe').src = 'about:blank';
-    document.body.classList.remove('jog-giving-locked');
-  }
-
-  links.forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      // Always intercept and open our own modal so the Giving link pops up a
-      // dialog on every host (http or https) instead of also triggering the
-      // page navigation / the official Church Center modal script.
-      e.preventDefault();
-      // Church Center's modal layout is fixed at ~480px wide and overflows
-      // smaller iframes; on narrow screens open the responsive giving page in
-      // a new tab instead (the official Church Center mobile behavior).
-      if (window.innerWidth < 480) {
-        window.open(a.getAttribute('href'), '_blank', 'noopener');
-        return;
-      }
-      show(a.getAttribute('href'));
-    });
-  });
+  var s = document.createElement('script');
+  s.src = 'https://js.churchcenter.com/modal/v1';
+  s.async = true;
+  document.head.appendChild(s);
 }

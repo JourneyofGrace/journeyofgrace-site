@@ -2417,9 +2417,6 @@ body[data-collection-id="5cb2b2e79b747a58e8a70c21"] .jog-block.image-block .intr
 .jog-cc-front {
   aspect-ratio: 731 / 542;
 }
-.jog-cc-back {
-  aspect-ratio: 731 / 520;
-}
 .jog-cc-logo {
   width: 3.4rem;
   height: auto;
@@ -2474,6 +2471,9 @@ select.jog-cc-input {
 }
 textarea.jog-cc-input {
   resize: vertical;
+}
+.jog-cc-back #cc-other {
+  padding: 0.8rem 0.6rem;
 }
 .jog-cc-row {
   display: flex;

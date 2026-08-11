@@ -783,7 +783,7 @@ function openGivingPopup(url) {
     var availH = window.innerHeight * 0.94;
     var scale = Math.min(w / CANVAS_W, availH / CANVAS_H);
     wrap.style.width = Math.round(CANVAS_W * scale) + 'px';
-    wrap.style.height = Math.round(CANVAS_H * scale) + 'px';
+    wrap.style.height = Math.round(CANVAS_H * scale) - 100 + 'px';
     frame.style.width = CANVAS_W + 'px';
     frame.style.height = CANVAS_H + 'px';
     frame.style.transform = 'scale(' + scale + ')';

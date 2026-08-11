@@ -2735,6 +2735,7 @@ body.jog-lightbox-locked {
 .jog-giving-popup-body .jog-giving-frame-wrap {
   transform-origin: top left;
   flex: 0 0 auto;
+  overflow: hidden;
 }
 .jog-giving-popup-body::-webkit-scrollbar {
   display: none;

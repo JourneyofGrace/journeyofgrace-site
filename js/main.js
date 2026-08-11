@@ -640,7 +640,7 @@ function initBreadcrumb() {
     'youth-group': 'Connect',
     'mens-ministry': 'Connect',
     'womens-ministry': 'Connect',
-    'life-groups': 'Connect',
+    'discipleship': 'Connect',
     'journey-classes': 'Connect'
   };
   var parentLabel = parents[page];

@@ -5,7 +5,7 @@ const expectMap = {
   connect: { sections: 3, tiles: 6, imgs: 0, full: 0, cta: 1 },
   'journey-classes': { sections: 1, tiles: 0, imgs: 0, full: 0, cta: 1 },
   'kids-min': { sections: 3, tiles: 0, imgs: 5, full: 1, cta: 1 },
-  'life-groups': { sections: 1, tiles: 0, imgs: 0, full: 0, cta: 1 },
+  'discipleship': { sections: 1, tiles: 0, imgs: 0, full: 0, cta: 1 },
   'mens-ministry': { sections: 3, tiles: 0, imgs: 6, full: 1, cta: 1 },
   'womens-ministry': { sections: 2, tiles: 0, imgs: 0, full: 0, cta: 1 },
   'service-teams': { sections: 1, tiles: 0, imgs: 0, full: 0, cta: 1 },

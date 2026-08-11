@@ -28,7 +28,7 @@ The first line of a markdown file selects the renderer.
 
 ### Standard mode (default)
 
-Used by: connect, journey-classes, kids-min, life-groups, mens-ministry,
+Used by: connect, journey-classes, kids-min, discipleship, mens-ministry,
 service-teams, spanish, womens-ministry, youth-group.
 
 | Syntax | Renders as |

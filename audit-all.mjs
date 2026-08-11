@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 
 const PAGES = [
   'index','about-us','connect','events','sermons','sermon-archive','journey-classes',
-  'kids-min','life-groups','mens-ministry','womens-ministry','youth-group','service-teams',
+  'kids-min','discipleship','mens-ministry','womens-ministry','youth-group','service-teams',
   'nextstep','visit','plan-your-visit','spanish','privacy','404',
   'connection-card','event-facility-request'
 ];

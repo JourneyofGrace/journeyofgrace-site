@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const PAGES = ['index','about-us','connect','events','sermons','sermon-archive','journey-classes','kids-min','life-groups','mens-ministry','womens-ministry','youth-group','service-teams','nextstep','visit','plan-your-visit','spanish','privacy','404'];
+const PAGES = ['index','about-us','connect','events','sermons','sermon-archive','journey-classes','kids-min','discipleship','mens-ministry','womens-ministry','youth-group','service-teams','nextstep','visit','plan-your-visit','spanish','privacy','404'];
 
 const browser = await chromium.launch({ headless: true });
 const results = {};

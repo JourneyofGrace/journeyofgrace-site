@@ -8,7 +8,7 @@
 - [Youth Group](youth-group)
 
 ::ministry Discipleship Ministries
-- [Discipleship Groups](life-groups)
+- [Discipleship Groups](discipleship)
 - [Journey Classes](journey-classes)
 
 ::ministry Adult Ministries

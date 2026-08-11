@@ -79,7 +79,7 @@ opens it full-size in the built-in lightbox.
 | `youth-group.html` | Youth Group | `content/youth-group.md` (+ gallery) |
 | `mens-ministry.html` | Men's Ministry | `content/mens-ministry.md` (+ gallery) |
 | `womens-ministry.html` | Women's Ministry | `content/womens-ministry.md` (+ gallery, off when empty) |
-| `life-groups.html` | Life Groups | `content/life-groups.md` |
+| `life-groups.html` | Discipleship Groups | `content/life-groups.md` |
 | `journey-classes.html` | Journey Classes | `content/journey-classes.md` |
 | `service-teams.html` | Service Teams | `content/service-teams.md` |
 | `spanish.html` | Spanish Ministry | `content/spanish.md` |

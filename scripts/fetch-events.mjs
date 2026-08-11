@@ -366,7 +366,7 @@ async function fetchAll() {
     const mockGroups = {
       '1998843': { id: '1998843', name: 'ROC Youth Group', typeName: 'Youth' },
       '1691333': { id: '1691333', name: 'Men\u2019s Breakfast', typeName: 'Fellowship' },
-      '734809': { id: '734809', name: 'Sunday Morning Life Group', typeName: 'Life Group' },
+      '734809': { id: '734809', name: 'Sunday Morning Discipleship Group', typeName: 'Discipleship Group' },
     };
     const mkGrp = (starts, groupId, locId, locName, img) => (
       Object.assign(
@@ -503,12 +503,12 @@ ${calCards.map((c) => renderCard(c)).join('\n')}
 
   const grpHtml = grpCards && grpCards.length
     ? `    <!-- Group Events -->
-    <h2 class="eventlist-section-heading">Small Group &amp; Life Group Events</h2>
+    <h2 class="eventlist-section-heading">Small Group &amp; Discipleship Group Events</h2>
     <div class="eventlist eventlist--groups">
 ${grpCards.map((c) => renderCard(c)).join('\n')}
     </div>`
     : `    <!-- Group Events -->
-    <h2 class="eventlist-section-heading">Small Group &amp; Life Group Events</h2>
+    <h2 class="eventlist-section-heading">Small Group &amp; Discipleship Group Events</h2>
     <div class="eventlist eventlist--groups">
       <p class="eventlist-empty">No upcoming group events right now. Check back soon!</p>
     </div>`;

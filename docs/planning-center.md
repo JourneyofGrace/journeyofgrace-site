@@ -126,7 +126,7 @@ Event *dates/times* live in **Planning Center Calendar** (that is what the embed
 The **Groups** product manages small-group *signups* and has its own public page:
 <https://journeyofgrace.churchcenter.com/groups>.
 
-If you want a "Join a Group" button on the Life Groups page, link to that URL — it is
+If you want a "Join a Group" button on the Discipleship Groups page, link to that URL — it is
 public and requires no configuration. (The Church Center admin can also generate a
 groups embed code, same *Share* flow, but it cannot be keyed to a bare "ID" without a
 backend server.)

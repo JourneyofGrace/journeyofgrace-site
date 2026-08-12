@@ -108,10 +108,11 @@ async function buildSubmissionPayload(formId, values, auth) {
   let address = null;
   let phone = null;
 
-  // The paper card's address lines (Street/City/State/Zip) cannot be written
-  // through a FormSubmissionValue (PCO 500s on address-type values), so they
-  // are collected here and written to the person's Address list afterwards
-  // (see the submit handler).
+  // The paper card's address lines (Street/City/State/Zip) are written to
+  // the person's Address list after the submission (see the submit handler).
+  // They are ALSO written as a FormSubmissionValue (value must be an object of
+  // street_line_1/city/state/zip — a plain string makes PCO 500) so the
+  // address shows up on the form submission itself.
   const addressField = fields.find((f) => f.fieldType === 'address');
   if (addressField) {
     const parts = {};
@@ -126,6 +127,11 @@ async function buildSubmissionPayload(formId, values, auth) {
         state: parts.State || '',
         zip: parts.Zip || '',
       };
+      included.push({
+        type: 'FormSubmissionValue',
+        attributes: { value: address },
+        relationships: { form_field: { data: { type: 'FormField', id: addressField.id } } },
+      });
       for (const key of ['Street', 'City', 'State', 'Zip']) delete values[key];
     }
   }

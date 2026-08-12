@@ -55,7 +55,7 @@ pageForms: {
   "plan-your-visit.html":       "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html":              "https://journeyofgrace.churchcenter.com/people/forms/1286060",
   "spanish.html":               "https://journeyofgrace.churchcenter.com/people/forms/1286061",
-  "connection-card.html":       "https://journeyofgrace.churchcenter.com/people/forms/1242125",
+  "connection-card.html":       "https://journeyofgrace.churchcenter.com/people/forms/1292063",
 }
 pageFormCanvas: {
   "connection-card.html":       { w: 820, h: 3400 },  // long connection card -> no inner scroll

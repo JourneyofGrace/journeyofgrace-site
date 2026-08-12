@@ -60,7 +60,7 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
   "plan-your-visit.html": "https://journeyofgrace.churchcenter.com/people/forms/1284759",
   "nextstep.html": "https://journeyofgrace.churchcenter.com/people/forms/1286060",
   "spanish.html": "https://journeyofgrace.churchcenter.com/people/forms/1286061",
-  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1242125"
+  "connection-card.html": "https://journeyofgrace.churchcenter.com/people/forms/1292063"
 };
 
 /*
@@ -80,7 +80,7 @@ window.JOG_CONFIG.planningCenter.pageForms = window.JOG_CONFIG.planningCenter.pa
  * Leave this map empty ({}) to keep the default iframe embed behavior.
  */
 window.JOG_CONFIG.planningCenter.relayForms = window.JOG_CONFIG.planningCenter.relayForms || {
-  "connection-card.html": "1242125",
+  "connection-card.html": "1292063",
   // "nextstep.html": "1286060",
 };
 

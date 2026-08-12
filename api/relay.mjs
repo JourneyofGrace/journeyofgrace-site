@@ -162,7 +162,7 @@ async function buildSubmissionPayload(formId, values, auth) {
           for (const v of nonEmpty) {
             included.push({
               type: 'FormSubmissionValue',
-              attributes: { value: v },
+              attributes: { value: { number: v, location: 'Mobile' } },
               relationships: { form_field: { data: { type: 'FormField', id: phoneField.id } } },
             });
           }
@@ -194,6 +194,16 @@ async function buildSubmissionPayload(formId, values, auth) {
       }
     } else if (field.fieldType === 'boolean') {
       pushValue(nonEmpty[0] === 'true' ? 'true' : 'false');
+    } else if (field.fieldType === 'phone_number') {
+      // Phone-number fields expect structured number/location attributes on
+      // the submission value (PCO 422s on a bare string).
+      for (const v of nonEmpty) {
+        included.push({
+          type: 'FormSubmissionValue',
+          attributes: { value: { number: v, location: 'Mobile' } },
+          relationships: { form_field: { data: { type: 'FormField', id: field.id } } },
+        });
+      }
     } else {
       for (const v of nonEmpty) pushValue(v);
     }

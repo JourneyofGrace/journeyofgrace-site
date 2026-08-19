@@ -16,7 +16,7 @@ services:
       # dir (not just live/<domain>) so the live/*.pem symlinks into archive/
       # resolve inside the container.
       - /etc/letsencrypt:/etc/letsencrypt:ro
-    restart: unless-stopped
+    restart: always
     healthcheck:
       # nginx listens IPv4-only, and localhost resolves to ::1 inside the
       # container, so the probe must use the literal IPv4 loopback.
@@ -41,7 +41,7 @@ services:
       - api/.env
     ports:
       - "3001:3000"
-    restart: unless-stopped
+    restart: always
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
       interval: 30s

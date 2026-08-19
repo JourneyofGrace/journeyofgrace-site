@@ -3,6 +3,6 @@
 
 ## How Can You Serve?
 
-As we grow closer to Jesus and each other through our [Discipleship Groups](discipleship) and [Journey Classes](journey-classes), it’s natural that we desire to serve others. At Journey of Grace, we desire to serve each other and our community. If you’d like some more information, please feel free to click the button below and get plugged in today!
+As we grow closer to Jesus and each other through our [Life Groups](discipleship) and [Journey Classes](journey-classes), it’s natural that we desire to serve others. At Journey of Grace, we desire to serve each other and our community. If you’d like some more information, please feel free to click the button below and get plugged in today!
 
 ::cta connect Get Connected

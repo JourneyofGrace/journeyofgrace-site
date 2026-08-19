@@ -8,7 +8,7 @@
 ## Ways We Can Help You Move Forward
 
 ::beliefs
-- Get plugged in and find a [ministry or discipleship group](connect) that fits you
+- Get plugged in and find a [ministry or life group](connect) that fits you
 - Request prayer for yourself, your family, or a friend
 - Speak with a pastor about baptism, membership, or questions of faith
 - Sign up for an upcoming event or lend a hand on a service team

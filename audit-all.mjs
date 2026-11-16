@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { isThirdPartyConsole, isThirdPartyPageError } from './regression-helpers.mjs';
 
 const PAGES = [
   'index','about-us','connect','events','sermons','sermon-archive','journey-classes',
@@ -13,9 +14,17 @@ for (const slug of PAGES) {
   const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
   const consoleErr = [];
   const pageErr = [];
+  const thirdPartyIgnored = [];
   const badResponses = [];  // status >= 400 for any request
-  p.on('console', m => { if (m.type() === 'error') consoleErr.push(m.text()); });
-  p.on('pageerror', e => pageErr.push(e.message));
+  p.on('console', m => {
+    if (m.type() !== 'error') return;
+    if (isThirdPartyConsole(m)) { thirdPartyIgnored.push(m.text()); return; }
+    consoleErr.push(m.text());
+  });
+  p.on('pageerror', e => {
+    if (isThirdPartyPageError(e)) { thirdPartyIgnored.push(e.message); return; }
+    pageErr.push(e.message);
+  });
   p.on('response', r => {
     if (r.status() >= 400) badResponses.push(`${r.status()} ${r.url()}`);
   });
@@ -61,7 +70,7 @@ for (const slug of PAGES) {
     };
   });
 
-  results.push({ slug, loadStatus, consoleErr, pageErr, badResponses, data });
+  results.push({ slug, loadStatus, consoleErr, pageErr, thirdPartyIgnored, badResponses, data });
   await p.close();
 }
 
@@ -112,5 +121,7 @@ for (const r of results) {
   if (r.data.hOverflow) console.log('    hOverflow: ' + r.data.hOverflow);
   if ((r.brokenLinks || []).length) console.log('    brokenLinks: ' + r.brokenLinks.slice(0,8).join(', '));
 }
+const ignoredThirdParty = results.reduce((n, r) => n + (r.thirdPartyIgnored || []).length, 0);
 console.log(`\n${problems} pages with problems / ${results.length} total`);
+if (ignoredThirdParty) console.log(`Ignored ${ignoredThirdParty} third-party embed error(s) (Church Center).`);
 await b.close();

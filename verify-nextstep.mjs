@@ -1,7 +1,9 @@
 import { chromium } from 'playwright';
+import { isThirdPartyConsole, isThirdPartyPageError } from './regression-helpers.mjs';
 
 const BASE = 'http://localhost:8126/nextstep.html';
 const errors = [];
+let thirdPartyIgnored = 0;
 const r = {};
 
 const rawHtml = await (await fetch(BASE)).text();
@@ -16,8 +18,15 @@ for (const vp of [
   { name: 'mobile', width: 375, height: 760 }
 ]) {
   const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(vp.name + ' console: ' + m.text()); });
-  page.on('pageerror', (e) => errors.push(vp.name + ' pageerror: ' + e.message));
+  page.on('console', (m) => {
+    if (m.type() !== 'error') return;
+    if (isThirdPartyConsole(m)) { thirdPartyIgnored++; return; }
+    errors.push(vp.name + ' console: ' + m.text());
+  });
+  page.on('pageerror', (e) => {
+    if (isThirdPartyPageError(e)) { thirdPartyIgnored++; return; }
+    errors.push(vp.name + ' pageerror: ' + e.message);
+  });
 
   await page.goto(BASE, { waitUntil: 'load' });
   await page.waitForTimeout(400);
@@ -69,7 +78,7 @@ for (const vp of [
   await page.close();
 }
 
-console.log(JSON.stringify({ r, errors }, null, 2));
+console.log(JSON.stringify({ r, errors, thirdPartyIgnored }, null, 2));
 
 const ok =
   /jog-about-page/.test(r.bodyClass || '') &&

@@ -8,8 +8,8 @@ secret-free and documents the pipeline itself.
 ## Deployment model
 
 - **Repo:** `github.com/JourneyofGrace/journeyofgrace-site`, branch `main`.
-- **Server:** AlmaLinux 9.8 instance, serves the site via Docker Compose
-  (nginx for the static site, plus a Node relay for Planning Center form
+- **Server:** AlmaLinux 9.9 instance, serves the site via Docker Compose
+  (nginx for the static site, plus a Node 24 relay for Planning Center form
   submissions).
 - **Repo checkout on the server:** `/opt/jog/journeyofgrace-site`, owned by
   local user `jog`.

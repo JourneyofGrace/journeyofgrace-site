@@ -18,9 +18,10 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     restart: always
     healthcheck:
-      # nginx listens IPv4-only, and localhost resolves to ::1 inside the
-      # container, so the probe must use the literal IPv4 loopback.
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      # Probe the plain-HTTP /healthz endpoint. "/" redirects to HTTPS, and
+      # validating the public cert against 127.0.0.1 fails, so hitting "/"
+      # reports a false unhealthy state even when nginx is serving normally.
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/healthz"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -31,7 +32,7 @@ services:
   # gitignored) and forwards form submissions to the People API. Static site
   # JS never sees the token. See api/relay.mjs and docs/planning-center.md.
   api:
-    image: node:20-alpine
+    image: node:24-alpine
     container_name: journeyofgrace-relay
     working_dir: /app
     volumes:

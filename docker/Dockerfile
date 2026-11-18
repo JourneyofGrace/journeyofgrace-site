@@ -1,7 +1,7 @@
 # ---- Build stage: render content/*.md into the static HTML files ----
 # The build scripts (scripts/build-content.mjs, scripts/layout.mjs) are plain
 # Node scripts that use only built-in modules, so no `npm install` is needed.
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /src
 COPY . .

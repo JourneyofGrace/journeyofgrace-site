@@ -28,6 +28,28 @@ function api(apiPath) {
   });
 }
 
+function nextPath(url) {
+  if (!url) return null;
+  const u = new URL(url, 'https://api.planningcenteronline.com');
+  return `${u.pathname}${u.search}`;
+}
+
+// Follow PCO's `links.next` pagination. The events page must not silently drop
+// tagged calendar events or whitelisted group events that fall beyond page 1.
+async function apiAll(apiPath, label) {
+  let next = apiPath;
+  const data = [];
+  const included = [];
+  for (let page = 0; next && page < 100; page++) {
+    const res = await api(next);
+    if (res.status !== 200) throw new Error(`${label || 'PCO'} HTTP ${res.status} for ${next}`);
+    data.push(...(res.json.data || []));
+    if (res.json.included) included.push(...res.json.included);
+    next = nextPath(res.json.links && res.json.links.next);
+  }
+  return { data, included };
+}
+
 const CHURCH_CENTER = 'https://journeyofgrace.churchcenter.com';
 const GROUPS_DIR = `${CHURCH_CENTER}/groups`;
 
@@ -238,7 +260,7 @@ function realHeaderImage(url) {
 }
 
 // Build a card model from a group event.
-function groupCard(ev, groupName, locationName, headerImage) {
+function groupCard(ev, groupName, locationName, headerImage, groupLink) {
   const a = ev.attributes;
   const startLocal = phx(a.starts_at);
   const endLocal = phx(a.ends_at || a.starts_at);
@@ -252,7 +274,7 @@ function groupCard(ev, groupName, locationName, headerImage) {
   const groupId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
   return {
     name,
-    link: groupId ? `${GROUPS_DIR}/${groupId}` : `${CHURCH_CENTER}/calendar`,
+    link: groupLink || (groupId ? `${GROUPS_DIR}/${groupId}` : `${CHURCH_CENTER}/calendar`),
     allDay: false,
     startLocal,
     endLocal,
@@ -410,88 +432,114 @@ async function fetchAll() {
     return { calCards: tagFilteredCal, grpCards: whitelistedGrp, today };
   }
 
-  const calRes = await api(`/calendar/v2/event_instances?where[starts_at][gt]=${today}&order=starts_at&per_page=30&include=event`);
-  if (calRes.status !== 200) throw new Error(`calendar event_instances HTTP ${calRes.status}`);
-  const calCards = (calRes.json.data || []).map((inst) => calendarCard(inst));
+  const calInstances = await apiAll(
+    `/calendar/v2/event_instances?where[starts_at][gt]=${today}&order=starts_at&per_page=100&include=event`,
+    'calendar event_instances'
+  );
+  const calCards = calInstances.data.map((inst) => calendarCard(inst));
 
-  // Optional: fetch event tags so calendar events can be whitelisted by tag.
-  let calTagMap = {};
+  // Calendar events must be both tagged for the website and public in Church
+  // Center. Paginate so events later in the calendar are not skipped.
   const calTags = parseCalendarTags();
+  let filteredCal = [];
   if (calTags.length) {
-    const evRes = await api(`/calendar/v2/events?per_page=100&include=tags`);
-    if (evRes.status !== 200) throw new Error(`calendar events (tags) HTTP ${evRes.status}`);
+    const evRes = await apiAll('/calendar/v2/events?per_page=100&include=tags', 'calendar events');
     const tagNames = {};
-    for (const t of evRes.json.included || []) {
+    for (const t of evRes.included) {
       if (t.type === 'Tag') tagNames[t.id] = (t.attributes && t.attributes.name) || '';
     }
-    for (const ev of evRes.json.data || []) {
-      const tagIds = (ev.relationships && ev.relationships.tags && ev.relationships.tags.data || []).map((r) => r.id);
-      calTagMap[ev.id] = tagIds.map((id) => tagNames[id]).filter(Boolean);
-    }
-  }
-  const filteredCal = calTags.length ? calCards.filter((c) => inCalendarTag(calTagMap[c.eventId], calTags)) : calCards;
-  if (calTags.length) {
-    const droppedCal = calCards.length - filteredCal.length;
-    console.log(`Calendar tag filter active (${calTags.join(', ')}): kept ${filteredCal.length}, dropped ${droppedCal}`);
-  }
-
-  const grpRes = await api(`/groups/v2/events?where[starts_at][gt]=${today}&order=starts_at&per_page=30&include=group,location`);
-  if (grpRes.status !== 200) throw new Error(`group events HTTP ${grpRes.status}`);
-  const byType = {};
-  for (const inc of grpRes.json.included || []) {
-    (byType[inc.type] = byType[inc.type] || []).push(inc);
-  }
-  const groupNames = {};
-  const groupImages = {};
-  const groupTypes = {};
-  for (const g of byType.Group || []) {
-    groupNames[g.id] = g.attributes && g.attributes.name;
-    const hi = g.attributes && g.attributes.header_image;
-    groupImages[g.id] = (hi && hi.original) || (hi && hi.medium) || '';
-    const gt = g.relationships && g.relationships.group_type && g.relationships.group_type.data;
-    if (gt && gt.id) groupTypes[g.id] = gt.id;
-  }
-  const locNames = {};
-  for (const l of byType.Location || []) locNames[l.id] = l.attributes && l.attributes.name;
-
-  // Resolve group type names in one call, then build per-group descriptors for whitelist matching.
-  const typeIds = [...new Set(Object.values(groupTypes).filter(Boolean))];
-  const typeNames = {};
-  if (typeIds.length) {
-    const tr = await api(`/groups/v2/group_types?per_page=100`);
-    if (tr.status === 200) {
-      for (const t of tr.json.data || []) typeNames[t.id] = t.attributes && t.attributes.name;
-    }
-  }
-
-  const whitelist = parseWhitelist();
-  const groupsById = {};
-  for (const ev of grpRes.json.data || []) {
-    const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
-    if (gId && !(gId in groupsById)) {
-      groupsById[gId] = {
-        id: gId,
-        name: groupNames[gId],
-        typeName: groupTypes[gId] ? typeNames[groupTypes[gId]] : '',
+    const calEventMeta = {};
+    for (const ev of evRes.data) {
+      const tagIds = ((ev.relationships && ev.relationships.tags && ev.relationships.tags.data) || []).map((r) => r.id);
+      calEventMeta[ev.id] = {
+        tags: tagIds.map((id) => tagNames[id]).filter(Boolean),
+        visible: !!(ev.attributes && ev.attributes.visible_in_church_center),
       };
     }
+    filteredCal = calCards.filter((c) => {
+      const meta = calEventMeta[c.eventId];
+      return meta && meta.visible && inCalendarTag(meta.tags, calTags);
+    });
+    const notPublic = calCards.filter((c) => {
+      const meta = calEventMeta[c.eventId];
+      return !meta || !meta.visible;
+    }).length;
+    // A monthly event produces an instance per month. Show the next
+    // occurrence of each event series instead of 20+ duplicate cards.
+    const seenSeries = new Set();
+    const beforeDedupe = filteredCal.length;
+    filteredCal = filteredCal.filter((c) => {
+      if (!c.eventId || seenSeries.has(c.eventId)) return false;
+      seenSeries.add(c.eventId);
+      return true;
+    });
+    console.log(`Calendar tag filter active (${calTags.join(', ')}): kept ${filteredCal.length}, dropped ${calCards.length - beforeDedupe} (${notPublic} not public), collapsed ${beforeDedupe - filteredCal.length} recurring instances`);
+  } else {
+    console.log('Calendar tag filter not configured — no calendar events shown (fail closed).');
   }
-  const matchedGroupIds = buildMatchedGroupIds(groupsById, whitelist);
-  let kept = 0;
-  let dropped = 0;
-  const grpCards = (grpRes.json.data || []).map((ev) => {
-    const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
-    if (!matchedGroupIds.has(gId)) {
-      dropped++;
-      return null;
-    }
-    kept++;
-    const lId = ev.relationships && ev.relationships.location && ev.relationships.location.data && ev.relationships.location.data.id;
-    return groupCard(ev, groupNames[gId], lId ? locNames[lId] : '', groupImages[gId]);
-  }).filter(Boolean);
 
-  if (whitelist && whitelist.length) {
-    console.log(`Group whitelist active (${whitelist.join(', ')}): kept ${kept}, dropped ${dropped}`);
+  // Resolve the whitelist against ALL groups (not just groups that happen to
+  // appear in the first page of events), then keep only public group events.
+  const whitelist = parseWhitelist();
+  let grpCards = [];
+  let dropped = 0;
+  let hidden = 0;
+  if (whitelist.length) {
+    const groupsRes = await apiAll('/groups/v2/groups?per_page=100&include=group_type', 'groups');
+    const typeNames = {};
+    for (const t of groupsRes.included) {
+      if (t.type === 'GroupType') typeNames[t.id] = (t.attributes && t.attributes.name) || '';
+    }
+    const groupsById = {};
+    for (const g of groupsRes.data) {
+      const a = g.attributes || {};
+      const gt = g.relationships && g.relationships.group_type && g.relationships.group_type.data;
+      const hi = a.header_image || {};
+      groupsById[g.id] = {
+        id: g.id,
+        name: a.name,
+        typeName: gt ? typeNames[gt.id] : '',
+        eventsVisibility: a.events_visibility,
+        image: hi.original || hi.medium || '',
+        publicUrl: a.public_church_center_web_url || '',
+      };
+    }
+    const matchedGroupIds = buildMatchedGroupIds(groupsById, whitelist);
+
+    const grpEvents = await apiAll(
+      `/groups/v2/events?where[starts_at][gt]=${today}&order=starts_at&per_page=100&include=group,location`,
+      'group events'
+    );
+    const locNames = {};
+    for (const l of grpEvents.included) {
+      if (l.type === 'Location') locNames[l.id] = (l.attributes && l.attributes.name) || '';
+    }
+
+    const groupsWithUpcoming = new Set();
+    grpCards = grpEvents.data.map((ev) => {
+      const gId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
+      const group = groupsById[gId];
+      if (!group || !matchedGroupIds.has(gId)) {
+        dropped++;
+        return null;
+      }
+      groupsWithUpcoming.add(gId);
+      if (group.eventsVisibility !== 'public') {
+        hidden++;
+        return null;
+      }
+      const lId = ev.relationships && ev.relationships.location && ev.relationships.location.data && ev.relationships.location.data.id;
+      return groupCard(ev, group.name, lId ? locNames[lId] : '', group.image, group.publicUrl || `${GROUPS_DIR}/${gId}`);
+    }).filter(Boolean);
+
+    const emptyGroups = [...matchedGroupIds]
+      .filter((gId) => !groupsWithUpcoming.has(gId))
+      .map((gId) => groupsById[gId] && groupsById[gId].name)
+      .filter(Boolean);
+    if (emptyGroups.length) {
+      console.log(`Whitelisted groups with no upcoming events: ${emptyGroups.join(', ')}`);
+    }
+    console.log(`Group whitelist active (${whitelist.join(', ')}): kept ${grpCards.length}, dropped ${dropped}, hidden ${hidden} (non-public events)`);
   } else {
     console.log('Group whitelist not configured — no group events shown (fail closed).');
   }

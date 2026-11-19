@@ -117,6 +117,12 @@ renders a "no upcoming events" message instead of listing everything.
 | `PCO_GROUP_WHITELIST` | Comma-separated group **ids**, **names**, or **type names** | Only events from matching groups are shown. Name entries use closest-match, so friendly names (e.g. `ROC Youth Group`, `Men's Breakfast`) resolve even if they differ slightly from the exact name in PCO. |
 | `PCO_CALENDAR_TAG` | Comma-separated **tag names** | Only calendar events carrying at least one of these tags are shown. |
 
+Calendar items must also be marked **visible in Church Center**; group items
+must have **public** event visibility. Recurring series are collapsed to their
+next upcoming occurrence, and a whitelisted group only appears when it has a
+future public group event. PCO's Groups API cannot create group events, so
+future occurrences must be added in the Planning Center UI.
+
 Both must be set as **Actions variables** (not secrets):
 
 ```bash

@@ -8,9 +8,11 @@ auto-renewed; revisit wildcard automation when moving DNS to Cloudflare.
 
 ## How it works
 
-- Host certbot (`dnf install epel-release certbot`) writes tokens to
-  `webroot/.well-known/acme-challenge` in the repo; nginx serves
-  `/.well-known/acme-challenge/` from the container (host dir mounted read-only).
+- Host certbot writes tokens to `webroot/.well-known/acme-challenge` in the
+  repo; nginx serves `/.well-known/acme-challenge/` from the container (host dir
+  mounted read-only). Certbot 5.x is installed in `/opt/certbot-venv` because
+  EPEL's package is still 3.1.0; a systemd drop-in sets `CERTBOT_CMD` for the
+  renewal service.
 - `docker-compose.yml` mounts the WHOLE `/etc/letsencrypt` dir into the
   container (read-only). Mounting only `live/<domain>` does NOT work: certbot's
   `live/*.pem` are symlinks into `archive/`, and nginx can't resolve them when
@@ -29,16 +31,25 @@ auto-renewed; revisit wildcard automation when moving DNS to Cloudflare.
 # 1. DNS: A record for the hostname must point at this server
 #    (test.journeyofgrace.church -> 129.146.181.82).
 
-# 2. Install certbot and issue the first cert:
-sudo dnf install -y epel-release certbot
-scripts/tls-renew.sh test.journeyofgrace.church --bootstrap
+# 2. Install Certbot 5.x (EPEL only provides 3.1.0) and issue the first cert:
+sudo dnf install -y python3.11 python3.11-pip
+sudo python3.11 -m venv /opt/certbot-venv
+sudo /opt/certbot-venv/bin/pip install --upgrade pip certbot
+sudo CERTBOT_CMD=/opt/certbot-venv/bin/certbot \
+  scripts/tls-renew.sh test.journeyofgrace.church --bootstrap
 # (the container must already run with the webroot volume from docker-compose.yml)
 
 # 3. Serve the real cert: docker-compose.yml already mounts /etc/letsencrypt,
 #    so just recreate the web container:
 sudo docker compose up -d --build
 
-# 4. Install the renewal timer:
+# 4. Install the renewal timer and point it at the venv certbot:
+sudo mkdir -p /etc/systemd/system/jog-tls-renew.service.d
+sudo tee /etc/systemd/system/jog-tls-renew.service.d/certbot-venv.conf >/dev/null <<'EOF'
+[Service]
+Environment=CERTBOT_CMD=/opt/certbot-venv/bin/certbot
+EOF
+sudo systemctl daemon-reload
 sudo systemctl enable --now jog-tls-renew.timer
 ```
 
@@ -47,7 +58,7 @@ sudo systemctl enable --now jog-tls-renew.timer
 Issued 2026-08-10 with:
 `certbot certonly --manual --preferred-challenges dns-01 -d journeyofgrace.church -d "*.journeyofgrace.church"`
 (requires TXT records `_acme-challenge.journeyofgrace.church` at Namecheap;
-expires 2026-11-08, NOT auto-renewing). When DNS moves to Cloudflare, switch to
+expired 2026-11-08, NOT auto-renewing). When DNS moves to Cloudflare, switch to
 `certbot-dns-cloudflare` for automated wildcard renewal, then point nginx at
 `/etc/letsencrypt/live/journeyofgrace.church/...`.
 
@@ -57,4 +68,4 @@ expires 2026-11-08, NOT auto-renewing). When DNS moves to Cloudflare, switch to
   the whole /etc/letsencrypt, not just live/<domain>.
 - **challenge 404**: token written to host webroot but container not recreated
   with the `./webroot/.well-known` volume.
-- **verify renewal**: `sudo certbot renew --cert-name test.journeyofgrace.church --webroot -w webroot --dry-run --no-random-sleep-on-renew`
+- **verify renewal**: `sudo /opt/certbot-venv/bin/certbot renew --cert-name test.journeyofgrace.church --webroot -w webroot --dry-run --no-random-sleep-on-renew`

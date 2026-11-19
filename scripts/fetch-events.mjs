@@ -183,13 +183,29 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
+// PCO still carries the former "Mesa Naz" name in some event locations.
+// Normalize dynamic event content to match the site's current branding.
+function brandText(s) {
+  return String(s || '').replace(/Mesa\s+Naz/gi, 'Journey of Grace');
+}
+
+function cleanLocationName(raw) {
+  const name = String(raw || '').trim();
+  if (!/mesa\s+naz/i.test(name)) return brandText(name);
+  const rest = name.replace(/^.*?mesa\s+naz\s*[-–—:]?\s*/i, '').trim();
+  return rest && !/^955\s+e(ast)?\s+university/i.test(rest)
+    ? `Journey of Grace - ${brandText(rest)}`
+    : 'Journey of Grace';
+}
+
 // Build a card model from a calendar event instance.
 function calendarCard(inst) {
   const a = inst.attributes;
   const startLocal = phx(a.starts_at);
   const endLocal = phx(a.ends_at || a.starts_at);
   const dateLocalIso = `${startLocal.getUTCFullYear()}-${pad(startLocal.getUTCMonth() + 1)}-${pad(startLocal.getUTCDate())}`;
-  const locName = typeof a.location === 'string' ? a.location : (a.location && a.location.name) || '';
+  const locName = cleanLocationName(typeof a.location === 'string' ? a.location : (a.location && a.location.name) || '');
+  const name = brandText(a.name || 'Church Event');
   const addressLines = [];
   if (locName) addressLines.push(locName);
   addressLines.push('955 East University Drive', 'Mesa, AZ, 85203');
@@ -197,7 +213,7 @@ function calendarCard(inst) {
   const eventId = inst.relationships && inst.relationships.event && inst.relationships.event.data && inst.relationships.event.data.id;
   return {
     eventId: eventId || '',
-    name: a.name || 'Church Event',
+    name,
     link: a.church_center_url || `${CHURCH_CENTER}/calendar`,
     allDay: !!a.all_day_event,
     startLocal,
@@ -209,7 +225,7 @@ function calendarCard(inst) {
     dateLocalIso,
     addressLines,
     description: '',
-    googleUrl: googleCalendarLink(a.name, a.starts_at, a.ends_at || a.starts_at, a.all_day_event, addressLines.join(', ')),
+    googleUrl: googleCalendarLink(name, a.starts_at, a.ends_at || a.starts_at, a.all_day_event, addressLines.join(', ')),
   };
 }
 
@@ -227,13 +243,15 @@ function groupCard(ev, groupName, locationName, headerImage) {
   const startLocal = phx(a.starts_at);
   const endLocal = phx(a.ends_at || a.starts_at);
   const dateLocalIso = `${startLocal.getUTCFullYear()}-${pad(startLocal.getUTCMonth() + 1)}-${pad(startLocal.getUTCDate())}`;
+  const locName = cleanLocationName(locationName);
+  const name = brandText(a.name || 'Group Event');
   const addressLines = [];
-  if (locationName) addressLines.push(locationName);
+  if (locName) addressLines.push(locName);
   addressLines.push('955 East University Drive', 'Mesa, AZ, 85203');
-  if (!locationName) addressLines.push('United States');
+  if (!locName) addressLines.push('United States');
   const groupId = ev.relationships && ev.relationships.group && ev.relationships.group.data && ev.relationships.group.data.id;
   return {
-    name: a.name || 'Group Event',
+    name,
     link: groupId ? `${GROUPS_DIR}/${groupId}` : `${CHURCH_CENTER}/calendar`,
     allDay: false,
     startLocal,
@@ -244,10 +262,10 @@ function groupCard(ev, groupName, locationName, headerImage) {
     year: startLocal.getUTCFullYear(),
     dateLocalIso,
     addressLines,
-    description: (a.description || '').trim(),
-    groupName: groupName || '',
+    description: brandText((a.description || '').trim()),
+    groupName: brandText(groupName || ''),
     imageUrl: realHeaderImage(headerImage || ''),
-    googleUrl: googleCalendarLink(a.name, a.starts_at, a.ends_at || a.starts_at, false, addressLines.join(', ')),
+    googleUrl: googleCalendarLink(name, a.starts_at, a.ends_at || a.starts_at, false, addressLines.join(', ')),
   };
 }
 
